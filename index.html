@@ -1,0 +1,1641 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f111a">
+<meta name="description" content="КРАЙ (Edge Push) — пошаговая микро-тактика непрямого боя для одной руки">
+<title>КРАЙ · Edge Push</title>
+<style>
+:root{
+  --bg:#0f111a; --void:#090b12; --tile:#252a3a; --tile-edge:#171b28;
+  --cyan:#00e5ff; --cyan-dim:#0a7c8c; --red:#ff4757; --amber:#ffb037;
+  --ink:#e8edf7; --muted:#8b96ad; --line:rgba(160,180,215,.14);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden}
+html{background:#070910}
+body{
+  background:radial-gradient(120% 80% at 50% 10%,#1a2030 0%,#070910 70%);
+  color:var(--ink);
+  font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  touch-action:none;user-select:none;-webkit-user-select:none;
+  display:flex;justify-content:center;align-items:stretch;
+}
+#app{
+  position:relative;width:100%;max-width:480px;height:100vh;height:100dvh;
+  display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(180deg,#121623 0%,#0b0d15 100%);
+  box-shadow:0 0 70px rgba(0,0,0,.7);
+}
+#top{height:55%;flex:none;display:flex;flex-direction:column;min-height:0}
+#hud{flex:none;padding:8px 12px 2px}
+.hud-row{display:flex;align-items:center;gap:10px;min-height:30px}
+.hud-row.sub{margin-top:5px;min-height:24px}
+.brand{font-weight:900;letter-spacing:.16em;font-size:12px;color:var(--cyan);text-shadow:0 0 12px rgba(0,229,255,.45)}
+.floor-pill{
+  font-size:12px;letter-spacing:.08em;color:var(--muted);
+  background:rgba(255,255,255,.045);border:1px solid var(--line);
+  padding:4px 9px;border-radius:999px;white-space:nowrap;
+}
+.floor-pill b{color:var(--ink);font-size:13px}
+.hearts{display:flex;gap:3px;font-size:19px;line-height:1;flex:1;text-shadow:0 0 10px rgba(255,71,87,.35)}
+.hearts .full{color:var(--red)}
+.hearts .empty{color:#394154}
+.shield-pill{
+  font-size:12px;color:var(--cyan);border:1px solid rgba(0,229,255,.45);
+  background:rgba(0,229,255,.08);border-radius:999px;padding:3px 8px;white-space:nowrap;
+}
+.shield-pill.off{display:none}
+.icon-btn{
+  width:34px;height:34px;flex:none;border-radius:11px;border:1px solid var(--line);
+  background:rgba(255,255,255,.05);color:var(--ink);font-size:17px;font-weight:700;
+  display:grid;place-items:center;cursor:pointer;
+}
+.icon-btn:active{transform:scale(.93)}
+.perk-icons{display:flex;gap:4px;flex:1;flex-wrap:wrap;min-height:22px}
+.perk-chip{
+  font-size:13px;line-height:1;display:grid;place-items:center;
+  width:24px;height:22px;border-radius:7px;
+  background:rgba(0,229,255,.09);border:1px solid rgba(0,229,255,.28);
+}
+.perk-chip svg{width:14px;height:14px;color:var(--cyan)}
+.status{font-size:11px;color:var(--muted);white-space:nowrap;letter-spacing:.03em;transition:opacity .2s}
+.toasting .status{opacity:0}
+#stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:2px 0}
+#boardWrap{display:grid;place-items:center;max-width:100%;max-height:100%}
+#board{
+  position:relative;
+  width:max(180px,min(92vw,46dvh,calc(55dvh - 96px),440px));
+  aspect-ratio:1/1;border-radius:18px;overflow:hidden;
+  background:
+    radial-gradient(80% 60% at 50% 10%,rgba(30,38,58,.55),transparent 70%),
+    var(--void);
+  box-shadow:inset 0 0 0 1px rgba(120,150,200,.14),inset 0 0 40px rgba(0,0,0,.8),0 16px 36px rgba(0,0,0,.55);
+}
+#tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr)}
+.tile{margin:2.5px;border-radius:8px;position:relative;overflow:hidden}
+.t-FLOOR{
+  background:linear-gradient(180deg,#2c3244 0%,#252a3a 72%,#1d2231 100%);
+  border-top:1px solid rgba(255,255,255,.075);
+  box-shadow:inset 0 -5px 0 rgba(9,12,20,.55),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.t-CHASM{
+  background:radial-gradient(70% 70% at 50% 50%,rgba(0,0,0,.6),rgba(4,6,12,.15));
+  border:1px dashed rgba(150,175,215,.22);
+  box-shadow:inset 0 0 16px rgba(0,0,0,.85);
+}
+.t-PILLAR{
+  background:linear-gradient(160deg,#4b546b,#2a3042 70%,#1b2030);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.16),inset 0 -5px 0 rgba(0,0,0,.4),0 4px 0 rgba(0,0,0,.5);
+}
+.t-PILLAR::after{
+  content:"";position:absolute;inset:22%;border-radius:4px;
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.055) 0 4px,transparent 4px 8px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+}
+.t-SPIKES{
+  background:repeating-linear-gradient(45deg,#5b2a2e 0 6px,#3a1c24 6px 12px);
+  box-shadow:inset 0 0 0 1px rgba(255,120,80,.22),inset 0 -4px 8px rgba(0,0,0,.5);
+}
+.t-SPIKES::after{content:"▲ ▲";position:absolute;inset:0;display:grid;place-items:center;font-size:9px;color:rgba(255,150,110,.65);letter-spacing:1px}
+.t-LAVA{
+  background:radial-gradient(70% 70% at 50% 60%,#ff9b32,#b93a17 65%,#4a160e);
+  box-shadow:inset 0 0 0 1px rgba(255,180,80,.35),0 0 12px rgba(255,110,30,.25);
+  animation:lava 2.6s ease-in-out infinite alternate;
+}
+.t-LAVA::after{content:"♨";position:absolute;inset:0;display:grid;place-items:center;font-size:20px;color:rgba(255,235,190,.65)}
+@keyframes lava{to{filter:brightness(1.25)}}
+#telegraph,#fxSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+#entities,#fx,#preview{position:absolute;inset:0;pointer-events:none}
+.unit{
+  position:absolute;left:0;top:0;width:20%;height:20%;
+  transition:transform 145ms cubic-bezier(.2,.85,.25,1),opacity 180ms linear;
+  display:grid;place-items:center;
+}
+.unit .body{width:74%;height:74%;position:relative;display:grid;place-items:center;font-size:13px;font-weight:900}
+.unit.spawn{animation:spawn .22s ease-out}
+@keyframes spawn{from{opacity:0;transform:scale(.4)}}
+.unit.inactive{opacity:.72;filter:saturate(.7)}
+.unit.stunned{opacity:.6;filter:grayscale(.45)}
+.u-PLAYER .body{
+  border-radius:28%;border:2px solid #c9fbff;
+  background:linear-gradient(145deg,#a6fbff,#00c8e6 55%,#0088a8);
+  box-shadow:0 0 16px rgba(0,229,255,.65),inset 0 2px 0 rgba(255,255,255,.65);
+  color:#04333d;
+}
+.u-PLAYER .body::after{content:"";width:34%;height:34%;border-radius:22%;background:rgba(4,45,55,.42);transform:rotate(45deg)}
+.unit.shielded .body{box-shadow:0 0 0 3px rgba(0,229,255,.75),0 0 22px rgba(0,229,255,.8),inset 0 2px 0 rgba(255,255,255,.65)}
+.u-BRUTE .body,.u-JUGGERNAUT .body{
+  border-radius:16%;background:linear-gradient(150deg,#ff7a83,#e2263c 62%,#8c1225);
+  border:2px solid #ffb3ba;box-shadow:0 5px 0 rgba(0,0,0,.45),0 0 12px rgba(255,71,87,.35);
+}
+.u-JUGGERNAUT .body{background:linear-gradient(150deg,#a8334a,#5b0c22 70%);border-color:#ff8a72;box-shadow:0 0 0 2px #ff8a5b,inset 0 0 0 3px #3a0e18,0 5px 0 rgba(0,0,0,.5)}
+.u-JUGGERNAUT .body::after{content:"";width:36%;height:36%;border:2px solid #ffb493;border-radius:50%}
+.u-CHARGER .body{
+  border-radius:12%;transform:rotate(45deg);
+  background:linear-gradient(150deg,#ffd08a,#ff8a1f 60%,#a34b05);
+  border:2px solid #ffe0ad;box-shadow:0 0 12px rgba(255,150,40,.45);
+}
+.u-CHARGER .body::after{content:"";position:absolute;inset:22%;border-radius:50%;background:rgba(70,30,0,.35)}
+.u-SNIPER .body{
+  clip-path:polygon(50% 3%,97% 94%,3% 94%);
+  background:linear-gradient(180deg,#d9a3ff,#8b3ee8 60%,#4a168f);
+  filter:drop-shadow(0 3px 0 rgba(0,0,0,.5));
+}
+.u-BOMBER .body{
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3a8,#ffd028 55%,#c07a05);
+  border:2px solid #fff0a8;box-shadow:0 0 14px rgba(255,210,40,.55);
+}
+.u-BOMBER .body::before{content:"";position:absolute;top:-22%;left:52%;width:3px;height:22%;background:#ffe9a0;border-radius:2px;transform:rotate(22deg)}
+.u-BOMBER .body::after{content:"";width:100%;height:100%;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(120,60,0,.18)}
+.u-BARREL .body{
+  border-radius:22%;background:linear-gradient(180deg,#9a642f,#5e3a1b);
+  border:2px solid #e0a24d;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25),0 4px 0 rgba(0,0,0,.45);
+  color:#ffde9b;font-size:15px;
+}
+.u-BARREL .body::after{content:"!"}
+.pips{position:absolute;bottom:6%;left:0;right:0;display:flex;justify-content:center;gap:2px}
+.pip{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8)}
+.pip.off{background:#fff;opacity:.22}
+.badge{position:absolute;top:-1%;right:2%;font-size:11px;line-height:1;filter:drop-shadow(0 1px 2px #000)}
+.unit.active .badge{animation:zap 1s ease-in-out infinite}
+@keyframes zap{50%{transform:scale(1.35);filter:drop-shadow(0 0 5px #ffd23f)}}
+.tg-attack{fill:rgba(255,71,87,.08);stroke:#ff4757;stroke-width:1.4;animation:pulse 1s ease-in-out infinite}
+.tg-cell{fill:rgba(255,71,87,.14)}
+.tg-line{stroke:#ff4757;stroke-width:1.1;stroke-linecap:round;stroke-dasharray:3 2;animation:pulse 1s ease-in-out infinite}
+.tg-thin{stroke:#ff5c7a;stroke-width:.55;stroke-linecap:round;animation:pulse 1s ease-in-out infinite}
+.tg-move{fill:none;stroke:rgba(255,176,55,.75);stroke-width:1;stroke-dasharray:2 2}
+@keyframes pulse{50%{opacity:.4}}
+.pv-ray{stroke:rgba(0,229,255,.55);stroke-width:.9;stroke-dasharray:2.5 2}
+.pv-mark{fill:rgba(0,229,255,.12);stroke:#00e5ff;stroke-width:1.2;animation:pulse 1.2s ease-in-out infinite}
+.pv-dot{fill:rgba(0,229,255,.42)}
+.pv-label{fill:#9ff7ff;font-size:9px;font-weight:800;text-anchor:middle;dominant-baseline:central;font-family:inherit}
+.tip{
+  font-size:11.5px;color:var(--muted);text-align:center;min-height:16px;
+  padding:0 14px;letter-spacing:.02em;
+}
+.tip b{color:var(--cyan);font-weight:700}
+#controls{
+  height:45%;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;
+  padding:6px 10px calc(6px + env(safe-area-inset-bottom));gap:4px;
+  border-top:1px solid rgba(160,180,215,.09);
+  background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(0,0,0,.18));
+}
+.ability-row{display:flex;gap:8px;width:100%;max-width:420px}
+.ability{
+  position:relative;flex:1;min-height:66px;border-radius:16px;cursor:pointer;
+  border:1px solid var(--line);background:linear-gradient(180deg,#242b3c,#171c29);
+  color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 0 rgba(0,0,0,.35);
+  transition:transform .09s ease,border-color .15s,box-shadow .15s,opacity .15s;
+  padding:6px 4px;
+}
+.ability:active{transform:translateY(2px) scale(.98);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.ability .ico{line-height:0;color:#bff7ff}
+.ability .ico svg{width:24px;height:24px}
+.ability .name{font-size:11px;font-weight:800;letter-spacing:.07em}
+.ability .sub{font-size:9px;color:var(--muted)}
+.ability.on{
+  border-color:var(--cyan);
+  box-shadow:0 0 0 2px rgba(0,229,255,.3),0 0 20px rgba(0,229,255,.28),inset 0 1px 0 rgba(255,255,255,.1);
+  background:linear-gradient(180deg,#123a46,#0d2732);
+}
+.ability.cooling{opacity:.46}
+.ability .cd{
+  position:absolute;top:-7px;right:-5px;min-width:22px;height:22px;padding:0 4px;
+  border-radius:11px;background:#0d111c;border:1px solid rgba(255,176,55,.6);
+  color:var(--amber);font-size:12px;font-weight:900;display:grid;place-items:center;
+}
+.ability .cd.ready{display:none}
+.dpad{
+  --btn:clamp(64px,17.5vw,84px);
+  display:grid;grid-template-columns:repeat(3,var(--btn));grid-template-rows:repeat(3,var(--btn));
+  gap:5px;place-content:center;
+}
+.dir{
+  border-radius:18px;border:1px solid var(--line);cursor:pointer;
+  background:linear-gradient(180deg,#2b3346,#1a2030);
+  color:var(--ink);font-size:26px;font-weight:900;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 0 rgba(0,0,0,.42);
+  transition:transform .08s ease,border-color .15s,opacity .15s,box-shadow .15s;
+  display:grid;place-items:center;
+}
+.dir:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 rgba(0,0,0,.42)}
+.dir.ok{border-color:rgba(0,229,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 0 rgba(0,0,0,.42),0 0 14px rgba(0,229,255,.13)}
+.dir.bad{opacity:.36}
+.dir[data-dir="UP"]{grid-area:1/2}
+.dir[data-dir="LEFT"]{grid-area:2/1}
+.dir[data-dir="RIGHT"]{grid-area:2/3}
+.dir[data-dir="DOWN"]{grid-area:3/2}
+.dpad-mid{
+  grid-area:2/2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  border-radius:18px;background:rgba(255,255,255,.03);border:1px dashed var(--line);text-align:center;
+}
+.dpad-mid .mode{font-size:10px;font-weight:900;letter-spacing:.06em;color:var(--cyan)}
+.dpad-mid .turn{font-size:9px;color:var(--muted)}
+.hint{font-size:10px;color:#657087;text-align:center;letter-spacing:.03em;min-height:13px}
+#overlay{
+  position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;padding:18px;background:rgba(6,8,14,.93);backdrop-filter:blur(6px);
+}
+#overlay.hidden{display:none}
+.ov-title{font-size:22px;font-weight:900;letter-spacing:.1em;text-align:center;color:var(--cyan);text-shadow:0 0 18px rgba(0,229,255,.4)}
+.ov-sub{font-size:12px;color:var(--muted);text-align:center;max-width:340px;line-height:1.5}
+.ov-stats{font-size:12px;color:var(--ink);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:9px 14px;text-align:center;line-height:1.7}
+.perk-card{
+  width:100%;max-width:380px;min-height:74px;display:flex;align-items:center;gap:12px;text-align:left;
+  border-radius:16px;padding:10px 14px;cursor:pointer;
+  border:1px solid rgba(0,229,255,.3);background:linear-gradient(135deg,rgba(0,229,255,.1),rgba(255,255,255,.03));
+  color:var(--ink);
+}
+.perk-card:active{transform:scale(.98)}
+.perk-card .pc-ico{width:38px;text-align:center;flex:none;line-height:0;color:var(--cyan)}
+.perk-card .pc-ico svg{width:28px;height:28px}
+.perk-card .pc-name{font-size:14px;font-weight:900;letter-spacing:.04em}
+.perk-card .pc-desc{font-size:11px;color:var(--muted);line-height:1.35;margin-top:2px}
+.perk-card .pc-lvl{font-size:9px;color:var(--cyan);letter-spacing:.08em}
+.ov-btn{
+  min-width:150px;min-height:48px;padding:10px 18px;border-radius:14px;cursor:pointer;font-size:13px;font-weight:900;letter-spacing:.06em;
+  border:1px solid var(--cyan);background:rgba(0,229,255,.12);color:var(--ink);
+}
+.ov-btn.ghost{border-color:var(--line);background:rgba(255,255,255,.04);color:var(--muted)}
+.ov-btn:active{transform:scale(.97)}
+.ov-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.rules{font-size:11.5px;color:#c3cddd;line-height:1.65;max-width:360px;max-height:52dvh;overflow:auto;padding:0 4px}
+.rules b{color:var(--cyan)}
+#toast{
+  position:absolute;left:50%;top:46px;transform:translateX(-50%) translateY(-8px);
+  z-index:30;padding:8px 14px;border-radius:999px;font-size:11px;white-space:nowrap;
+  background:rgba(10,14,24,.94);border:1px solid rgba(0,229,255,.35);color:var(--ink);
+  opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.fx-text{
+  position:absolute;width:20%;height:20%;display:grid;place-items:center;
+  font-size:clamp(9px,2.7vw,13px);font-weight:900;letter-spacing:.03em;white-space:nowrap;
+  color:#fff;text-shadow:0 2px 4px #000,0 0 8px rgba(0,0,0,.9);
+  animation:floatup .95s ease-out forwards;
+}
+@keyframes floatup{
+  0%{opacity:0;transform:translateY(6px) scale(.75)}
+  15%{opacity:1;transform:translateY(0) scale(1.06)}
+  100%{opacity:0;transform:translateY(-42px) scale(1)}
+}
+.fx-ghost{position:absolute;left:0;top:0;width:20%;height:20%;display:grid;place-items:center;animation:ghostfall .55s ease-in forwards}
+.fx-ghost i{display:block;width:74%;height:74%;border-radius:30%;background:var(--gc,#ff4757);box-shadow:0 0 14px var(--gc,#ff4757)}
+@keyframes ghostfall{
+  0%{opacity:.95;transform:translate(calc(var(--fx)*100%),calc(var(--fy)*100%)) scale(1)}
+  100%{opacity:0;transform:translate(calc(var(--tx)*100%),calc(var(--ty)*100%)) scale(.05) rotate(35deg)}
+}
+.fx-boom{
+  position:absolute;width:20%;height:20%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,220,.95) 0%,rgba(255,170,50,.8) 35%,rgba(255,60,30,.35) 65%,transparent 72%);
+  animation:boom .5s ease-out forwards;
+}
+@keyframes boom{0%{opacity:1;transform:scale(.35)}100%{opacity:0;transform:scale(3.4)}}
+#boardWrap.shake{animation:shake .13s linear}
+@keyframes shake{
+  0%,100%{transform:translate(0,0)}
+  20%{transform:translate(-5px,2px)}
+  40%{transform:translate(5px,-3px)}
+  60%{transform:translate(-4px,-2px)}
+  80%{transform:translate(4px,3px)}
+}
+#rotate-hint{
+  display:none;position:absolute;z-index:15;top:6px;left:50%;transform:translateX(-50%);
+  padding:5px 12px;border-radius:999px;font-size:10px;letter-spacing:.05em;
+  background:rgba(10,14,24,.9);border:1px solid rgba(0,229,255,.35);color:var(--cyan);
+  pointer-events:none;white-space:nowrap;
+}
+@media (orientation:landscape) and (max-height:520px){#rotate-hint{display:block}}
+@media (max-width:360px){.ability .name{font-size:10px}.dpad{--btn:clamp(58px,17.5vw,70px)}}
+@media (max-height:620px){
+  #board{width:max(160px,min(88vw,42dvh,calc(55dvh - 82px),400px))}
+  .ability{min-height:56px}.dpad{--btn:clamp(54px,15vw,66px)}
+  .hud-row{min-height:26px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="top">
+    <header id="hud">
+      <div class="hud-row">
+        <span class="brand">КРАЙ</span>
+        <span class="floor-pill">ЭТАЖ <b id="floorNum">1/7</b></span>
+        <div class="hearts" id="hearts"></div>
+        <span class="shield-pill off" id="shieldPill"></span>
+        <button class="icon-btn" id="helpBtn" aria-label="Правила">?</button>
+        <button class="icon-btn" id="restartBtn" aria-label="Заново">↺</button>
+      </div>
+      <div class="hud-row sub">
+        <div class="perk-icons" id="perkIcons"></div>
+        <div class="status" id="statusLine"></div>
+      </div>
+    </header>
+    <main id="stage">
+      <div id="boardWrap">
+        <div id="board">
+          <div id="tiles"></div>
+          <svg id="telegraph" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+          <div id="entities"></div>
+          <svg id="fxSvg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+          <div id="fx"></div>
+        </div>
+      </div>
+      <div class="tip" id="tip"></div>
+    </main>
+  </div>
+
+  <section id="controls">
+    <div class="ability-row">
+      <button class="ability" id="hookBtn" type="button">
+        <span class="ico" data-icon="hook"></span><span class="name">КРЮК</span><span class="sub">тяни на себя</span>
+        <span class="cd ready" id="hookCd"></span>
+      </button>
+      <button class="ability" id="throwBtn" type="button">
+        <span class="ico" data-icon="throw"></span><span class="name">БРОСОК</span><span class="sub">через плечо</span>
+        <span class="cd ready" id="throwCd"></span>
+      </button>
+      <button class="ability" id="waitBtn" type="button">
+        <span class="ico" data-icon="shield"></span><span class="name">ЖДАТЬ</span><span class="sub">+1 щит</span>
+      </button>
+    </div>
+    <div class="dpad">
+      <button class="dir" type="button" data-dir="UP" aria-label="Вверх">▲</button>
+      <button class="dir" type="button" data-dir="LEFT" aria-label="Влево">◄</button>
+      <div class="dpad-mid"><span class="mode" id="modeLabel">ШАГ / ТОЛЧОК</span><span class="turn" id="turnLabel">ХОД 1</span></div>
+      <button class="dir" type="button" data-dir="RIGHT" aria-label="Вправо">►</button>
+      <button class="dir" type="button" data-dir="DOWN" aria-label="Вниз">▼</button>
+    </div>
+    <div class="hint">Свайп в любом месте экрана · клавиши ←↑→↓ / 1 / 2 / 3</div>
+  </section>
+
+  <div id="rotate-hint">↻ Для удобства поверните телефон вертикально</div>
+  <div id="overlay" class="hidden"></div>
+  <div id="toast"></div>
+</div>
+
+<script id="engine-script">
+/* ===== ENGINE START ===== */
+(function (root) {
+'use strict';
+
+/* ---------------------------------------------------------------------------
+ * «КРАЙ» / Edge Push — чистый детерминированный конечный автомат.
+ * Никакого DOM, таймеров, физики или поиска пути: только целые числа 0..4.
+ * ------------------------------------------------------------------------- */
+
+const SIZE = 5;
+const MAX_FLOOR = 7;
+const TILE = { FLOOR:'FLOOR', CHASM:'CHASM', PILLAR:'PILLAR', SPIKES:'SPIKES', LAVA:'LAVA' };
+const DIRS = [
+  { key:'UP',    dx: 0, dy:-1, glyph:'▲' },
+  { key:'RIGHT', dx: 1, dy: 0, glyph:'►' },
+  { key:'DOWN',  dx: 0, dy: 1, glyph:'▼' },
+  { key:'LEFT',  dx:-1, dy: 0, glyph:'◄' }
+];
+const DIR = Object.fromEntries(DIRS.map(d => [d.key, d]));
+
+const PERKS = [
+  { id:'HEAVY_RAM',      icon:'Т', title:'Тяжёлый таран' },
+  { id:'SPIKED_WALLS',   icon:'Ш', title:'Шипованные стены' },
+  { id:'LUCKY_HARPOON',  icon:'Г', title:'Азартный гарпун' },
+  { id:'SHOCK_LANDING',  icon:'У', title:'Ударное приземление' },
+  { id:'LONG_CHAINS',    icon:'Ц', title:'Длинные цепи' },
+  { id:'SECOND_BREATH',  icon:'Д', title:'Второе дыхание' }
+];
+const ENEMY_HP = { BRUTE:2, CHARGER:2, SNIPER:1, BOMBER:1, JUGGERNAUT:4 };
+
+const clone = x => JSON.parse(JSON.stringify(x));
+
+/* --- RNG: линейный конгруэнтный, состояние лежит в state и сохраняется --- */
+function rnd(s) {
+  s.rng = (Math.imul(s.rng, 1664525) + 1013904223) >>> 0;
+  return s.rng / 4294967296;
+}
+function ri(s, n) { return Math.floor(rnd(s) * n); }
+function pick(s, arr) { return arr[ri(s, arr.length)]; }
+function shuffle(s, arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = ri(s, i + 1); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+
+/* --- Геометрия --- */
+const inBounds = (x, y) => x >= 0 && x < SIZE && y >= 0 && y < SIZE;
+const gTile = (g, x, y) => inBounds(x, y) ? g[y][x] : 'VOID';
+const tileAt = (s, x, y) => gTile(s.grid, x, y);
+const isHazard = t => t === 'SPIKES' || t === 'LAVA';
+const isBlockedStep = t => t === 'VOID' || t === 'PILLAR' || t === 'CHASM' || isHazard(t);
+const unitAt = (s, x, y) => s.entities.find(e => e.alive && e.x === x && e.y === y) || null;
+const byId = (s, id) => s.entities.find(e => e.id === id);
+const playerOf = s => s.entities.find(e => e.kind === 'PLAYER') || null;
+const enemiesOf = s => s.entities.filter(e => e.alive && e.kind === 'ENEMY').sort((a, b) => a.spawn - b.spawn);
+const manhattan = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+const perkLevel = (s, id) => s.perks.reduce((n, p) => n + (p === id ? 1 : 0), 0);
+const clampCell = n => Math.max(0, Math.min(SIZE - 1, n));
+const sign = n => n > 0 ? 1 : (n < 0 ? -1 : 0);
+
+function addEntity(s, o) {
+  const e = Object.assign({ id:s.nextId++, alive:true, spawn:-1, hp:1, maxHp:1, type:undefined }, o);
+  s.entities.push(e);
+  return e;
+}
+function ev(ctx, t, data) { ctx.events.push(Object.assign({ t }, data)); }
+function takeEvents(ctx) { const e = ctx.events; ctx.events = []; return e; }
+
+/* ===========================================================================
+ * 1. Генерация арены (без тупиков и изолированных островков)
+ * ========================================================================= */
+function components(grid) {
+  const seen = new Set(), comps = [];
+  for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
+    const t = grid[y][x];
+    if (t === 'CHASM' || t === 'PILLAR' || seen.has(y * SIZE + x)) continue;
+    const q = [{ x, y }], comp = [];
+    seen.add(y * SIZE + x);
+    while (q.length) {
+      const c = q.shift(); comp.push(c);
+      for (const d of DIRS) {
+        const nx = c.x + d.dx, ny = c.y + d.dy;
+        if (!inBounds(nx, ny)) continue;
+        const nt = grid[ny][nx];
+        if (nt === 'CHASM' || nt === 'PILLAR') continue;
+        const k = ny * SIZE + nx;
+        if (seen.has(k)) continue;
+        seen.add(k); q.push({ x:nx, y:ny });
+      }
+    }
+    comps.push(comp);
+  }
+  return comps;
+}
+
+function enemyRoster(floor) {
+  if (floor === 1) return ['BRUTE','BRUTE','CHARGER','BOMBER'];
+  if (floor === 2) return ['BRUTE','CHARGER','SNIPER','BOMBER'];
+  return ['BRUTE','CHARGER','SNIPER','BOMBER','BRUTE'];
+}
+
+function tryLayout(s, enemyCount) {
+  const g = Array.from({ length:SIZE }, () => Array(SIZE).fill(TILE.FLOOR));
+  const ring = [];
+  for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++)
+    if (x === 0 || x === SIZE - 1 || y === 0 || y === SIZE - 1) ring.push({ x, y });
+
+  // 6–10 пропастей на внешнем кольце. Углы всегда пропасть: это гарантирует,
+  // что у оставшихся угловых клеток не бывает «висячих» островков.
+  const chasmCount = 6 + ri(s, 5);
+  for (const c of ring) if ((c.x === 0 || c.x === 4) && (c.y === 0 || c.y === 4)) g[c.y][c.x] = TILE.CHASM;
+  const rest = shuffle(s, ring.filter(c => g[c.y][c.x] === TILE.FLOOR));
+  for (let i = 0; i < chasmCount - 4; i++) g[rest[i].y][rest[i].x] = TILE.CHASM;
+
+  // 1–2 колонны в центральном 3×3, но не в точке спавна (2,2).
+  const center = [];
+  for (let y = 1; y <= 3; y++) for (let x = 1; x <= 3; x++) if (!(x === 2 && y === 2)) center.push({ x, y });
+  const pillarCount = 1 + ri(s, 2);
+  for (const c of shuffle(s, center).slice(0, pillarCount)) g[c.y][c.x] = TILE.PILLAR;
+
+  // 1–2 ловушки: не в центре и не вплотную к нему.
+  const hazCandidates = [];
+  for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++)
+    if (g[y][x] === TILE.FLOOR && manhattan({x,y}, {x:2,y:2}) >= 2) hazCandidates.push({ x, y });
+  const hazardCount = 1 + ri(s, 2);
+  for (const c of shuffle(s, hazCandidates).slice(0, hazardCount)) g[c.y][c.x] = rnd(s) < .5 ? TILE.SPIKES : TILE.LAVA;
+
+  const comps = components(g);
+  if (comps.length !== 1) return null;                 // нет недостижимых клеток
+  let spawn = { x:2, y:2 };
+  if (g[2][2] !== TILE.FLOOR) {
+    const near = DIRS.map(d => ({ x:2 + d.dx, y:2 + d.dy })).find(c => gTile(g, c.x, c.y) === TILE.FLOOR);
+    if (!near) return null;
+    spawn = near;
+  }
+  const main = comps[0];
+  const floorCells = main.filter(c => g[c.y][c.x] === TILE.FLOOR);
+  const adj = DIRS.filter(d => gTile(g, spawn.x + d.dx, spawn.y + d.dy) === TILE.FLOOR);
+  if (adj.length < 2) return null;                    // герой не в тупике
+  const gates = floorCells.filter(c => DIRS.some(d => {
+    const t = gTile(g, c.x + d.dx, c.y + d.dy);
+    return t === TILE.CHASM || t === 'VOID';
+  }));
+  if (gates.length < 2) return null;                  // есть куда сбрасывать врагов
+  const far = shuffle(s, floorCells.filter(c => manhattan(c, spawn) >= 2));
+  const barrelCount = 1 + ri(s, 2);
+  if (far.length < enemyCount + barrelCount + 1) return null;
+  return {
+    grid:g, spawn,
+    barrels:far.slice(0, barrelCount),
+    enemies:far.slice(barrelCount, barrelCount + enemyCount)
+  };
+}
+
+function fallbackLayout(s, enemyCount) {
+  // Заведомо связная арена на случай, если 300 случайных попыток не прошли валидацию.
+  const g = Array.from({ length:SIZE }, () => Array(SIZE).fill(TILE.FLOOR));
+  for (const c of [{x:0,y:0},{x:2,y:0},{x:4,y:0},{x:4,y:2},{x:4,y:4},{x:2,y:4},{x:0,y:4},{x:0,y:2}]) g[c.y][c.x] = TILE.CHASM;
+  g[1][1] = TILE.PILLAR; g[3][3] = TILE.PILLAR;
+  g[1][0] = TILE.SPIKES; g[3][4] = TILE.LAVA;
+  const spawn = { x:2, y:2 };
+  const floorCells = components(g)[0].filter(c => g[c.y][c.x] === TILE.FLOOR);
+  const far = shuffle(s, floorCells.filter(c => manhattan(c, spawn) >= 2));
+  const barrelCount = 1 + ri(s, 2);
+  return { grid:g, spawn, barrels:far.slice(0, barrelCount), enemies:far.slice(barrelCount, barrelCount + enemyCount) };
+}
+
+function generateFloor(s, floor, carry) {
+  const enemyCount = floor <= 2 ? 3 : (floor <= 5 ? 4 : 5);
+  let layout = null;
+  for (let attempt = 0; attempt < 300 && !layout; attempt++) layout = tryLayout(s, enemyCount);
+  if (!layout) layout = fallbackLayout(s, enemyCount);
+
+  s.grid = layout.grid;
+  s.entities = [];
+  addEntity(s, {
+    kind:'PLAYER', x:layout.spawn.x, y:layout.spawn.y,
+    hp:carry ? carry.hp : 3, maxHp:carry ? carry.maxHp : 3
+  });
+  for (const c of layout.barrels)
+    addEntity(s, { kind:'BARREL', type:'BARREL', x:c.x, y:c.y, hp:1, maxHp:1 });
+  const roster = enemyRoster(floor);
+  layout.enemies.forEach((c, i) => {
+    const type = (floor === MAX_FLOOR && i === 0) ? 'JUGGERNAUT' : pick(s, roster);
+    const hp = ENEMY_HP[type];
+    addEntity(s, { kind:'ENEMY', type, x:c.x, y:c.y, hp, maxHp:hp, spawn:i });
+  });
+}
+
+/* ===========================================================================
+ * 2. Урон, смерть, взрывы
+ * ========================================================================= */
+function queueBoom(s, u, ctx) {
+  if (ctx.boomSet.has(u.id)) return;
+  ctx.boomSet.add(u.id);
+  ctx.boomQueue.push({ id:u.id, x:u.x, y:u.y });
+}
+
+function killUnit(s, u, reason, ctx) {
+  if (!u.alive) return;
+  u.alive = false; u.hp = 0;
+  if (u.type === 'BOMBER') queueBoom(s, u, ctx);   // живая бомба взрывается при любой смерти
+  if (u.kind === 'ENEMY') {
+    s.kills++; ctx.kills++;
+    if (reason === 'CHASM' || reason === 'VOID') s.falls++;
+  }
+  ev(ctx, 'death', { id:u.id, x:u.x, y:u.y, reason, kind:u.kind, type:u.type });
+}
+
+function damage(s, u, amount, cause, ctx, opts) {
+  opts = opts || {};
+  if (!u || !u.alive) return;
+  if (u.kind === 'PLAYER' && !opts.ignoreShield && s.shield > 0) {
+    s.shield--;
+    ev(ctx, 'shield', { x:u.x, y:u.y, text:'ЩИТ!' });
+    return;
+  }
+  u.hp -= amount;
+  ev(ctx, 'damage', { id:u.id, x:u.x, y:u.y, amount, cause });
+  if (cause === 'WALL' || cause === 'CRUSH') ev(ctx, 'shake', { strength:1 });
+  // Бочка и живая бомба детонируют от ЛЮБОГО урона, даже если выжили.
+  if (u.type === 'BARREL' || u.type === 'BOMBER') queueBoom(s, u, ctx);
+  if (u.hp <= 0) killUnit(s, u, cause, ctx);
+}
+
+function moveUnit(s, u, x, y, ctx) {
+  const from = { x:u.x, y:u.y };
+  u.x = x; u.y = y;
+  ev(ctx, 'move', { id:u.id, from, to:{ x, y } });
+}
+
+function fallUnit(s, u, to, ctx, reason) {
+  ev(ctx, 'fall', { id:u.id, from:{ x:u.x, y:u.y }, to:{ x:to.x, y:to.y }, kind:u.kind, type:u.type });
+  ev(ctx, 'text', { x:clampCell(to.x), y:clampCell(to.y), text:'ПРОПАСТЬ!' });
+  killUnit(s, u, reason, ctx);
+}
+
+/* resolvePush: ядро удовольствия. Пошаговый импульс + рекурсивное домино. */
+function resolvePush(s, A, dx, dy, distance, ctx, depth) {
+  depth = depth || 0;
+  if (!A || !A.alive || depth > 8) return;
+  // Мини-босса сдвигает только на 1 клетку, но пропасть для него всё так же смертельна.
+  let dist = (A.type === 'JUGGERNAUT' && distance > 1) ? 1 : distance;
+  for (let step = 1; step <= dist && A.alive; step++) {
+    // Щит гасит один входящий толчок целиком (не только урон).
+    if (A.kind === 'PLAYER' && ctx.incoming && s.shield > 0) {
+      s.shield--;
+      ev(ctx, 'shield', { x:A.x, y:A.y, text:'ЩИТ!' });
+      return;
+    }
+    const nx = A.x + dx, ny = A.y + dy;
+    const t = tileAt(s, nx, ny);
+    if (!inBounds(nx, ny) || t === TILE.CHASM) { fallUnit(s, A, { x:nx, y:ny }, ctx, 'CHASM'); return; }
+    if (t === TILE.PILLAR) {
+      const dmg = (A.kind === 'ENEMY') ? 1 + perkLevel(s, 'SPIKED_WALLS') : 1;
+      ev(ctx, 'text', { x:A.x, y:A.y, text:'БАМ! -' + dmg });
+      damage(s, A, dmg, 'WALL', ctx);
+      return;
+    }
+    const B = unitAt(s, nx, ny);
+    if (B) {
+      ev(ctx, 'text', { x:nx, y:ny, text:'БАМ! -1' });
+      damage(s, A, 1, 'CRUSH', ctx);
+      damage(s, B, 1, 'CRUSH', ctx);
+      ev(ctx, 'shake', { strength:1 });
+      if (B.alive) resolvePush(s, B, dx, dy, 1, ctx, depth + 1);
+      return;
+    }
+    moveUnit(s, A, nx, ny, ctx);
+    if (isHazard(t)) { damage(s, A, 1, 'HAZARD', ctx); return; }
+  }
+}
+
+/* Очередь взрывов: 2 урона в квадрате 3×3 + разлет соседей на 1 клетку. */
+function flushBooms(s, ctx) {
+  const prev = ctx.incoming;
+  ctx.incoming = true;                 // щит защищает и от разлета
+  let guard = 0;
+  while (ctx.boomQueue.length && guard++ < 64) {
+    const b = ctx.boomQueue.shift();
+    if (ctx.exploded.has(b.id) || !inBounds(b.x, b.y)) continue;
+    ctx.exploded.add(b.id);
+    ev(ctx, 'explosion', { x:b.x, y:b.y });
+    ev(ctx, 'shake', { strength:2 });
+    const victims = s.entities.filter(e =>
+      e.alive && Math.abs(e.x - b.x) <= 1 && Math.abs(e.y - b.y) <= 1
+    );
+    const p = victims.find(v => v.kind === 'PLAYER');
+    let protectedPlayer = false;
+    if (p && s.shield > 0) {
+      s.shield--; protectedPlayer = true;
+      ev(ctx, 'shield', { x:p.x, y:p.y, text:'ЩИТ!' });
+    }
+    for (const v of victims) {
+      if (v === p && protectedPlayer) continue;
+      damage(s, v, 2, 'BOOM', ctx, { ignoreShield:true });
+    }
+    const survivors = victims.filter(v => v.alive && !(v === p && protectedPlayer))
+      .sort((a, c) => (a.spawn - c.spawn) || (a.id - c.id));
+    for (const v of survivors) {
+      const ddx = v.x - b.x, ddy = v.y - b.y;
+      if (ddx === 0 && ddy === 0) continue;
+      let kx = 0, ky = 0;
+      if (Math.abs(ddx) >= Math.abs(ddy)) kx = sign(ddx); else ky = sign(ddy);
+      resolvePush(s, v, kx, ky, 1, ctx);
+    }
+  }
+  ctx.incoming = prev;
+}
+
+function cleanupDead(s) { s.entities = s.entities.filter(e => e.alive); }
+const floorClear = s => enemiesOf(s).length === 0;
+const playerAlive = s => { const p = playerOf(s); return !!(p && p.alive); };
+
+function hitPlayer(s, amount, dx, dy, cause, ctx) {
+  const p = playerOf(s);
+  if (!p || !p.alive) return;
+  if (s.shield > 0) {                 // один удар ИЛИ один толчок = одна зарядка щита
+    s.shield--;
+    ev(ctx, 'shield', { x:p.x, y:p.y, text:'ЩИТ!' });
+    return;
+  }
+  damage(s, p, amount, cause, ctx, { ignoreShield:true });
+  if (p.alive && (dx || dy)) resolvePush(s, p, dx, dy, 1, ctx);
+}
+
+/* ===========================================================================
+ * 3. Намерения врагов (не более 2 активных угрозы за ход)
+ * ========================================================================= */
+const passableVoluntary = (s, x, y) => {
+  const t = tileAt(s, x, y);
+  return inBounds(x, y) && t === TILE.FLOOR && !unitAt(s, x, y);
+};
+
+function chooseStep(s, e, p, align) {
+  const dx = p.x - e.x, dy = p.y - e.y;
+  const hor = { x:sign(dx), y:0 }, ver = { x:0, y:sign(dy) };
+  const opts = align
+    ? (Math.abs(dx) <= Math.abs(dy) ? [hor, ver] : [ver, hor])
+    : (Math.abs(dx) >= Math.abs(dy) ? [hor, ver] : [ver, hor]);
+  for (const o of opts) {
+    if ((o.x || o.y) && passableVoluntary(s, e.x + o.x, e.y + o.y))
+      return { x:e.x + o.x, y:e.y + o.y };
+  }
+  for (const d of DIRS) if (passableVoluntary(s, e.x + d.dx, e.y + d.dy))
+    return { x:e.x + d.dx, y:e.y + d.dy };
+  return null;
+}
+
+function lineCells(s, e, dx, dy, stopAtUnit) {
+  const cells = [];
+  for (let i = 1; i <= 4; i++) {
+    const x = e.x + dx * i, y = e.y + dy * i;
+    if (!inBounds(x, y)) break;
+    const t = s.grid[y][x];
+    if (t === TILE.PILLAR) break;
+    cells.push({ x, y });
+    if (stopAtUnit && unitAt(s, x, y)) break;
+  }
+  return cells;
+}
+
+function computeIntent(s, e) {
+  const p = playerOf(s);
+  const base = { id:e.id, kind:'WAIT', dx:0, dy:0, cells:[], target:null, type:e.type };
+  if (!p || !p.alive) return base;
+  const dx = p.x - e.x, dy = p.y - e.y;
+  const aligned = (dx === 0) !== (dy === 0);   // ровно одна координата совпадает
+  switch (e.type) {
+    case 'BRUTE':
+    case 'JUGGERNAUT': {
+      if (manhattan(e, p) === 1) {
+        return Object.assign(base, {
+          kind:'ATTACK', dx:sign(dx), dy:sign(dy),
+          cells:[{ x:p.x, y:p.y }], target:{ x:p.x, y:p.y }
+        });
+      }
+      const step = chooseStep(s, e, p, false);
+      return Object.assign(base, { kind:step ? 'MOVE' : 'WAIT', target:step, cells:step ? [step] : [] });
+    }
+    case 'CHARGER': {
+      if (aligned) {
+        const cx = dx === 0 ? 0 : sign(dx), cy = dy === 0 ? 0 : sign(dy);
+        return Object.assign(base, { kind:'CHARGE', dx:cx, dy:cy, cells:lineCells(s, e, cx, cy, false) });
+      }
+      const step = chooseStep(s, e, p, true);
+      return Object.assign(base, { kind:step ? 'MOVE' : 'WAIT', target:step, cells:step ? [step] : [] });
+    }
+    case 'SNIPER': {
+      if (aligned) {
+        const cx = dx === 0 ? 0 : sign(dx), cy = dy === 0 ? 0 : sign(dy);
+        const cells = lineCells(s, e, cx, cy, true);
+        const target = cells.length ? cells[cells.length - 1] : null;
+        return Object.assign(base, { kind:'SHOOT', dx:cx, dy:cy, cells, target });
+      }
+      const step = chooseStep(s, e, p, true);
+      return Object.assign(base, { kind:step ? 'MOVE' : 'WAIT', target:step, cells:step ? [step] : [] });
+    }
+    case 'BOMBER': {
+      const step = chooseStep(s, e, p, false);
+      return Object.assign(base, { kind:step ? 'MOVE' : 'WAIT', target:step, cells:step ? [step] : [] });
+    }
+    default: return base;
+  }
+}
+
+function startPlayerTurn(s) {
+  s.mode = 'BASIC';
+  s.stunned = [];
+  s.shield = 0;                        // щит от «Ждать» живёт только до начала следующего хода
+  s.activeIds = [];
+  s.intents = [];
+  if (s.phase !== 'PLAYER') return;
+  const active = enemiesOf(s).slice(0, 2);       // строго по очереди спавна, без внезапных активаций
+  s.activeIds = active.map(e => e.id);
+  s.intents = active.map(e => computeIntent(s, e));
+}
+
+function enemyPhase(s, ctx) {
+  for (const it of s.intents) {
+    const e = byId(s, it.id);
+    if (!e || !e.alive) continue;                // убит — ход просто пропускается
+    if (s.stunned.includes(e.id)) {
+      ev(ctx, 'text', { x:e.x, y:e.y, text:'ОГЛУШЁН!' });
+      continue;
+    }
+    switch (it.kind) {
+      case 'ATTACK': {
+        const p = playerOf(s);
+        if (p && p.alive && p.x === it.target.x && p.y === it.target.y)
+          hitPlayer(s, 1, it.dx, it.dy, 'ATTACK', ctx);
+        else ev(ctx, 'text', { x:it.target.x, y:it.target.y, text:'МИМО!' });
+        break;
+      }
+      case 'CHARGE':
+        resolvePush(s, e, it.dx, it.dy, 4, ctx);
+        break;
+      case 'SHOOT': {
+        let hit = null;
+        for (const c of it.cells) {
+          const u = unitAt(s, c.x, c.y);
+          if (u && u.id !== e.id) { hit = u; break; }
+        }
+        ev(ctx, 'shot', { from:{ x:e.x, y:e.y }, cells:it.cells, dx:it.dx, dy:it.dy });
+        if (hit) {
+          if (hit.kind === 'PLAYER') hitPlayer(s, 1, it.dx, it.dy, 'SHOT', ctx);
+          else {
+            damage(s, hit, 1, 'SHOT', ctx);
+            if (hit.alive) resolvePush(s, hit, it.dx, it.dy, 1, ctx);
+          }
+        }
+        break;
+      }
+      case 'MOVE': {
+        const c = it.target;
+        if (c && passableVoluntary(s, c.x, c.y)) moveUnit(s, e, c.x, c.y, ctx);
+        break;
+      }
+      default: break;
+    }
+  }
+}
+
+/* ===========================================================================
+ * 4. Действия игрока (ровно 1 ход = 1 действие)
+ * ========================================================================= */
+const cdLength = s => Math.max(0, 2 - perkLevel(s, 'LONG_CHAINS'));
+const hookCdLength = s => Math.max(0, cdLength(s) - Math.max(0, perkLevel(s, 'LUCKY_HARPOON') - 1));
+
+function doHook(s, p, d, ctx) {
+  if (s.hookCd > 0) return false;
+  const fx = p.x + d.dx, fy = p.y + d.dy;
+  const frontTile = tileAt(s, fx, fy);
+  if (frontTile === TILE.PILLAR || frontTile === 'VOID') { cancel(ctx, fx, fy, 'НЕТ ПУТИ'); return false; }
+  let target = null, dist = 0;
+  for (let i = 2; i <= 4; i++) {                  // вплотную (i=1) крюк не нужен
+    const x = p.x + d.dx * i, y = p.y + d.dy * i;
+    if (!inBounds(x, y)) break;
+    if (s.grid[y][x] === TILE.PILLAR) break;
+    const u = unitAt(s, x, y);
+    if (u) { target = u; dist = i; break; }
+  }
+  if (!target || (target.kind !== 'ENEMY' && target.kind !== 'BARREL')) {
+    cancel(ctx, p.x, p.y, 'НЕТ ЦЕЛИ'); return false;
+  }
+  ev(ctx, 'hook', { from:{ x:p.x, y:p.y }, to:{ x:target.x, y:target.y } });
+  // Тянем по прямой до клетки прямо перед героем.
+  for (let i = dist - 1; i >= 1 && target.alive; i--) {
+    const x = p.x + d.dx * i, y = p.y + d.dy * i;
+    const t = s.grid[y][x];
+    if (t === TILE.CHASM) { fallUnit(s, target, { x, y }, ctx, 'CHASM'); break; }
+    const other = unitAt(s, x, y);
+    if (other) {
+      ev(ctx, 'text', { x, y, text:'БАМ! -1' });
+      damage(s, target, 1, 'CRUSH', ctx);
+      damage(s, other, 1, 'CRUSH', ctx);
+      ev(ctx, 'shake', { strength:1 });
+      break;
+    }
+    moveUnit(s, target, x, y, ctx);
+    if (isHazard(t)) { damage(s, target, 1, 'HAZARD', ctx); break; }
+  }
+  s.hookCd = hookCdLength(s);
+  ctx.used = 'HOOK';
+  if (perkLevel(s, 'LUCKY_HARPOON') > 0 && target.kind === 'ENEMY' && !target.alive) {
+    s.hookCd = 0;
+    ev(ctx, 'text', { x:p.x, y:p.y, text:'ПЕРЕЗАРЯДКА!' });
+  }
+  return true;
+}
+
+function doThrow(s, p, d, ctx) {
+  if (s.throwCd > 0) return false;
+  const fx = p.x + d.dx, fy = p.y + d.dy;
+  const front = unitAt(s, fx, fy);
+  if (!front || front.kind === 'PLAYER') { cancel(ctx, fx, fy, 'НЕКОГО БРОСАТЬ'); return false; }
+  const bx = p.x - d.dx, by = p.y - d.dy;
+  const behindIn = inBounds(bx, by);
+  const behindTile = behindIn ? s.grid[by][bx] : 'VOID';
+  const behindUnit = behindIn ? unitAt(s, bx, by) : null;
+  const canFly = !behindIn || (behindTile !== TILE.PILLAR && !behindUnit);
+  if (canFly) {
+    if (!behindIn) {                              // край карты = бездна
+      fallUnit(s, front, { x:bx, y:by }, ctx, 'VOID');
+    } else {
+      moveUnit(s, front, bx, by, ctx);
+      if (behindTile === TILE.CHASM) fallUnit(s, front, { x:bx, y:by }, ctx, 'CHASM');
+      else if (isHazard(behindTile)) damage(s, front, 1, 'HAZARD', ctx);
+    }
+  } else {                                       // стена или юнит позади => смена мест
+    const ex = front.x, ey = front.y, px = p.x, py = p.y;
+    p.x = ex; p.y = ey; front.x = px; front.y = py;
+    ev(ctx, 'move', { id:p.id, from:{ x:px, y:py }, to:{ x:ex, y:ey } });
+    ev(ctx, 'move', { id:front.id, from:{ x:ex, y:ey }, to:{ x:px, y:py } });
+    ev(ctx, 'text', { x:px, y:py, text:'СМЕНА МЕСТ' });
+    if (front.kind === 'ENEMY') { s.stunned.push(front.id); ev(ctx, 'text', { x:px, y:py, text:'ОГЛУШЁН!' }); }
+  }
+  const lvl = perkLevel(s, 'SHOCK_LANDING');
+  if (lvl > 0) {
+    const near = enemiesOf(s).filter(e => e.id !== front.id &&
+      Math.max(Math.abs(e.x - p.x), Math.abs(e.y - p.y)) === 1);
+    for (const e of near) {
+      const ddx = e.x - p.x, ddy = e.y - p.y;
+      let kx = 0, ky = 0;
+      if (Math.abs(ddx) >= Math.abs(ddy)) kx = sign(ddx); else ky = sign(ddy);
+      resolvePush(s, e, kx, ky, lvl, ctx);
+    }
+  }
+  s.throwCd = cdLength(s);
+  ctx.used = 'THROW';
+  return true;
+}
+
+function cancel(ctx, x, y, text) {
+  ev(ctx, 'shake', { strength:0 });
+  ev(ctx, 'text', { x:clampCell(x), y:clampCell(y), text });
+}
+
+function doDirection(s, key, ctx) {
+  const d = DIR[key];
+  const p = playerOf(s);
+  if (!d || !p || !p.alive) return false;
+  if (s.mode === 'HOOK') return doHook(s, p, d, ctx);
+  if (s.mode === 'THROW') return doThrow(s, p, d, ctx);
+  const nx = p.x + d.dx, ny = p.y + d.dy;
+  const t = tileAt(s, nx, ny);
+  // Защита от случайной смерти: базовый шаг в пропасть / лаву / шипы не тратит ход.
+  if (isBlockedStep(t)) { cancel(ctx, nx, ny, 'НЕТ ПУТИ'); return false; }
+  const u = unitAt(s, nx, ny);
+  if (!u) { moveUnit(s, p, nx, ny, ctx); return true; }
+  if (u.kind === 'PLAYER') return false;
+  resolvePush(s, u, d.dx, d.dy, 2 + perkLevel(s, 'HEAVY_RAM'), ctx);   // тяжёлый таран: 3+
+  return true;
+}
+
+/* ===========================================================================
+ * 5. Ход целиком и структура забега
+ * ========================================================================= */
+function createGame(seed) {
+  const n = (typeof seed === 'number' && Number.isFinite(seed)) ? (seed >>> 0) : 1;
+  const s = {
+    v:1, seed:n, rng:n || 1, floor:1, turn:1,
+    grid:[], entities:[], nextId:1,
+    shield:0, perks:[], hookCd:0, throwCd:0, mode:'BASIC',
+    activeIds:[], intents:[], stunned:[],
+    phase:'PLAYER', perkChoices:[],
+    kills:0, falls:0
+  };
+  generateFloor(s, 1, null);
+  startPlayerTurn(s);
+  return s;
+}
+
+function tickCooldowns(s, used) {
+  if (used !== 'HOOK' && s.hookCd > 0) s.hookCd--;
+  if (used !== 'THROW' && s.throwCd > 0) s.throwCd--;
+}
+
+function choosePerkCards(s) {
+  const fresh = shuffle(s, PERKS.filter(p => perkLevel(s, p.id) === 0));
+  const owned = shuffle(s, PERKS.filter(p => perkLevel(s, p.id) > 0));
+  return fresh.concat(owned).slice(0, 3).map(p => p.id);
+}
+
+function describePerk(id, level) {
+  switch (id) {
+    case 'HEAVY_RAM':      return 'Базовый толчок отбрасывает цель на ' + (2 + level) + ' клетки.';
+    case 'SPIKED_WALLS':   return 'Удар врага о колонну наносит ' + (1 + level) + ' урона.';
+    case 'LUCKY_HARPOON':  return 'Крюк, сразу убивший цель, перезаряжается.' +
+                            (level > 1 ? ' Доп. откат крюка −' + (level - 1) + '.' : '');
+    case 'SHOCK_LANDING':  return 'После броска враги рядом отлетают на ' + level + ' кл. от героя.';
+    case 'LONG_CHAINS':    return 'Откат крюка и броска — ' + Math.max(0, 2 - level) + ' хода.';
+    case 'SECOND_BREATH':  return '+1 к макс. HP и полное лечение.';
+    default: return '';
+  }
+}
+
+function endFloor(s, ctx) {
+  s.hookCd = 0; s.throwCd = 0; s.shield = 0; s.mode = 'BASIC';
+  s.activeIds = []; s.intents = []; s.stunned = [];
+  s.turn += 1;
+  if (s.floor >= MAX_FLOOR) { s.phase = 'WIN'; s.perkChoices = []; ev(ctx, 'text', { x:2, y:2, text:'КРАЙ ДОСТИГНУТ!' }); }
+  else { s.phase = 'PERKS'; s.perkChoices = choosePerkCards(s); }
+}
+
+function choosePerk(state, id) {
+  const s = clone(state);
+  if (s.phase !== 'PERKS' || !s.perkChoices.includes(id)) return s;
+  const p = playerOf(s);
+  s.perks.push(id);
+  if (id === 'SECOND_BREATH' && p) { p.maxHp += 1; p.hp = p.maxHp; }
+  s.floor += 1;
+  s.phase = 'PLAYER'; s.perkChoices = [];
+  s.mode = 'BASIC'; s.hookCd = 0; s.throwCd = 0; s.shield = 0;
+  const carry = p ? { hp:p.hp, maxHp:p.maxHp } : null;
+  generateFloor(s, s.floor, carry);             // HP и перки переносятся между этажами
+  startPlayerTurn(s);
+  return s;
+}
+
+function setMode(state, mode) {
+  const s = clone(state);
+  if (s.phase !== 'PLAYER') return s;
+  if (mode !== 'BASIC') {
+    if (mode === 'HOOK' && s.hookCd > 0) return s;
+    if (mode === 'THROW' && s.throwCd > 0) return s;
+  }
+  s.mode = (s.mode === mode) ? 'BASIC' : mode;
+  return s;
+}
+
+/**
+ * performTurn: полный детерминированный ход. Возвращает кадры для покадровой
+ * анимации: [ действие игрока+взрывы, фаза врагов, начало следующего хода ].
+ */
+function performTurn(state, action) {
+  const s = clone(state);
+  const ctx = {
+    events:[], boomQueue:[], boomSet:new Set(), exploded:new Set(),
+    kills:0, incoming:false, used:null
+  };
+  if (s.phase !== 'PLAYER') return { state, frames:[], spent:false };
+  const startKills = s.kills;
+  let ok = false;
+  if (action.type === 'DIR') ok = doDirection(s, action.dir, ctx);
+  else if (action.type === 'WAIT') {
+    s.shield = Math.min(2, s.shield + 1);
+    ev(ctx, 'text', { x:playerOf(s).x, y:playerOf(s).y, text:'+1 ЩИТ' });
+    ok = true;
+  }
+  if (!ok) {
+    return { state:clone(state), frames:[{ state:clone(state), events:takeEvents(ctx) }], spent:false };
+  }
+
+  flushBooms(s, ctx);
+  cleanupDead(s);
+  const frames = [{ state:clone(s), events:takeEvents(ctx) }];
+
+  if (playerAlive(s) && !floorClear(s)) {
+    ctx.incoming = true;
+    enemyPhase(s, ctx);
+    ctx.incoming = false;
+    flushBooms(s, ctx);
+    cleanupDead(s);
+    frames.push({ state:clone(s), events:takeEvents(ctx) });
+  }
+
+  if (!playerAlive(s)) {
+    s.phase = 'DEAD'; s.mode = 'BASIC'; s.activeIds = []; s.intents = []; s.stunned = [];
+  } else if (floorClear(s)) {
+    endFloor(s, ctx);
+  } else {
+    tickCooldowns(s, ctx.used);
+    s.turn += 1;
+    startPlayerTurn(s);
+  }
+  if (s.kills - startKills >= 2) {
+    ev(ctx, 'text', { x:2, y:1, text:(s.kills - startKills >= 3 ? 'ТРИПЛЕТ!' : 'ДУПЛЕТ!') });
+  }
+  cleanupDead(s);
+  frames.push({ state:clone(s), events:takeEvents(ctx) });
+  return { state:s, frames, spent:true };
+}
+
+/* Подсветка допустимых направлений и превью цели для UI. */
+function preview(s) {
+  const p = playerOf(s);
+  const out = { mode:s.mode, dirs:{} };
+  if (!p) return out;
+  for (const d of DIRS) {
+    const fx = p.x + d.dx, fy = p.y + d.dy;
+    const info = { valid:false, label:'', mark:null, kind:'BLOCK', ray:[] };
+    if (s.mode === 'HOOK') {
+      const ft = tileAt(s, fx, fy);
+      let target = null;
+      if (ft !== TILE.PILLAR && ft !== 'VOID') {
+        for (let i = 2; i <= 4; i++) {
+          const x = p.x + d.dx * i, y = p.y + d.dy * i;
+          if (!inBounds(x, y)) break;
+          info.ray.push({ x, y });
+          if (s.grid[y][x] === TILE.PILLAR) break;
+          if (unitAt(s, x, y)) { target = unitAt(s, x, y); break; }
+        }
+      }
+      if (target) {
+        info.valid = true; info.kind = 'PULL'; info.mark = { x:fx, y:fy };
+        if (ft === TILE.CHASM) info.label = '!';
+        else if (isHazard(ft)) info.label = '-1';
+        else if (unitAt(s, fx, fy)) info.label = 'БАМ';
+        else info.label = '+';
+      } else info.label = '—';
+    } else if (s.mode === 'THROW') {
+      const front = unitAt(s, fx, fy);
+      if (front && front.kind !== 'PLAYER') {
+        const bx = p.x - d.dx, by = p.y - d.dy;
+        const inb = inBounds(bx, by);
+        const t = inb ? s.grid[by][bx] : 'VOID';
+        const u = inb ? unitAt(s, bx, by) : null;
+        info.valid = true; info.mark = inb ? { x:bx, y:by } : { x:bx, y:by };
+        if (!inb) { info.kind = 'VOID'; info.label = '!'; }
+        else if (t === TILE.CHASM) { info.kind = 'FALL'; info.label = '!'; }
+        else if (isHazard(t)) { info.kind = 'HAZARD'; info.label = '-1'; }
+        else if (t === TILE.PILLAR || u) { info.kind = 'SWAP'; info.mark = { x:fx, y:fy }; info.label = '↔'; }
+        else { info.kind = 'LAND'; info.label = '+'; }
+      } else info.label = '—';
+    } else {
+      const t = tileAt(s, fx, fy);
+      if (isBlockedStep(t)) info.label = '✕';
+      else {
+        const u = unitAt(s, fx, fy);
+        info.valid = true; info.mark = { x:fx, y:fy };
+        info.kind = u ? 'PUSH' : 'STEP';
+        info.label = u ? '>' : '·';
+      }
+    }
+    out.dirs[d.key] = info;
+  }
+  return out;
+}
+
+root.EdgeEngine = {
+  SIZE, MAX_FLOOR, TILE, DIRS, DIR, PERKS, ENEMY_HP,
+  createGame, performTurn, setMode, choosePerk, choosePerkCards, describePerk,
+  preview, clone, inBounds, tileAt, unitAt, byId, playerOf, enemiesOf, perkLevel,
+  generateFloor, startPlayerTurn, computeIntent, resolvePush, flushBooms
+};
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+/* ===== ENGINE END ===== */
+</script>
+
+<script id="ui-script">
+(function () {
+'use strict';
+const E = globalThis.EdgeEngine;
+const SAVE_KEY = 'edge-push:v1';
+const $ = q => document.querySelector(q);
+
+const ICON_PATHS = {
+  hook:'<path d="M12 3v10a4 4 0 1 1-8 0"/><circle cx="12" cy="3" r="1.6"/>',
+  throw:'<path d="M4 9a8 8 0 0 1 13-3M20 3v5h-5"/><path d="M20 15a8 8 0 0 1-13 3M4 21v-5h5"/>',
+  shield:'<path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5l-8-3z"/>',
+  HEAVY_RAM:'<path d="M3 12h13M11 7l5 5-5 5"/>',
+  SPIKED_WALLS:'<path d="M4 4h16v16H4zM4 10h16M4 16h16M10 4v6M16 10v6M8 16v4"/>',
+  LUCKY_HARPOON:'<path d="M12 3v10a4 4 0 1 1-8 0M8 9l4 4"/><circle cx="12" cy="3" r="1.6"/>',
+  SHOCK_LANDING:'<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>',
+  LONG_CHAINS:'<circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/>',
+  SECOND_BREATH:'<path d="M12 20S4 15 4 9.5A4 4 0 0 1 12 8a4 4 0 0 1 8 1.5C20 15 12 20 12 20z"/>'
+};
+function icon(name) {
+  return '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" ' +
+         'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+         (ICON_PATHS[name] || '') + '</svg>';
+}
+for (const el of document.querySelectorAll('[data-icon]')) el.innerHTML = icon(el.dataset.icon);
+
+const tilesEl = $('#tiles'), unitsEl = $('#entities'), fxEl = $('#fx');
+const tgEl = $('#telegraph'), fxSvg = $('#fxSvg'), overlay = $('#overlay');
+const boardWrap = $('#boardWrap'), toastEl = $('#toast');
+const unitNodes = new Map();
+let state = null, busy = false, modal = null, swipeStart = null, suppressClick = false;
+let shakeTimer = null, toastTimer = null;
+
+/* ---------- сохранение ---------- */
+function load() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (s.v !== 1 || !Array.isArray(s.grid) || s.grid.length !== 5 ||
+        !Array.isArray(s.entities) || !s.entities.length || !s.phase) return null;
+    return s;
+  } catch (e) { return null; }
+}
+function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) {} }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function vibrate(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  document.getElementById('app').classList.add('toasting');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastEl.classList.remove('show');
+    document.getElementById('app').classList.remove('toasting');
+  }, 1700);
+}
+
+const restored = load();
+state = restored || E.createGame((Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0);
+
+/* ---------- плитки ---------- */
+for (let i = 0; i < 25; i++) {
+  const d = document.createElement('div');
+  d.className = 'tile t-FLOOR';
+  tilesEl.appendChild(d);
+}
+
+const cx = x => x * 20 + 10;
+const cy = y => y * 20 + 10;
+const rect = (x, y, cls, inset) =>
+  '<rect class="' + cls + '" x="' + (x * 20 + (inset === undefined ? 2 : inset)) +
+  '" y="' + (y * 20 + (inset === undefined ? 2 : inset)) +
+  '" width="' + (20 - 2 * (inset === undefined ? 2 : inset)) +
+  '" height="' + (20 - 2 * (inset === undefined ? 2 : inset)) + '" rx="3"/>';
+function arrowHead(x, y, dx, dy, color) {
+  const tx = cx(x) + dx * 8, ty = cy(y) + dy * 8;
+  const px = -dy, py = dx;
+  const b1 = (cx(x) - dx + px * 4.5) + ',' + (cy(y) - dy + py * 4.5);
+  const b2 = (cx(x) - dx - px * 4.5) + ',' + (cy(y) - dy - py * 4.5);
+  return '<polygon points="' + tx + ',' + ty + ' ' + b1 + ' ' + b2 + '" fill="' + color + '"/>';
+}
+
+/* ---------- SVG: намерения + превью ---------- */
+function buildTelegraph(s, pv, showPreview) {
+  let h = '';
+  for (const it of (s.intents || [])) {
+    const e = E.byId(s, it.id);
+    if (!e || !e.alive) continue;
+    const stunned = (s.stunned || []).includes(e.id);
+    const red = stunned ? '#7a8497' : '#ff4757';
+    if (it.kind === 'ATTACK' && it.target) {
+      h += '<rect class="tg-attack" x="' + (it.target.x * 20 + 2) + '" y="' + (it.target.y * 20 + 2) +
+           '" width="16" height="16" rx="3" stroke="' + red + '"/>';
+      h += '<text x="' + cx(it.target.x) + '" y="' + cy(it.target.y) +
+           '" fill="' + red + '" font-size="9" font-weight="900" text-anchor="middle" dominant-baseline="central">!</text>';
+    } else if ((it.kind === 'CHARGE' || it.kind === 'SHOOT') && it.cells.length) {
+      for (const c of it.cells) h += rect(c.x, c.y, 'tg-cell', 3);
+      const last = it.cells[it.cells.length - 1];
+      h += '<line class="' + (it.kind === 'SHOOT' ? 'tg-thin' : 'tg-line') + '" x1="' + cx(e.x) +
+           '" y1="' + cy(e.y) + '" x2="' + cx(last.x) + '" y2="' + cy(last.y) +
+           '" stroke="' + red + '"/>';
+      h += arrowHead(last.x, last.y, it.dx, it.dy, red);
+    } else if (it.kind === 'MOVE' && it.target) {
+      h += rect(it.target.x, it.target.y, 'tg-move', 5);
+      h += '<line class="tg-move" x1="' + cx(e.x) + '" y1="' + cy(e.y) +
+           '" x2="' + cx(it.target.x) + '" y2="' + cy(it.target.y) + '"/>';
+    }
+  }
+  if (showPreview && s.phase === 'PLAYER') {
+    const p = E.playerOf(s);
+    if (p && pv) {
+      for (const d of E.DIRS) {
+        const info = pv.dirs[d.key];
+        if (!info) continue;
+        if (pv.mode === 'HOOK' && info.ray.length) {
+          let ex = p.x, ey = p.y;
+          for (const c of info.ray) { ex = c.x; ey = c.y; }
+          h += '<line class="pv-ray" x1="' + cx(p.x) + '" y1="' + cy(p.y) +
+               '" x2="' + cx(ex) + '" y2="' + cy(ey) + '"/>';
+        }
+        if (info.valid && info.mark) {
+          const m = info.mark;
+          if (m.x >= 0 && m.x < 5 && m.y >= 0 && m.y < 5) {
+            if (pv.mode === 'BASIC') {
+              h += '<circle class="pv-dot" cx="' + cx(m.x) + '" cy="' + cy(m.y) +
+                   '" r="' + (info.kind === 'PUSH' ? 3.2 : 2.1) + '"/>';
+            } else {
+              h += '<rect class="pv-mark" x="' + (m.x * 20 + 2) + '" y="' + (m.y * 20 + 2) +
+                   '" width="16" height="16" rx="3"/>';
+              if (info.label && info.label !== '·')
+                h += '<text class="pv-label" x="' + cx(m.x) + '" y="' + cy(m.y) + '">' + info.label + '</text>';
+            }
+          } else {
+            h += arrowHead(clampView(m.x), clampView(m.y), -d.dx, -d.dy, '#00e5ff');
+            h += '<text class="pv-label" x="' + cx(clampView(m.x)) + '" y="' + cy(clampView(m.y)) + '">!</text>';
+          }
+        }
+      }
+    }
+  }
+  tgEl.innerHTML = h;
+}
+function clampView(n) { return Math.max(0, Math.min(4, n)); }
+
+/* ---------- юниты ---------- */
+function createUnitNode(e) {
+  const d = document.createElement('div');
+  d.className = 'unit spawn u-' + (e.type || e.kind);
+  d.innerHTML = '<div class="body"></div><div class="pips"></div><div class="badge"></div>';
+  setTimeout(() => d.classList.remove('spawn'), 240);
+  unitsEl.appendChild(d);
+  return d;
+}
+function updateUnitNode(n, e, s) {
+  const active = e.kind === 'ENEMY' && (s.activeIds || []).includes(e.id);
+  const stunned = (s.stunned || []).includes(e.id);
+  n.classList.toggle('active', active);
+  n.classList.toggle('inactive', e.kind === 'ENEMY' && !active);
+  n.classList.toggle('stunned', stunned);
+  n.classList.toggle('shielded', e.kind === 'PLAYER' && s.shield > 0);
+  const badge = n.querySelector('.badge');
+  badge.textContent = stunned ? 'Z' : (active ? '⚡' : '');
+  const pips = n.querySelector('.pips');
+  if (e.kind === 'ENEMY') {
+    let h = '';
+    for (let i = 0; i < e.maxHp; i++) h += '<span class="pip' + (i < e.hp ? '' : ' off') + '"></span>';
+    pips.innerHTML = h;
+  } else pips.innerHTML = '';
+}
+function renderUnits(s) {
+  const seen = new Set();
+  for (const e of s.entities) {
+    if (!e.alive) continue;
+    let n = unitNodes.get(e.id);
+    if (!n) { n = createUnitNode(e); unitNodes.set(e.id, n); }
+    seen.add(e.id);
+    n.style.transform = 'translate(' + (e.x * 100) + '%,' + (e.y * 100) + '%)';
+    updateUnitNode(n, e, s);
+  }
+  for (const [id, n] of Array.from(unitNodes)) {
+    if (!seen.has(id)) { n.remove(); unitNodes.delete(id); }
+  }
+}
+
+/* ---------- эффекты ---------- */
+function shake() {
+  boardWrap.classList.remove('shake');
+  void boardWrap.offsetWidth;
+  boardWrap.classList.add('shake');
+  clearTimeout(shakeTimer);
+  shakeTimer = setTimeout(() => boardWrap.classList.remove('shake'), 150);
+}
+function posStyle(x, y) {
+  return 'left:' + (clampView(x) * 20) + '%;top:' + (clampView(y) * 20) + '%';
+}
+function floatText(text, x, y, color) {
+  const d = document.createElement('div');
+  d.className = 'fx-text';
+  d.style.cssText = posStyle(x, y) + (color ? ';color:' + color : '');
+  d.textContent = text;
+  fxEl.appendChild(d);
+  setTimeout(() => d.remove(), 1000);
+}
+function ghost(from, to, type) {
+  const colors = { PLAYER:'#00e5ff', BRUTE:'#ff4757', CHARGER:'#ff9a2f', SNIPER:'#a95cff',
+                   BOMBER:'#ffd028', JUGGERNAUT:'#a8334a', BARREL:'#d89544' };
+  const d = document.createElement('div');
+  d.className = 'fx-ghost';
+  d.style.setProperty('--gc', colors[type] || '#ff4757');
+  d.style.setProperty('--fx', from.x);
+  d.style.setProperty('--fy', from.y);
+  d.style.setProperty('--tx', to.x);
+  d.style.setProperty('--ty', to.y);
+  d.innerHTML = '<i></i>';
+  fxEl.appendChild(d);
+  setTimeout(() => d.remove(), 600);
+}
+function boom(x, y) {
+  const d = document.createElement('div');
+  d.className = 'fx-boom';
+  d.style.cssText = posStyle(x, y);
+  fxEl.appendChild(d);
+  setTimeout(() => d.remove(), 560);
+}
+function beam(from, to, color) {
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', from.x * 20 + 10); line.setAttribute('y1', from.y * 20 + 10);
+  line.setAttribute('x2', to.x * 20 + 10); line.setAttribute('y2', to.y * 20 + 10);
+  line.setAttribute('stroke', color); line.setAttribute('stroke-width', '1.6');
+  line.setAttribute('stroke-linecap', 'round');
+  fxSvg.appendChild(line);
+  setTimeout(() => line.remove(), 280);
+}
+const dmgLabel = {
+  WALL:'БАМ!', CRUSH:'БАМ!', HAZARD:'ЖЖЁТ!', BOOM:'ВЗРЫВ', SHOT:'ВЫСТРЕЛ', ATTACK:'УДАР'
+};
+function playFx(events) {
+  for (const e of events) {
+    switch (e.t) {
+      case 'move': break;                            // скольжение делает CSS-transition
+      case 'fall':
+        ghost(e.from, e.to, e.type || e.kind);
+        floatText('ПРОПАСТЬ!', clampView(e.to.x), clampView(e.to.y), '#ffd166');
+        vibrate([30, 20, 40]);
+        break;
+      case 'death':
+        if (e.reason !== 'CHASM' && e.reason !== 'VOID') floatText('×', e.x, e.y, '#ff8a95');
+        break;
+      case 'damage':
+        floatText((dmgLabel[e.cause] || '') + ' -' + e.amount, e.x, e.y,
+                  e.cause === 'BOOM' ? '#ffcf6b' : '#ffffff');
+        break;
+      case 'explosion':
+        boom(e.x, e.y); shake(); vibrate([30, 20, 40]);
+        break;
+      case 'shake': shake(); break;
+      case 'shield': floatText(e.text || 'ЩИТ!', e.x, e.y, '#00e5ff'); break;
+      case 'text': floatText(e.text, e.x, e.y, '#ffe9a3'); break;
+      case 'hook': beam(e.from, e.to, '#00e5ff'); break;
+      case 'shot': {
+        const last = e.cells.length ? e.cells[e.cells.length - 1] : e.from;
+        beam(e.from, last, '#ff4757');
+        break;
+      }
+      default: break;
+    }
+  }
+}
+
+/* ---------- HUD / кнопки ---------- */
+const MODE_LABEL = { BASIC:'ШАГ', HOOK:'КРЮК', THROW:'БРОСОК' };
+function renderHud(s) {
+  const p = E.playerOf(s);
+  $('#floorNum').textContent = s.floor + '/' + E.MAX_FLOOR;
+  let hearts = '';
+  if (p) for (let i = 0; i < p.maxHp; i++)
+    hearts += '<span class="' + (i < p.hp ? 'full' : 'empty') + '">' + (i < p.hp ? '♥' : '♡') + '</span>';
+  $('#hearts').innerHTML = hearts;
+  const sp = $('#shieldPill');
+  sp.classList.toggle('off', s.shield <= 0);
+  sp.textContent = 'ЩИТ ×' + s.shield;
+  $('#perkIcons').innerHTML = s.perks.map(id => {
+    const meta = E.PERKS.find(q => q.id === id);
+    return '<span class="perk-chip" title="' + (meta ? meta.title : id) + '">' + icon(id) + '</span>';
+  }).join('');
+  const threats = (s.intents || []).filter(it => {
+    const u = E.byId(s, it.id); return u && u.alive && !(s.stunned || []).includes(u.id);
+  }).length;
+  $('#statusLine').textContent = 'ХОД ' + s.turn + ' · ⚡' + threats + ' · УБИТО ' + s.kills;
+  const tips = {
+    BASIC:'Шаг или <b>толчок на 2 клетки</b> · цель — край',
+    HOOK:'<b>Крюк:</b> выбери луч с целью',
+    THROW:'<b>Бросок:</b> выбери врага перед собой'
+  };
+  $('#tip').innerHTML = tips[s.mode] || tips.BASIC;
+  $('#modeLabel').textContent = MODE_LABEL[s.mode] || MODE_LABEL.BASIC;
+  $('#turnLabel').textContent = 'ХОД ' + s.turn;
+}
+function renderControls(s, pv) {
+  const playable = s.phase === 'PLAYER' && !busy && !modal;
+  const hb = $('#hookBtn'), tb = $('#throwBtn');
+  hb.classList.toggle('on', s.mode === 'HOOK');
+  tb.classList.toggle('on', s.mode === 'THROW');
+  hb.classList.toggle('cooling', s.hookCd > 0);
+  tb.classList.toggle('cooling', s.throwCd > 0);
+  const hc = $('#hookCd'), tc = $('#throwCd');
+  hc.textContent = s.hookCd > 0 ? s.hookCd : '';
+  tc.textContent = s.throwCd > 0 ? s.throwCd : '';
+  hc.classList.toggle('ready', s.hookCd === 0);
+  tc.classList.toggle('ready', s.throwCd === 0);
+  for (const btn of document.querySelectorAll('.dir')) {
+    const info = pv && pv.dirs[btn.dataset.dir];
+    const ok = playable && info && info.valid;
+    btn.classList.toggle('ok', !!ok && s.mode !== 'BASIC');
+    btn.classList.toggle('bad', playable && info && !info.valid);
+  }
+}
+
+/* ---------- оверлеи ---------- */
+function perkCard(id, level) {
+  const meta = E.PERKS.find(p => p.id === id);
+  return '<button class="perk-card" data-perk="' + id + '" type="button">' +
+    '<span class="pc-ico">' + icon(id) + '</span><span><span class="pc-name">' + meta.title + '</span>' +
+    '<span class="pc-lvl"> УР. ' + level + '</span><div class="pc-desc">' + E.describePerk(id, level) + '</div></span></button>';
+}
+function renderOverlay(s) {
+  if (modal === 'restart') {
+    overlay.innerHTML = '<div class="ov-title">НАЧАТЬ ЗАНОВО?</div>' +
+      '<div class="ov-sub">Текущий забег будет сброшен. Прогресс сохраняется только для последней партии.</div>' +
+      '<div class="ov-row"><button class="ov-btn" data-act="new" type="button">НОВЫЙ ЗАБЕГ</button>' +
+      '<button class="ov-btn ghost" data-act="close" type="button">ОТМЕНА</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (modal === 'help') {
+    overlay.innerHTML = '<div class="ov-title">КАК ИГРАТЬ</div>' +
+      '<div class="rules">' +
+      '<b>Цель:</b> 7 этажей. Прямых ударов нет — сбрасывайте врагов в пропасть, лаву, бочки, колонны и друг в друга.<br><br>' +
+      '<b>Ход:</b> свайп в любом месте экрана или крестовина. Пустая клетка — шаг, занятая — толчок на 2 клетки. Время идёт только в момент хода.<br><br>' +
+      '<b>Крюк:</b> тянет первого врага/бочку на луче (дистанция 2–4) вплотную к герою. Луч за колонной не работает.<br><br>' +
+      '<b>Бросок:</b> враг перед вами перелетает за спину; если там стена или юнит — смена мест и оглушение.<br><br>' +
+      '<b>Ждать:</b> пропустить ход, получить щит на один удар или толчок до начала следующего хода.<br><br>' +
+      '<b>Активные угрозы:</b> не больше двух за ход. Остальные враги «спят» и не двигаются. Красные стрелки показывают их намерение: уйдите в сторону или подставьте союзника.<br><br>' +
+      '<b>Бочки и бомберы</b> взрываются от любого урона: 2 урона в квадрате 3×3 и разлёт соседей.<br><br>' +
+      'После каждого этажа — 1 из 3 перков. Партия сохраняется после каждого действия.' +
+      '</div><div class="ov-row"><button class="ov-btn" data-act="close" type="button">ПОНЯТНО</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (s.phase === 'PERKS') {
+    overlay.innerHTML = '<div class="ov-title">ЭТАЖ ' + s.floor + ' ПРОЙДЕН</div>' +
+      '<div class="ov-sub">Выберите один перк. Откаты сброшены, щит обнуляется.</div>' +
+      s.perkChoices.map(id => perkCard(id, s.perks.filter(p => p === id).length + 1)).join('') +
+      '<div class="ov-sub">HP ' + (E.playerOf(s) ? E.playerOf(s).hp + '/' + E.playerOf(s).maxHp : '') +
+      ' · УБИТО ' + s.kills + '</div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (s.phase === 'WIN' || s.phase === 'DEAD') {
+    const win = s.phase === 'WIN';
+    overlay.innerHTML = '<div class="ov-title" style="color:' + (win ? '#00e5ff' : '#ff4757') + '">' +
+      (win ? 'КРАЙ ДОСТИГНУТ' : 'ВЫ ПОГИБЛИ') + '</div>' +
+      '<div class="ov-sub">' + (win ? 'Все 7 этажей зачищены. Остров держится на ваших толчках.' :
+        'Герой сорвался или был добит. Остров ждёт следующую попытку.') + '</div>' +
+      '<div class="ov-stats">Этаж: ' + s.floor + '/' + E.MAX_FLOOR + '<br>Побед: ' + s.kills +
+      '<br>В бездну: ' + s.falls + '<br>Перков: ' + s.perks.length + '</div>' +
+      '<div class="ov-row"><button class="ov-btn" data-act="new" type="button">НОВЫЙ ЗАБЕГ</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  overlay.classList.add('hidden');
+  overlay.innerHTML = '';
+}
+
+/* ---------- главный рендер ---------- */
+function render(s, events, showPreview) {
+  const tileNodes = tilesEl.children;
+  for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++)
+    tileNodes[y * 5 + x].className = 'tile t-' + s.grid[y][x];
+  renderUnits(s);
+  const pv = E.preview(s);
+  buildTelegraph(s, pv, !!showPreview);
+  renderHud(s);
+  renderControls(s, pv);
+  renderOverlay(s);
+  if (events && events.length) playFx(events);
+}
+
+/* ---------- ввод ---------- */
+function newRun() {
+  state = E.createGame((Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0);
+  for (const [, n] of Array.from(unitNodes)) n.remove();
+  unitNodes.clear();
+  fxSvg.innerHTML = ''; fxEl.innerHTML = '';
+  modal = null; busy = false;
+  save(); render(state, [], true);
+}
+function toggleMode(mode) {
+  if (busy || modal || state.phase !== 'PLAYER') return;
+  const ns = E.setMode(state, mode);
+  if (ns.mode === state.mode) {
+    const cd = mode === 'HOOK' ? state.hookCd : state.throwCd;
+    toast(cd > 0 ? 'ОТКАТ: ' + cd + ' ХОДА' : 'РЕЖИМ НЕДОСТУПЕН');
+    shake();
+    return;
+  }
+  state = ns; save(); render(state, [], true);
+  vibrate(15);
+}
+async function doAction(action) {
+  if (busy || modal || state.phase !== 'PLAYER') return;
+  const res = E.performTurn(state, action);
+  if (!res.spent) { render(res.state, res.frames[0].events, true); vibrate(15); return; }
+  busy = true;
+  vibrate(15);
+  for (let i = 0; i < res.frames.length; i++) {
+    const f = res.frames[i];
+    render(f.state, f.events, false);
+    if (i < res.frames.length - 1) await sleep(185);
+  }
+  state = res.state;
+  save();
+  render(state, [], true);
+  busy = false;
+}
+const doDir = key => doAction({ type:'DIR', dir:key });
+
+for (const btn of document.querySelectorAll('.dir'))
+  btn.addEventListener('click', () => { if (suppressClick) return; doDir(btn.dataset.dir); });
+$('#hookBtn').addEventListener('click', () => { if (suppressClick) return; toggleMode('HOOK'); });
+$('#throwBtn').addEventListener('click', () => { if (suppressClick) return; toggleMode('THROW'); });
+$('#waitBtn').addEventListener('click', () => { if (suppressClick) return; doAction({ type:'WAIT' }); });
+$('#restartBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'restart'; renderOverlay(state); });
+$('#helpBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'help'; renderOverlay(state); });
+
+overlay.addEventListener('click', e => {
+  if (suppressClick) return;
+  const perk = e.target.closest('[data-perk]');
+  if (perk) {
+    state = E.choosePerk(state, perk.dataset.perk);
+    save(); render(state, [], true);
+    toast('ЭТАЖ ' + state.floor + ' · ВПЕРЁД');
+    return;
+  }
+  const act = e.target.closest('[data-act]');
+  if (!act) return;
+  if (act.dataset.act === 'new') newRun();
+  else { modal = null; renderOverlay(state); }
+});
+
+/* Свайп в ЛЮБОЙ точке экрана, порог 30px. */
+document.addEventListener('pointerdown', e => {
+  swipeStart = { x:e.clientX, y:e.clientY, id:e.pointerId };
+}, { passive:true });
+document.addEventListener('pointerup', e => {
+  if (!swipeStart) return;
+  const dx = e.clientX - swipeStart.x, dy = e.clientY - swipeStart.y;
+  swipeStart = null;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 30) return;
+  suppressClick = true;
+  setTimeout(() => { suppressClick = false; }, 320);
+  const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
+  doDir(dir);
+}, { passive:true });
+document.addEventListener('pointercancel', () => { swipeStart = null; }, { passive:true });
+
+/* Клавиатура — для десктопа и доступности. */
+document.addEventListener('keydown', e => {
+  if (e.repeat) return;
+  const k = e.key.toLowerCase();
+  if (modal) {
+    if (k === 'escape') { modal = null; renderOverlay(state); }
+    return;
+  }
+  if (k === 'arrowup' || k === 'w') doDir('UP');
+  else if (k === 'arrowdown' || k === 's') doDir('DOWN');
+  else if (k === 'arrowleft' || k === 'a') doDir('LEFT');
+  else if (k === 'arrowright' || k === 'd') doDir('RIGHT');
+  else if (k === '1') toggleMode('HOOK');
+  else if (k === '2') toggleMode('THROW');
+  else if (k === '3' || k === ' ') doAction({ type:'WAIT' });
+  else if (k === 'r') { modal = 'restart'; renderOverlay(state); }
+  else if (k === '?' || k === 'h') { modal = 'help'; renderOverlay(state); }
+  else return;
+  e.preventDefault();
+});
+
+save();                                   // мгновенное автосохранение: сразу при старте
+render(state, [], true);
+if (restored) toast('ПАРТИЯ ВОССТАНОВЛЕНА · ЭТАЖ ' + state.floor);
+else toast('СВАЙП ИЛИ КРЕСТОВИНА — ВАШ ХОД');
+})();
+</script>
+</body>
+</html>
