@@ -8,9 +8,24 @@
 <title>КРАЙ · Edge Push</title>
 <style>
 :root{
+  /* ===== COLOR CONTRACT / ПАЛИТРА =====
+     ОДИН ЦВЕТ = ОДНА РОЛЬ. Защищённые оттенки нельзя использовать как декор.
+     Рецепт: NATO APP-6 (синий=свой, красный=чужой) + игровая color language
+     (красный=опасность, жёлтый=объект, зелёный=безопасный ход) + WCAG 1.4.1
+     (цвет всегда дублируется формой/паттерном/подписью). Красный и зелёный
+     разведены в reddish и bluish-green, чтобы их различали при дейтеранопии.
+       СВОЙ              --ally    #00e5ff  герой, щит, HP, кнопки игрока
+       ЧУЖОЙ             --hostile #ff4757  ВСЕ враги, урон, намерения
+       ОБЪЕКТ/ВНИМАНИЕ  --neutral #ffb037  бочки, откаты, ⚡, подсказки
+       ОПАСНАЯ МЕСТНОСТЬ--hazard  #ff7a1a  лава и шипы (+ штриховка)
+       БЕЗОПАСНЫЙ ХОД   --safe    #5cffb0  превью шага/крюка/броска
+       ИНЕРТНОЕ          --tile/--void      пол, колонна, пропасть, фон */
   --bg:#0f111a; --void:#090b12; --tile:#252a3a; --tile-edge:#171b28;
-  --cyan:#00e5ff; --cyan-dim:#0a7c8c; --red:#ff4757; --amber:#ffb037;
+  --ally:#00e5ff; --hostile:#ff4757; --neutral:#ffb037;
+  --hazard:#ff7a1a; --safe:#5cffb0;
   --ink:#e8edf7; --muted:#8b96ad; --line:rgba(160,180,215,.14);
+  /* алиасы: весь старый UI автоматически следует контракту */
+  --cyan:var(--ally); --cyan-dim:#0a7c8c; --red:var(--hostile); --amber:var(--neutral);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0;overflow:hidden}
@@ -39,8 +54,8 @@ body{
   padding:4px 9px;border-radius:999px;white-space:nowrap;
 }
 .floor-pill b{color:var(--ink);font-size:13px}
-.hearts{display:flex;gap:3px;font-size:19px;line-height:1;flex:1;text-shadow:0 0 10px rgba(255,71,87,.35)}
-.hearts .full{color:var(--red)}
+.hearts{display:flex;gap:3px;font-size:19px;line-height:1;flex:1;text-shadow:0 0 10px rgba(0,229,255,.4)}
+.hearts .full{color:var(--ally)}
 .hearts .empty{color:#394154}
 .shield-pill{
   font-size:12px;color:var(--cyan);border:1px solid rgba(0,229,255,.45);
@@ -95,13 +110,13 @@ body{
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
 }
 .t-SPIKES{
-  background:repeating-linear-gradient(45deg,#5b2a2e 0 6px,#3a1c24 6px 12px);
-  box-shadow:inset 0 0 0 1px rgba(255,120,80,.22),inset 0 -4px 8px rgba(0,0,0,.5);
+  background:repeating-linear-gradient(45deg,#7a3c12 0 6px,#48230b 6px 12px);
+  box-shadow:inset 0 0 0 1px rgba(255,122,26,.5),inset 0 -4px 8px rgba(0,0,0,.5);
 }
-.t-SPIKES::after{content:"▲ ▲";position:absolute;inset:0;display:grid;place-items:center;font-size:9px;color:rgba(255,150,110,.65);letter-spacing:1px}
+.t-SPIKES::after{content:"▲ ▲";position:absolute;inset:0;display:grid;place-items:center;font-size:9px;color:rgba(255,176,90,.9);letter-spacing:1px}
 .t-LAVA{
-  background:radial-gradient(70% 70% at 50% 60%,#ff9b32,#b93a17 65%,#4a160e);
-  box-shadow:inset 0 0 0 1px rgba(255,180,80,.35),0 0 12px rgba(255,110,30,.25);
+  background:radial-gradient(70% 70% at 50% 60%,#ffb45e,#ff7a1a 55%,#7a2c08);
+  box-shadow:inset 0 0 0 1px rgba(255,122,26,.55),0 0 12px rgba(255,122,26,.3);
   animation:lava 2.6s ease-in-out infinite alternate;
 }
 .t-LAVA::after{content:"♨";position:absolute;inset:0;display:grid;place-items:center;font-size:20px;color:rgba(255,235,190,.65)}
@@ -126,51 +141,53 @@ body{
 }
 .u-PLAYER .body::after{content:"";width:34%;height:34%;border-radius:22%;background:rgba(4,45,55,.42);transform:rotate(45deg)}
 .unit.shielded .body{box-shadow:0 0 0 3px rgba(0,229,255,.75),0 0 22px rgba(0,229,255,.8),inset 0 2px 0 rgba(255,255,255,.65)}
+/* ЧУЖОЙ: пять форм — один красный. Форма, а не оттенок, говорит кто это. */
 .u-BRUTE .body,.u-JUGGERNAUT .body{
-  border-radius:16%;background:linear-gradient(150deg,#ff7a83,#e2263c 62%,#8c1225);
+  border-radius:16%;background:linear-gradient(150deg,#ff7a83,var(--hostile) 62%,#8c1225);
   border:2px solid #ffb3ba;box-shadow:0 5px 0 rgba(0,0,0,.45),0 0 12px rgba(255,71,87,.35);
 }
-.u-JUGGERNAUT .body{background:linear-gradient(150deg,#a8334a,#5b0c22 70%);border-color:#ff8a72;box-shadow:0 0 0 2px #ff8a5b,inset 0 0 0 3px #3a0e18,0 5px 0 rgba(0,0,0,.5)}
-.u-JUGGERNAUT .body::after{content:"";width:36%;height:36%;border:2px solid #ffb493;border-radius:50%}
+.u-JUGGERNAUT .body{background:linear-gradient(150deg,#a8334a,#5b0c22 70%);border-color:#ffb3ba;box-shadow:0 0 0 2px rgba(255,71,87,.85),inset 0 0 0 3px #3a0e18,0 5px 0 rgba(0,0,0,.5)}
+.u-JUGGERNAUT .body::after{content:"";width:36%;height:36%;border:2px solid #ffb3ba;border-radius:50%}
 .u-CHARGER .body{
   border-radius:12%;transform:rotate(45deg);
-  background:linear-gradient(150deg,#ffd08a,#ff8a1f 60%,#a34b05);
-  border:2px solid #ffe0ad;box-shadow:0 0 12px rgba(255,150,40,.45);
+  background:linear-gradient(150deg,#ff9aa3,var(--hostile) 60%,#8c1225);
+  border:2px solid #ffb3ba;box-shadow:0 0 12px rgba(255,71,87,.45);
 }
-.u-CHARGER .body::after{content:"";position:absolute;inset:22%;border-radius:50%;background:rgba(70,30,0,.35)}
+.u-CHARGER .body::after{content:"";position:absolute;inset:22%;border-radius:50%;background:rgba(70,0,12,.4)}
 .u-SNIPER .body{
   clip-path:polygon(50% 3%,97% 94%,3% 94%);
-  background:linear-gradient(180deg,#d9a3ff,#8b3ee8 60%,#4a168f);
+  background:linear-gradient(180deg,#ff9aa3,#f0334b 60%,#8c1225);
   filter:drop-shadow(0 3px 0 rgba(0,0,0,.5));
 }
 .u-BOMBER .body{
-  border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3a8,#ffd028 55%,#c07a05);
-  border:2px solid #fff0a8;box-shadow:0 0 14px rgba(255,210,40,.55);
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffc0c6,var(--hostile) 55%,#8c1225);
+  border:2px solid #ffb3ba;box-shadow:0 0 14px rgba(255,71,87,.55);
 }
-.u-BOMBER .body::before{content:"";position:absolute;top:-22%;left:52%;width:3px;height:22%;background:#ffe9a0;border-radius:2px;transform:rotate(22deg)}
-.u-BOMBER .body::after{content:"";width:100%;height:100%;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(120,60,0,.18)}
+.u-BOMBER .body::before{content:"";position:absolute;top:-22%;left:52%;width:3px;height:22%;background:#ffb3ba;border-radius:2px;transform:rotate(22deg)}
+.u-BOMBER .body::after{content:"";width:100%;height:100%;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(90,0,18,.25)}
 .u-BARREL .body{
-  border-radius:22%;background:linear-gradient(180deg,#9a642f,#5e3a1b);
-  border:2px solid #e0a24d;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25),0 4px 0 rgba(0,0,0,.45);
-  color:#ffde9b;font-size:15px;
+  border-radius:22%;background:linear-gradient(180deg,#ffd98a,var(--neutral) 55%,#8a5410);
+  border:2px solid #ffe0a0;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25),0 4px 0 rgba(0,0,0,.45);
+  color:#3a2300;font-size:15px;
 }
 .u-BARREL .body::after{content:"!"}
 .pips{position:absolute;bottom:6%;left:0;right:0;display:flex;justify-content:center;gap:2px}
 .pip{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8)}
 .pip.off{background:#fff;opacity:.22}
-.badge{position:absolute;top:-1%;right:2%;font-size:11px;line-height:1;filter:drop-shadow(0 1px 2px #000)}
+.badge{position:absolute;top:-1%;right:2%;font-size:11px;line-height:1;color:var(--neutral);filter:drop-shadow(0 1px 2px #000)}
+.unit.stunned .badge{color:var(--muted)}
 .unit.active .badge{animation:zap 1s ease-in-out infinite}
 @keyframes zap{50%{transform:scale(1.35);filter:drop-shadow(0 0 5px #ffd23f)}}
 .tg-attack{fill:rgba(255,71,87,.08);stroke:#ff4757;stroke-width:1.4;animation:pulse 1s ease-in-out infinite}
 .tg-cell{fill:rgba(255,71,87,.14)}
 .tg-line{stroke:#ff4757;stroke-width:1.1;stroke-linecap:round;stroke-dasharray:3 2;animation:pulse 1s ease-in-out infinite}
 .tg-thin{stroke:#ff5c7a;stroke-width:.55;stroke-linecap:round;animation:pulse 1s ease-in-out infinite}
-.tg-move{fill:none;stroke:rgba(255,176,55,.75);stroke-width:1;stroke-dasharray:2 2}
+.tg-move{fill:rgba(255,71,87,.10);stroke:rgba(255,71,87,.8);stroke-width:1;stroke-dasharray:2 2}
 @keyframes pulse{50%{opacity:.4}}
-.pv-ray{stroke:rgba(0,229,255,.55);stroke-width:.9;stroke-dasharray:2.5 2}
-.pv-mark{fill:rgba(0,229,255,.12);stroke:#00e5ff;stroke-width:1.2;animation:pulse 1.2s ease-in-out infinite}
-.pv-dot{fill:rgba(0,229,255,.42)}
-.pv-label{fill:#9ff7ff;font-size:9px;font-weight:800;text-anchor:middle;dominant-baseline:central;font-family:inherit}
+.pv-ray{stroke:rgba(92,255,176,.55);stroke-width:.9;stroke-dasharray:2.5 2}
+.pv-mark{fill:rgba(92,255,176,.12);stroke:var(--safe);stroke-width:1.2;animation:pulse 1.2s ease-in-out infinite}
+.pv-dot{fill:rgba(92,255,176,.5)}
+.pv-label{fill:#c6ffe4;font-size:9px;font-weight:800;text-anchor:middle;dominant-baseline:central;font-family:inherit}
 .tip{
   font-size:11.5px;color:var(--muted);text-align:center;min-height:16px;
   padding:0 14px;letter-spacing:.02em;
@@ -222,7 +239,7 @@ body{
   display:grid;place-items:center;
 }
 .dir:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 rgba(0,0,0,.42)}
-.dir.ok{border-color:rgba(0,229,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 0 rgba(0,0,0,.42),0 0 14px rgba(0,229,255,.13)}
+.dir.ok{border-color:rgba(92,255,176,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 0 rgba(0,0,0,.42),0 0 14px rgba(92,255,176,.16)}
 .dir.bad{opacity:.36}
 .dir[data-dir="UP"]{grid-area:1/2}
 .dir[data-dir="LEFT"]{grid-area:2/1}
@@ -242,7 +259,20 @@ body{
 #overlay.hidden{display:none}
 #overlay:not(.hidden) ~ #toast{opacity:0;transition:none}
 #overlay.legend-mode{justify-content:flex-start;overflow:auto;touch-action:pan-y;gap:8px;padding-top:14px}
+/* «Понятно» всегда в пределах экрана, даже если легенда прокручивается */
+#overlay.legend-mode .ov-row{
+  position:sticky;bottom:0;z-index:1;width:100%;max-width:420px;padding:6px 0 2px;
+  background:rgba(6,8,14,.97);
+}
 .legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px;width:100%;max-width:420px}
+.lg-pal{width:100%;max-width:420px;display:grid;grid-template-columns:1fr 1fr;gap:5px 8px}
+.lg-pal-item{
+  display:flex;align-items:center;gap:6px;min-height:30px;padding:3px 6px;border-radius:9px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+}
+.lg-pal-chip{width:16px;height:16px;flex:none;border-radius:5px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.lg-pal-item b{display:block;font-size:9.5px;line-height:1.15;letter-spacing:.04em;color:var(--ink)}
+.lg-pal-item small{display:block;font-size:8.5px;line-height:1.15;color:var(--muted)}
 .lg-group{width:100%;max-width:420px;font-size:9.5px;font-weight:900;letter-spacing:.12em;color:var(--cyan);margin-top:2px}
 .lg-item{
   display:flex;align-items:center;gap:6px;min-height:36px;padding:4px 6px;border-radius:10px;
@@ -250,10 +280,10 @@ body{
 }
 .lg-item b{display:block;font-size:10.5px;line-height:1.2;color:var(--ink)}
 .lg-item small{display:block;font-size:9.5px;line-height:1.2;color:var(--muted)}
-.lg-ico,.lg-tile,.lg-sym{width:28px;height:28px;flex:none}
+.lg-ico,.lg-tile,.lg-sym{width:28px;height:28px;flex:none;pointer-events:none}
 .lg-ico{display:grid;place-items:center}
 .lg-ico .body{width:74%;height:74%;position:relative;display:grid;place-items:center}
-.lg-tile{border-radius:6px;margin:0}
+.lg-tile{position:relative;overflow:hidden;display:block;border-radius:6px;margin:0}
 .lg-tile.t-LAVA::after{font-size:14px}
 .lg-tile.t-SPIKES::after{font-size:7px}
 .lg-sym{
@@ -265,16 +295,21 @@ body{
 .icon-btn svg{width:16px;height:16px}
 .tut-links{display:flex;gap:6px}
 @media (max-height:700px){
-  #overlay.legend-mode{gap:4px;padding:8px 10px}
-  .ov-title{font-size:17px}
-  .ov-sub{font-size:10px;line-height:1.3}
-  .ov-btn{min-height:40px}
-  .ov-btn.small{min-height:32px;padding:5px 8px;font-size:9px}
-  .lg-item{min-height:28px;padding:2px 4px}
+  #overlay.legend-mode{gap:3px;padding:6px 10px}
+  #overlay.legend-mode .ov-row{padding:4px 0 1px}
+  .ov-title{font-size:16px}
+  .ov-sub{font-size:9.5px;line-height:1.25;max-width:none}
+  .ov-btn{min-height:36px}
+  .ov-btn.small{min-height:30px;padding:4px 7px;font-size:9px}
+  .legend-grid,.lg-pal{gap:3px 6px}
+  .lg-pal{grid-template-columns:repeat(3,1fr)}
+  .lg-item,.lg-pal-item{min-height:26px;padding:2px 4px}
+  .lg-pal-chip{width:12px;height:12px}
+  .lg-pal-item b{font-size:8.5px}.lg-pal-item small{font-size:7.5px}
   .lg-ico,.lg-tile,.lg-sym{width:21px;height:21px}
   .lg-item b{font-size:9.5px}
-  .lg-item small{font-size:8.5px;line-height:1.15}
-  .lg-group{margin-top:0;font-size:9px}
+  .lg-item small{font-size:8px;line-height:1.15}
+  .lg-group{margin-top:0;font-size:8.5px}
 }
 .ov-title{font-size:22px;font-weight:900;letter-spacing:.1em;text-align:center;color:var(--cyan);text-shadow:0 0 18px rgba(0,229,255,.4)}
 .ov-sub{font-size:12px;color:var(--muted);text-align:center;max-width:340px;line-height:1.5}
@@ -347,7 +382,7 @@ body{
   100%{opacity:0;transform:translateY(-42px) scale(1)}
 }
 .fx-ghost{position:absolute;left:0;top:0;width:20%;height:20%;display:grid;place-items:center;animation:ghostfall .55s ease-in forwards}
-.fx-ghost i{display:block;width:74%;height:74%;border-radius:30%;background:var(--gc,#ff4757);box-shadow:0 0 14px var(--gc,#ff4757)}
+.fx-ghost i{display:block;width:74%;height:74%;border-radius:30%;background:var(--gc,var(--hostile));box-shadow:0 0 14px var(--gc,var(--hostile))}
 @keyframes ghostfall{
   0%{opacity:.95;transform:translate(calc(var(--fx)*100%),calc(var(--fy)*100%)) scale(1)}
   100%{opacity:0;transform:translate(calc(var(--tx)*100%),calc(var(--ty)*100%)) scale(.05) rotate(35deg)}
@@ -1224,6 +1259,13 @@ const E = globalThis.EdgeEngine;
 const SAVE_KEY = 'edge-push:v1';
 const $ = q => document.querySelector(q);
 
+/* COLOR CONTRACT в JS — значения синхронизированы с :root в <style>.
+   Менять ТОЛЬКО вместе: тесты сверяют палитру CSS и этот объект. */
+const PAL = {
+  ally:'#00e5ff', hostile:'#ff4757', neutral:'#ffb037',
+  hazard:'#ff7a1a', safe:'#5cffb0', inert:'#7a8497'
+};
+
 const ICON_PATHS = {
   hook:'<path d="M12 3v10a4 4 0 1 1-8 0"/><circle cx="12" cy="3" r="1.6"/>',
   throw:'<path d="M4 9a8 8 0 0 1 13-3M20 3v5h-5"/><path d="M20 15a8 8 0 0 1-13 3M4 21v-5h5"/>',
@@ -1387,7 +1429,7 @@ function buildTelegraph(s, pv, showPreview) {
     const e = E.byId(s, it.id);
     if (!e || !e.alive) continue;
     const stunned = (s.stunned || []).includes(e.id);
-    const red = stunned ? '#7a8497' : '#ff4757';
+    const red = stunned ? PAL.inert : PAL.hostile;
     if (it.kind === 'ATTACK' && it.target) {
       h += '<rect class="tg-attack" x="' + (it.target.x * 20 + 2) + '" y="' + (it.target.y * 20 + 2) +
            '" width="16" height="16" rx="3" stroke="' + red + '"/>';
@@ -1431,7 +1473,7 @@ function buildTelegraph(s, pv, showPreview) {
                 h += '<text class="pv-label" x="' + cx(m.x) + '" y="' + cy(m.y) + '">' + info.label + '</text>';
             }
           } else {
-            h += arrowHead(clampView(m.x), clampView(m.y), -d.dx, -d.dy, '#00e5ff');
+            h += arrowHead(clampView(m.x), clampView(m.y), -d.dx, -d.dy, PAL.safe);
             h += '<text class="pv-label" x="' + cx(clampView(m.x)) + '" y="' + cy(clampView(m.y)) + '">!</text>';
           }
         }
@@ -1502,11 +1544,12 @@ function floatText(text, x, y, color) {
   setTimeout(() => d.remove(), 1000);
 }
 function ghost(from, to, type) {
-  const colors = { PLAYER:'#00e5ff', BRUTE:'#ff4757', CHARGER:'#ff9a2f', SNIPER:'#a95cff',
-                   BOMBER:'#ffd028', JUGGERNAUT:'#a8334a', BARREL:'#d89544' };
+  const colors = { PLAYER:PAL.ally, BRUTE:PAL.hostile, CHARGER:PAL.hostile,
+                   SNIPER:PAL.hostile, BOMBER:PAL.hostile, JUGGERNAUT:PAL.hostile,
+                   BARREL:PAL.neutral };
   const d = document.createElement('div');
   d.className = 'fx-ghost';
-  d.style.setProperty('--gc', colors[type] || '#ff4757');
+  d.style.setProperty('--gc', colors[type] || PAL.hostile);
   d.style.setProperty('--fx', from.x);
   d.style.setProperty('--fy', from.y);
   d.style.setProperty('--tx', to.x);
@@ -1540,26 +1583,26 @@ function playFx(events) {
       case 'move': break;                            // скольжение делает CSS-transition
       case 'fall':
         ghost(e.from, e.to, e.type || e.kind);
-        floatText('ПРОПАСТЬ!', clampView(e.to.x), clampView(e.to.y), '#ffd166');
+        floatText('ПРОПАСТЬ!', clampView(e.to.x), clampView(e.to.y), PAL.neutral);
         vibrate([30, 20, 40]);
         break;
       case 'death':
-        if (e.reason !== 'CHASM' && e.reason !== 'VOID') floatText('×', e.x, e.y, '#ff8a95');
+        if (e.reason !== 'CHASM' && e.reason !== 'VOID') floatText('×', e.x, e.y, PAL.hostile);
         break;
       case 'damage':
         floatText((dmgLabel[e.cause] || '') + ' -' + e.amount, e.x, e.y,
-                  e.cause === 'BOOM' ? '#ffcf6b' : '#ffffff');
+                  e.cause === 'BOOM' ? PAL.hazard : PAL.hostile);
         break;
       case 'explosion':
         boom(e.x, e.y); shake(); vibrate([30, 20, 40]);
         break;
       case 'shake': shake(); break;
-      case 'shield': floatText(e.text || 'ЩИТ!', e.x, e.y, '#00e5ff'); break;
-      case 'text': floatText(e.text, e.x, e.y, '#ffe9a3'); break;
-      case 'hook': beam(e.from, e.to, '#00e5ff'); break;
+      case 'shield': floatText(e.text || 'ЩИТ!', e.x, e.y, PAL.ally); break;
+      case 'text': floatText(e.text, e.x, e.y, PAL.neutral); break;
+      case 'hook': beam(e.from, e.to, PAL.safe); break;
       case 'shot': {
         const last = e.cells.length ? e.cells[e.cells.length - 1] : e.from;
-        beam(e.from, last, '#ff4757');
+        beam(e.from, last, PAL.hostile);
         break;
       }
       default: break;
@@ -1624,14 +1667,23 @@ function perkCard(id, level) {
     '<span class="pc-lvl"> УР. ' + level + '</span><div class="pc-desc">' + E.describePerk(id, level) + '</div></span></button>';
 }
 /* ---------- легенда: кто есть кто ---------- */
+/* Цвет = чья сторона / какая роль. Форма = кто именно (WCAG 1.4.1). */
+const LEGEND_PALETTE = [
+  ['var(--ally)','СВОЙ','герой, щит, HP, ваши кнопки'],
+  ['var(--hostile)','ЧУЖОЙ','все враги, урон, намерения'],
+  ['var(--neutral)','ОБЪЕКТ / ВНИМАНИЕ','бочки, откаты, ⚡, подсказки'],
+  ['var(--hazard)','ОПАСНАЯ МЕСТНОСТЬ','лава, шипы + штриховка'],
+  ['var(--safe)','БЕЗОПАСНЫЙ ХОД','превью шага, крюка, броска'],
+  ['var(--tile)','ИНЕРТНОЕ','пол, колонна, пропасть']
+];
 const LEGEND_UNITS = [
   ['PLAYER','Герой','бирюзовый · 3 ♥ · шаг и толчок'],
   ['BRUTE','Громила','красный квадрат · 2 ♥ · удар вблизи'],
-  ['CHARGER','Бык','оранжевый ромб · 2 ♥ · несётся по линии'],
-  ['SNIPER','Снайпер','фиолетовый треугольник · 1 ♥ · выстрел'],
-  ['BOMBER','Бомбер','жёлтый круг · 1 ♥ · взрыв от урона'],
-  ['JUGGERNAUT','Джаггернаут','тёмный квадрат · 4 ♥ · толчок 1 кл.'],
-  ['BARREL','Бочка','коричневая · взрыв 3×3 от урона']
+  ['CHARGER','Бык','красный ромб · 2 ♥ · несётся по линии'],
+  ['SNIPER','Снайпер','красный треугольник · 1 ♥ · выстрел'],
+  ['BOMBER','Бомбер','красный круг · 1 ♥ · взрыв от урона'],
+  ['JUGGERNAUT','Джаггернаут','тёмно-красный · 4 ♥ · толчок 1 кл.'],
+  ['BARREL','Бочка','янтарная · взрыв 3×3 от урона']
 ];
 const LEGEND_TILES = [
   ['FLOOR','Пол','сюда можно шагнуть'],
@@ -1641,12 +1693,12 @@ const LEGEND_TILES = [
   ['LAVA','Лава','1 урон при приземлении']
 ];
 const LEGEND_MARKS = [
-  ['⚡','#ffd23f','Активный враг','⚡ не больше 2 за ход'],
-  ['Z','#9aa7c0','Оглушён','пропускает ход'],
+  ['⚡',PAL.neutral,'Активный враг','⚡ не больше 2 за ход'],
+  ['Z',PAL.inert,'Оглушён','пропускает ход'],
   ['●●','#ffffff','Очки HP','белые точки под врагом'],
-  ['→','#ff4757','Намерение','красная стрелка / рамка'],
-  ['+','#00e5ff','Превью','куда прилетит цель'],
-  ['2','#ffb037','Откат и щит','цифра на кнопке, ЩИТ ×N']
+  ['→',PAL.hostile,'Намерение','красная стрелка / рамка'],
+  ['+',PAL.safe,'Превью','зелёная рамка / точка'],
+  ['2',PAL.neutral,'Откат и щит','цифра на кнопке, ЩИТ ×N']
 ];
 function lgItem(swatch, name, note) {
   return '<div class="lg-item">' + swatch +
@@ -1655,8 +1707,14 @@ function lgItem(swatch, name, note) {
 const lgUnit = a => lgItem('<span class="lg-ico u-' + a[0] + '"><i class="body"></i></span>', a[1], a[2]);
 const lgTile = a => lgItem('<span class="lg-tile t-' + a[0] + '"></span>', a[1], a[2]);
 const lgMark = a => lgItem('<span class="lg-sym" style="color:' + a[1] + '">' + a[0] + '</span>', a[2], a[3]);
+const lgPal = a => '<div class="lg-pal-item"><span class="lg-pal-chip" style="background:' + a[0] +
+  '"></span><span><b>' + a[1] + '</b><small>' + a[2] + '</small></span></div>';
 function legendBlock(title, items) {
   return '<div class="lg-group">' + title + '</div><div class="legend-grid">' + items.join('') + '</div>';
+}
+function legendPalette() {
+  return '<div class="lg-group">ПАЛИТРА · ЧТО ОЗНАЧАЕТ ЦВЕТ</div>' +
+         '<div class="lg-pal">' + LEGEND_PALETTE.map(lgPal).join('') + '</div>';
 }
 
 function renderOverlay(s) {
@@ -1671,7 +1729,9 @@ function renderOverlay(s) {
   }
   if (modal === 'legend') {
     overlay.innerHTML = '<div class="ov-title">КТО ЕСТЬ КТО</div>' +
-      '<div class="ov-sub">Форма и цвет вместо спрайтов. Белые точки под врагом — его здоровье.</div>' +
+      '<div class="ov-sub">Цвет = сторона и роль, форма = тип. Все враги красные, ' +
+      'все безопасные ходы зелёные. Белые точки под врагом — его здоровье.</div>' +
+      legendPalette() +
       legendBlock('ГЕРОЙ · ВРАГИ · ОБЪЕКТЫ', LEGEND_UNITS.map(lgUnit)) +
       legendBlock('КЛЕТКИ ПОЛЯ', LEGEND_TILES.map(lgTile)) +
       legendBlock('МЕТКИ И ПОДСКАЗКИ', LEGEND_MARKS.map(lgMark)) +
@@ -1689,6 +1749,9 @@ function renderOverlay(s) {
       '<b>Ждать:</b> пропустить ход, получить щит на один удар или толчок до начала следующего хода.<br><br>' +
       '<b>Активные угрозы:</b> не больше двух за ход. Остальные враги «спят» и не двигаются. Красные стрелки показывают их намерение: уйдите в сторону или подставьте союзника.<br><br>' +
       '<b>Бочки и бомберы</b> взрываются от любого урона: 2 урона в квадрате 3×3 и разлёт соседей.<br><br>' +
+      '<b>Цвета:</b> бирюзовый — свой и ваш интерфейс; красный — все враги, урон и намерения; ' +
+      'янтарный — нейтральные объекты, откаты и ⚡; оранжевый со штриховкой — лава и шипы; ' +
+      'зелёный — превью безопасного хода. Формы и подписи дублируют цвет.<br><br>' +
       'После каждого этажа — 1 из 3 перков. Партия сохраняется после каждого действия.' +
       '</div><div class="ov-row">' +
       '<button class="ov-btn small" data-act="legend" type="button">ЛЕГЕНДА ПОЛЯ</button>' +
@@ -1706,7 +1769,7 @@ function renderOverlay(s) {
   }
   if (s.phase === 'WIN' || s.phase === 'DEAD') {
     const win = s.phase === 'WIN';
-    overlay.innerHTML = '<div class="ov-title" style="color:' + (win ? '#00e5ff' : '#ff4757') + '">' +
+    overlay.innerHTML = '<div class="ov-title" style="color:' + (win ? PAL.ally : PAL.hostile) + '">' +
       (win ? 'КРАЙ ДОСТИГНУТ' : 'ВЫ ПОГИБЛИ') + '</div>' +
       '<div class="ov-sub">' + (win ? 'Все 7 этажей зачищены. Остров держится на ваших толчках.' :
         'Герой сорвался или был добит. Остров ждёт следующую попытку.') + '</div>' +

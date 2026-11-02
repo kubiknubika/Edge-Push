@@ -284,7 +284,10 @@ test('UI: легенда из HUD — все юниты, клетки и мет�
   const ov = doc.querySelector('#overlay');
   assert.match(ov.textContent, /КТО ЕСТЬ КТО/);
   assert.ok(ov.classList.contains('legend-mode'));
-  assert.equal(ov.querySelectorAll('.lg-group').length, 3);
+  assert.equal(ov.querySelectorAll('.lg-group').length, 4, 'палитра + 3 раздела');
+  assert.equal(ov.querySelectorAll('.lg-pal-item').length, 6, '6 ролей палитры');
+  assert.match(ov.textContent, /ЧУЖОЙ/);
+  assert.match(ov.textContent, /БЕЗОПАСНЫЙ ХОД/);
   assert.equal(ov.querySelectorAll('.lg-ico').length, 7, '7 мини-иконок юнитов');
   assert.equal(ov.querySelectorAll('.lg-tile').length, 5, '5 клеток');
   assert.equal(ov.querySelectorAll('.lg-sym').length, 6, '6 меток');
@@ -356,6 +359,53 @@ test('UI: легенда не меняет партию и не реагируе
   assert.equal(JSON.parse(win.localStorage.getItem(SAVE_KEY)).turn, s0.turn, 'ход не потрачен');
   assert.equal(win.localStorage.getItem(SAVE_KEY), before, 'сохранение не изменилось');
   assert.match(doc.querySelector('#overlay').textContent, /КТО ЕСТЬ КТО/);
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('COLOR CONTRACT: палитра CSS и JS синхронна, один цвет = одна роль', () => {
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+  const jsPal = html.match(/const PAL = \{([\s\S]*?)\};/)[1];
+  const roles = {
+    ally:'#00e5ff', hostile:'#ff4757', neutral:'#ffb037',
+    hazard:'#ff7a1a', safe:'#5cffb0'
+  };
+  for (const [role, hex] of Object.entries(roles)) {
+    assert.match(css, new RegExp('--' + role + '\\s*:\\s*' + hex), 'CSS переменная ' + role);
+    assert.match(jsPal, new RegExp(role + ":\\s*'" + hex + "'"), 'JS PAL.' + role);
+  }
+  // старые алиасы обязаны ссылаться на контракт, а не жить своими hex-кодами
+  assert.match(css, /--cyan:var\(--ally\)/);
+  assert.match(css, /--red:var\(--hostile\)/);
+  assert.match(css, /--amber:var\(--neutral\)/);
+  // защищённые оттенки не разбросаны по врагам: все 5 архетипов — красная семья
+  for (const stale of ['#ffd08a','#d9a3ff','#8b3ee8','#fff3a8','#ffd028','#9a642f'])
+    assert.ok(!css.includes(stale), 'старый оттенок ' + stale + ' больше не используется');
+  // превью = зелёный, намерения = красный, HP героя = «свой»
+  assert.match(css, /\.pv-mark\{[^}]*stroke:var\(--safe\)/);
+  assert.match(css, /\.dir\.ok\{[^}]*rgba\(92,255,176/);
+  assert.match(css, /\.tg-attack\{[^}]*stroke:#ff4757/);
+  assert.match(css, /\.hearts \.full\{color:var\(--ally\)\}/);
+  assert.match(css, /\.t-SPIKES\{[^}]*repeating-linear-gradient/);
+});
+
+test('UI: кнопка ПОНЯТНО кликабельна — мини-клетки не перехватывают тап', async () => {
+  // Регрессия: ::after с inset:0 у .t-SPIKES/.t-LAVA без position:relative
+  // растягивался на весь оверлей и ловил pointer events поверх кнопок.
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+  assert.match(css, /\.lg-tile\{[^}]*position:relative[^}]*overflow:hidden/);
+  assert.match(css, /\.lg-ico,\.lg-tile,\.lg-sym\{[^}]*pointer-events:none/);
+
+  const { dom, doc, errors } = boot();
+  await pause(25);
+  tap(doc, doc.querySelector('#legendBtn'));
+  const ov = doc.querySelector('#overlay');
+  assert.ok(!ov.classList.contains('hidden'));
+  const close = ov.querySelector('[data-act="close"]');
+  assert.ok(close, 'кнопка ПОНЯТНО присутствует');
+  tap(doc, close);
+  assert.ok(ov.classList.contains('hidden'), 'ПОНЯТНО закрывает легенду');
+  assert.ok(!ov.classList.contains('legend-mode'));
   assert.deepEqual(errors, [], 'нет ошибок в консоли');
   dom.window.close();
 });
