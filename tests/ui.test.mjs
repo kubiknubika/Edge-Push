@@ -276,3 +276,86 @@ test('UI: у прошедшего обучение игрока карточка
   assert.deepEqual(errors, [], 'нет ошибок в консоли');
   dom.window.close();
 });
+
+test('UI: легенда из HUD — все юниты, клетки и метки', async () => {
+  const { dom, win, doc, errors } = boot();
+  await pause(25);
+  tap(doc, doc.querySelector('#legendBtn'));
+  const ov = doc.querySelector('#overlay');
+  assert.match(ov.textContent, /КТО ЕСТЬ КТО/);
+  assert.ok(ov.classList.contains('legend-mode'));
+  assert.equal(ov.querySelectorAll('.lg-group').length, 3);
+  assert.equal(ov.querySelectorAll('.lg-ico').length, 7, '7 мини-иконок юнитов');
+  assert.equal(ov.querySelectorAll('.lg-tile').length, 5, '5 клеток');
+  assert.equal(ov.querySelectorAll('.lg-sym').length, 6, '6 меток');
+  for (const cls of ['u-PLAYER','u-BRUTE','u-CHARGER','u-SNIPER','u-BOMBER','u-JUGGERNAUT','u-BARREL'])
+    assert.equal(ov.querySelectorAll('.lg-ico.' + cls).length, 1, 'иконка ' + cls);
+  for (const cls of ['t-FLOOR','t-CHASM','t-PILLAR','t-SPIKES','t-LAVA'])
+    assert.equal(ov.querySelectorAll('.lg-tile.' + cls).length, 1, 'клетка ' + cls);
+  assert.match(ov.textContent, /Громила/);
+  assert.match(ov.textContent, /Снайпер/);
+  assert.match(ov.textContent, /Джаггернаут/);
+  assert.match(ov.textContent, /Пропасть/);
+  assert.match(ov.textContent, /Намерение/);
+  tap(doc, ov.querySelector('[data-act="close"]'));
+  assert.ok(ov.classList.contains('hidden'));
+  assert.ok(!ov.classList.contains('legend-mode'));
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: легенда из справки, по клавише L и закрытие Escape', async () => {
+  const { dom, win, doc, errors } = boot();
+  await pause(25);
+  tap(doc, doc.querySelector('#helpBtn'));
+  assert.match(doc.querySelector('#overlay').textContent, /КАК ИГРАТЬ/);
+  tap(doc, doc.querySelector('[data-act="legend"]'));
+  assert.match(doc.querySelector('#overlay').textContent, /КТО ЕСТЬ КТО/);
+
+  key(win, 'Escape');
+  assert.ok(doc.querySelector('#overlay').classList.contains('hidden'));
+  key(win, 'l');
+  assert.match(doc.querySelector('#overlay').textContent, /КТО ЕСТЬ КТО/, 'клавиша L открывает легенду');
+  key(win, 'Escape');
+  assert.ok(doc.querySelector('#overlay').classList.contains('hidden'));
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: легенда из обучения сохраняет шаг и может перезапустить обучение', async () => {
+  const { dom, win, doc, errors } = boot(undefined, { freshTutorial:true });
+  await pause(25);
+  const tut = doc.querySelector('#tutorial');
+  tap(doc, tut.querySelector('[data-tut="next"]'));
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 2\/6/);
+  tap(doc, tut.querySelector('[data-tut="legend"]'));
+  assert.match(doc.querySelector('#overlay').textContent, /КТО ЕСТЬ КТО/);
+  assert.ok(tut.classList.contains('hidden'), 'карточка обучения скрыта под легендой');
+
+  tap(doc, doc.querySelector('#overlay [data-act="close"]'));
+  assert.ok(!tut.classList.contains('hidden'), 'обучение вернулось');
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 2\/6/, 'шаг не сбился');
+
+  tap(doc, tut.querySelector('[data-tut="legend"]'));
+  tap(doc, doc.querySelector('#overlay [data-act="tutorial"]'));
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 1\/6/, 'из легенды обучение перезапускается');
+  assert.equal(win.localStorage.getItem('edge-push:tutorial:v1'), null);
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: легенда не меняет партию и не реагирует на игровой ввод', async () => {
+  const { dom, win, doc, errors } = boot();
+  await pause(25);
+  const before = win.localStorage.getItem(SAVE_KEY);
+  tap(doc, doc.querySelector('#legendBtn'));
+  const s0 = JSON.parse(win.localStorage.getItem(SAVE_KEY));
+  key(win, 'ArrowUp');
+  swipe(win, 100, 300, 200, 300);
+  await pause(80);
+  assert.equal(JSON.parse(win.localStorage.getItem(SAVE_KEY)).turn, s0.turn, 'ход не потрачен');
+  assert.equal(win.localStorage.getItem(SAVE_KEY), before, 'сохранение не изменилось');
+  assert.match(doc.querySelector('#overlay').textContent, /КТО ЕСТЬ КТО/);
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});

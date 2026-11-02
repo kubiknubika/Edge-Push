@@ -240,6 +240,42 @@ body{
   gap:12px;padding:18px;background:rgba(6,8,14,.93);backdrop-filter:blur(6px);
 }
 #overlay.hidden{display:none}
+#overlay:not(.hidden) ~ #toast{opacity:0;transition:none}
+#overlay.legend-mode{justify-content:flex-start;overflow:auto;touch-action:pan-y;gap:8px;padding-top:14px}
+.legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 8px;width:100%;max-width:420px}
+.lg-group{width:100%;max-width:420px;font-size:9.5px;font-weight:900;letter-spacing:.12em;color:var(--cyan);margin-top:2px}
+.lg-item{
+  display:flex;align-items:center;gap:6px;min-height:36px;padding:4px 6px;border-radius:10px;
+  background:rgba(255,255,255,.035);border:1px solid var(--line);
+}
+.lg-item b{display:block;font-size:10.5px;line-height:1.2;color:var(--ink)}
+.lg-item small{display:block;font-size:9.5px;line-height:1.2;color:var(--muted)}
+.lg-ico,.lg-tile,.lg-sym{width:28px;height:28px;flex:none}
+.lg-ico{display:grid;place-items:center}
+.lg-ico .body{width:74%;height:74%;position:relative;display:grid;place-items:center}
+.lg-tile{border-radius:6px;margin:0}
+.lg-tile.t-LAVA::after{font-size:14px}
+.lg-tile.t-SPIKES::after{font-size:7px}
+.lg-sym{
+  display:grid;place-items:center;border-radius:8px;font-size:14px;font-weight:900;line-height:1;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);
+}
+.ov-btn.small{min-width:0;padding:8px 10px;font-size:10px;min-height:40px}
+.icon-btn .ico{line-height:0}
+.icon-btn svg{width:16px;height:16px}
+.tut-links{display:flex;gap:6px}
+@media (max-height:700px){
+  #overlay.legend-mode{gap:4px;padding:8px 10px}
+  .ov-title{font-size:17px}
+  .ov-sub{font-size:10px;line-height:1.3}
+  .ov-btn{min-height:40px}
+  .ov-btn.small{min-height:32px;padding:5px 8px;font-size:9px}
+  .lg-item{min-height:28px;padding:2px 4px}
+  .lg-ico,.lg-tile,.lg-sym{width:21px;height:21px}
+  .lg-item b{font-size:9.5px}
+  .lg-item small{font-size:8.5px;line-height:1.15}
+  .lg-group{margin-top:0;font-size:9px}
+}
 .ov-title{font-size:22px;font-weight:900;letter-spacing:.1em;text-align:center;color:var(--cyan);text-shadow:0 0 18px rgba(0,229,255,.4)}
 .ov-sub{font-size:12px;color:var(--muted);text-align:center;max-width:340px;line-height:1.5}
 .ov-stats{font-size:12px;color:var(--ink);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:9px 14px;text-align:center;line-height:1.7}
@@ -357,6 +393,7 @@ body{
         <span class="floor-pill">ЭТАЖ <b id="floorNum">1/7</b></span>
         <div class="hearts" id="hearts"></div>
         <span class="shield-pill off" id="shieldPill"></span>
+        <button class="icon-btn" id="legendBtn" aria-label="Легенда"><span class="ico" data-icon="legend"></span></button>
         <button class="icon-btn" id="helpBtn" aria-label="Правила">?</button>
         <button class="icon-btn" id="restartBtn" aria-label="Заново">↺</button>
       </div>
@@ -1196,7 +1233,9 @@ const ICON_PATHS = {
   LUCKY_HARPOON:'<path d="M12 3v10a4 4 0 1 1-8 0M8 9l4 4"/><circle cx="12" cy="3" r="1.6"/>',
   SHOCK_LANDING:'<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>',
   LONG_CHAINS:'<circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/>',
-  SECOND_BREATH:'<path d="M12 20S4 15 4 9.5A4 4 0 0 1 12 8a4 4 0 0 1 8 1.5C20 15 12 20 12 20z"/>'
+  SECOND_BREATH:'<path d="M12 20S4 15 4 9.5A4 4 0 0 1 12 8a4 4 0 0 1 8 1.5C20 15 12 20 12 20z"/>',
+  legend:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>' +
+         '<rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'
 };
 function icon(name) {
   return '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" ' +
@@ -1306,7 +1345,9 @@ function renderTutorial(cur) {
   const last = tutStep === TUTORIAL.length - 1;
   el.innerHTML =
     '<div class="tut-head"><span class="tut-step">ОБУЧЕНИЕ ' + (tutStep + 1) + '/' + TUTORIAL.length + '</span>' +
-    '<button class="tut-skip" data-tut="skip" type="button">ПРОПУСТИТЬ</button></div>' +
+    '<span class="tut-links">' +
+    '<button class="tut-skip" data-tut="legend" type="button">ЛЕГЕНДА</button>' +
+    '<button class="tut-skip" data-tut="skip" type="button">ПРОПУСТИТЬ</button></span></div>' +
     '<div class="tut-title">' + st.title + '</div>' +
     '<div class="tut-text">' + st.text + '</div>' +
     '<div class="tut-row"><span class="tut-hint">' + st.hint + '</span>' +
@@ -1582,13 +1623,60 @@ function perkCard(id, level) {
     '<span class="pc-ico">' + icon(id) + '</span><span><span class="pc-name">' + meta.title + '</span>' +
     '<span class="pc-lvl"> УР. ' + level + '</span><div class="pc-desc">' + E.describePerk(id, level) + '</div></span></button>';
 }
+/* ---------- легенда: кто есть кто ---------- */
+const LEGEND_UNITS = [
+  ['PLAYER','Герой','бирюзовый · 3 ♥ · шаг и толчок'],
+  ['BRUTE','Громила','красный квадрат · 2 ♥ · удар вблизи'],
+  ['CHARGER','Бык','оранжевый ромб · 2 ♥ · несётся по линии'],
+  ['SNIPER','Снайпер','фиолетовый треугольник · 1 ♥ · выстрел'],
+  ['BOMBER','Бомбер','жёлтый круг · 1 ♥ · взрыв от урона'],
+  ['JUGGERNAUT','Джаггернаут','тёмный квадрат · 4 ♥ · толчок 1 кл.'],
+  ['BARREL','Бочка','коричневая · взрыв 3×3 от урона']
+];
+const LEGEND_TILES = [
+  ['FLOOR','Пол','сюда можно шагнуть'],
+  ['CHASM','Пропасть','мгновенная смерть'],
+  ['PILLAR','Колонна','удар = 1 урон'],
+  ['SPIKES','Шипы','1 урон при приземлении'],
+  ['LAVA','Лава','1 урон при приземлении']
+];
+const LEGEND_MARKS = [
+  ['⚡','#ffd23f','Активный враг','⚡ не больше 2 за ход'],
+  ['Z','#9aa7c0','Оглушён','пропускает ход'],
+  ['●●','#ffffff','Очки HP','белые точки под врагом'],
+  ['→','#ff4757','Намерение','красная стрелка / рамка'],
+  ['+','#00e5ff','Превью','куда прилетит цель'],
+  ['2','#ffb037','Откат и щит','цифра на кнопке, ЩИТ ×N']
+];
+function lgItem(swatch, name, note) {
+  return '<div class="lg-item">' + swatch +
+         '<span><b>' + name + '</b><small>' + note + '</small></span></div>';
+}
+const lgUnit = a => lgItem('<span class="lg-ico u-' + a[0] + '"><i class="body"></i></span>', a[1], a[2]);
+const lgTile = a => lgItem('<span class="lg-tile t-' + a[0] + '"></span>', a[1], a[2]);
+const lgMark = a => lgItem('<span class="lg-sym" style="color:' + a[1] + '">' + a[0] + '</span>', a[2], a[3]);
+function legendBlock(title, items) {
+  return '<div class="lg-group">' + title + '</div><div class="legend-grid">' + items.join('') + '</div>';
+}
+
 function renderOverlay(s) {
   renderTutorial(s);
+  overlay.classList.toggle('legend-mode', modal === 'legend');
   if (modal === 'restart') {
     overlay.innerHTML = '<div class="ov-title">НАЧАТЬ ЗАНОВО?</div>' +
       '<div class="ov-sub">Текущий забег будет сброшен. Прогресс сохраняется только для последней партии.</div>' +
       '<div class="ov-row"><button class="ov-btn" data-act="new" type="button">НОВЫЙ ЗАБЕГ</button>' +
       '<button class="ov-btn ghost" data-act="close" type="button">ОТМЕНА</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (modal === 'legend') {
+    overlay.innerHTML = '<div class="ov-title">КТО ЕСТЬ КТО</div>' +
+      '<div class="ov-sub">Форма и цвет вместо спрайтов. Белые точки под врагом — его здоровье.</div>' +
+      legendBlock('ГЕРОЙ · ВРАГИ · ОБЪЕКТЫ', LEGEND_UNITS.map(lgUnit)) +
+      legendBlock('КЛЕТКИ ПОЛЯ', LEGEND_TILES.map(lgTile)) +
+      legendBlock('МЕТКИ И ПОДСКАЗКИ', LEGEND_MARKS.map(lgMark)) +
+      '<div class="ov-row"><button class="ov-btn" data-act="close" type="button">ПОНЯТНО</button>' +
+      '<button class="ov-btn ghost" data-act="tutorial" type="button">ОБУЧЕНИЕ</button></div>';
     overlay.classList.remove('hidden'); return;
   }
   if (modal === 'help') {
@@ -1603,8 +1691,9 @@ function renderOverlay(s) {
       '<b>Бочки и бомберы</b> взрываются от любого урона: 2 урона в квадрате 3×3 и разлёт соседей.<br><br>' +
       'После каждого этажа — 1 из 3 перков. Партия сохраняется после каждого действия.' +
       '</div><div class="ov-row">' +
-      '<button class="ov-btn ghost" data-act="tutorial" type="button">ПОВТОРИТЬ ОБУЧЕНИЕ</button>' +
-      '<button class="ov-btn" data-act="close" type="button">ПОНЯТНО</button></div>';
+      '<button class="ov-btn small" data-act="legend" type="button">ЛЕГЕНДА ПОЛЯ</button>' +
+      '<button class="ov-btn ghost small" data-act="tutorial" type="button">ОБУЧЕНИЕ</button>' +
+      '<button class="ov-btn ghost small" data-act="close" type="button">ПОНЯТНО</button></div>';
     overlay.classList.remove('hidden'); return;
   }
   if (s.phase === 'PERKS') {
@@ -1691,6 +1780,7 @@ $('#hookBtn').addEventListener('click', () => { if (suppressClick) return; toggl
 $('#throwBtn').addEventListener('click', () => { if (suppressClick) return; toggleMode('THROW'); });
 $('#waitBtn').addEventListener('click', () => { if (suppressClick) return; doAction({ type:'WAIT' }); });
 $('#restartBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'restart'; renderOverlay(state); });
+$('#legendBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'legend'; renderOverlay(state); });
 $('#helpBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'help'; renderOverlay(state); });
 
 overlay.addEventListener('click', e => {
@@ -1705,6 +1795,7 @@ overlay.addEventListener('click', e => {
   const act = e.target.closest('[data-act]');
   if (!act) return;
   if (act.dataset.act === 'new') newRun();
+  else if (act.dataset.act === 'legend') { modal = 'legend'; renderOverlay(state); }
   else if (act.dataset.act === 'tutorial') {
     try { localStorage.removeItem(TUT_KEY); } catch (e) {}
     tutActive = true; tutStep = 0; tutRendered = -2; modal = null;
@@ -1717,6 +1808,7 @@ overlay.addEventListener('click', e => {
 
 $('#tutorial').addEventListener('click', e => {
   if (suppressClick) return;
+  if (e.target.closest('[data-tut="legend"]')) { modal = 'legend'; renderOverlay(state); return; }
   if (e.target.closest('[data-tut="skip"]')) { finishTutorial(); toast('ОБУЧЕНИЕ ПРОПУЩЕНО'); return; }
   if (e.target.closest('[data-tut="next"]')) advanceTutorial(false);
 });
@@ -1753,6 +1845,7 @@ document.addEventListener('keydown', e => {
   else if (k === '2') toggleMode('THROW');
   else if (k === '3' || k === ' ') doAction({ type:'WAIT' });
   else if (k === 'r') { modal = 'restart'; renderOverlay(state); }
+  else if (k === 'l' || k === 'д') { modal = 'legend'; renderOverlay(state); }
   else if (k === '?' || k === 'h') { modal = 'help'; renderOverlay(state); }
   else return;
   e.preventDefault();
