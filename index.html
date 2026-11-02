@@ -4,7 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0f111a">
+<meta name="color-scheme" content="dark">
 <meta name="description" content="КРАЙ (Edge Push) — пошаговая микро-тактика непрямого боя для одной руки">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="КРАЙ">
+<meta name="application-name" content="КРАЙ">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>КРАЙ · Edge Push</title>
 <style>
 :root{
@@ -49,6 +58,7 @@ body{
 }
 #app{
   position:relative;width:100%;max-width:480px;height:100vh;height:100dvh;
+  padding-top:env(safe-area-inset-top); /* вырезы/статус-бар в standalone и на Android */
   display:flex;flex-direction:column;overflow:hidden;
   background:linear-gradient(180deg,#121623 0%,#0b0d15 100%);
   box-shadow:0 0 70px rgba(0,0,0,.7);
@@ -2339,6 +2349,23 @@ save();                                   // мгновенное автосох
 render(state, [], true);
 if (restored) toast('ПАРТИЯ ВОССТАНОВЛЕНА · ЭТАЖ ' + state.floor);
 else toast('СВАЙП ИЛИ КРЕСТОВИНА — ВАШ ХОД');
+})();
+</script>
+
+<!-- PWA: только для HTTPS / localhost. Внутри APK (?native=1) ассеты уже локальны,
+     поэтому service worker не регистрируется и не мешает WebViewAssetLoader. -->
+<script id="pwa-script">
+(function () {
+  if (!navigator.serviceWorker || typeof navigator.serviceWorker.register !== 'function') return;
+  if (new URLSearchParams(location.search).has('native')) return;
+  var proto = location.protocol, host = location.hostname;
+  var local = proto === 'http:' && (host === 'localhost' || host === '127.0.0.1' || host === '[::1]');
+  if (proto !== 'https:' && !local) return;
+  window.addEventListener('load', function () {
+    var script = new URL('sw.js', location.href).href;
+    var scope = new URL('./', location.href).href;
+    navigator.serviceWorker.register(script, { scope: scope }).catch(function () {});
+  });
 })();
 </script>
 </body>

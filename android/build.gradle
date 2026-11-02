@@ -1,0 +1,9 @@
+// КРАЙ / Edge Push — корневой Gradle-файл.
+// AGP 8.13.0 + Gradle 8.13 + JDK 17; compileSdk/targetSdk 36 (требование Google Play с 31.08.2026).
+plugins {
+    id 'com.android.application' version '8.13.0' apply false
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
+}

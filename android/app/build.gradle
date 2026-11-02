@@ -1,0 +1,68 @@
+// Релизные координаты синхронизированы с package.json и sw.js через npm run version:bump.
+// Подпись включается только при наличии android/keystore.properties (в .gitignore).
+plugins {
+    id 'com.android.application'
+}
+
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+def hasReleaseKeystore = false
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    hasReleaseKeystore = keystoreProperties['storeFile'] ? true : false
+}
+
+android {
+    namespace 'com.kubiknubika.edgepush'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.kubiknubika.edgepush'
+        minSdk 26                 // Android 8.0 + обновляемый WebView с 100dvh/clamp()
+        targetSdk 36              // Android 16: обязательный минимум Play с 31.08.2026
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            if (hasReleaseKeystore) {
+                storeFile rootProject.file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                enableV1Signing false
+                enableV2Signing true
+                enableV3Signing true
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (hasReleaseKeystore) signingConfig signingConfigs.release
+            minifyEnabled false       // Java-кода почти нет, а ассеты должны остаться нетронутыми
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+    }
+
+    buildFeatures {
+        buildConfig true            // нужен BuildConfig.DEBUG для WebView.setWebContentsDebuggingEnabled
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    // WebViewAssetLoader: локальные ассеты по виртуальному https- origin,
+    // без file:// и без разрешения INTERNET.
+    implementation 'androidx.webkit:webkit:1.15.0'
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 108×108 dp. Вся важная графика внутри центральной безопасной зоны Ø72 dp (18..90). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- поле 5×5 -->
+    <path
+        android:strokeColor="#333A4359"
+        android:strokeWidth="0.8"
+        android:pathData="M18,18H90 M18,32.4H90 M18,46.8H90 M18,61.2H90 M18,75.6H90 M18,90H90
+                          M18,18V90 M32.4,18V90 M46.8,18V90 M61.2,18V90 M75.6,18V90 M90,18V90" />
+    <path
+        android:strokeColor="#6600E5FF"
+        android:strokeWidth="1.6"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M24,18 H84 A6,6 0 0 1 90,24 V84 A6,6 0 0 1 84,90 H24 A6,6 0 0 1 18,84 V24 A6,6 0 0 1 24,18 Z" />
+
+    <!-- герой -->
+    <path
+        android:fillColor="#FF00E5FF"
+        android:pathData="M31,43 H41 A4,4 0 0 1 45,47 V57 A4,4 0 0 1 41,61 H31 A4,4 0 0 1 27,57 V47 A4,4 0 0 1 31,43 Z" />
+    <path
+        android:fillColor="#FFE8EDF7"
+        android:pathData="M34,49 H38 V55 H34 Z" />
+
+    <!-- толчок -->
+    <path
+        android:strokeColor="#FF00E5FF"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M47,52 H55" />
+    <path
+        android:strokeColor="#FF00E5FF"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M52,49 L55,52 L52,55" />
+
+    <!-- враг -->
+    <path
+        android:fillColor="#FFFF4757"
+        android:pathData="M66,43 L75,52 L66,61 L57,52 Z" />
+    <path
+        android:fillColor="#FFE8EDF7"
+        android:pathData="M66,49 L69,52 L66,55 L63,52 Z" />
+
+    <!-- опасная кромка -->
+    <path
+        android:fillColor="#FFFF7A1A"
+        android:pathData="M78,43 L90,52 L78,61 Z" />
+    <path
+        android:strokeColor="#FFFFB037"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M81,52 H87" />
+</vector>

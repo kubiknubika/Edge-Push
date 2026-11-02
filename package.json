@@ -8,19 +8,29 @@
     "test": "node --test tests/*.test.mjs",
     "test:engine": "node --test tests/engine.test.mjs",
     "test:ui": "node --test tests/ui.test.mjs",
+    "test:ai": "node --test tests/ai.test.mjs",
+    "test:release": "node --test tests/release.test.mjs",
     "start": "python3 -m http.server 8000 --bind 0.0.0.0",
+    "icons": "node scripts/generate-icons.mjs",
+    "store:art": "bash scripts/generate-store-art.sh",
+    "store:screenshots": "node scripts/capture-screenshots.mjs",
+    "android:assets": "node scripts/sync-assets.mjs",
+    "pwa:build": "node scripts/sync-assets.mjs --out dist",
+    "assets:all": "node scripts/sync-assets.mjs --all",
+    "release:check": "node scripts/release-check.mjs",
+    "version:bump": "node scripts/bump-version.mjs",
     "ai": "npm run ai:evolve && npm run ai:evaluate && npm run ai:report",
     "ai:evolve": "node ai/evolve.mjs",
     "ai:evaluate": "node ai/evaluate.mjs",
     "ai:report": "node ai/report.mjs",
     "ai:test": "node --test tests/ai.test.mjs",
-    "test:ai": "node --test tests/ai.test.mjs",
     "ai:mastery": "node ai/mastery.mjs",
     "ai:full": "npm run ai && npm run ai:mastery && npm run ai:difficulty && npm run ai:report",
     "ai:difficulty": "node ai/difficulty.mjs && node ai/inject-seeds.mjs",
     "ai:seeds": "node ai/inject-seeds.mjs"
   },
   "devDependencies": {
-    "jsdom": "^30.1.3"
+    "jsdom": "^30.1.3",
+    "playwright-core": "^1.64.1"
   }
 }

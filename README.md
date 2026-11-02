@@ -379,6 +379,15 @@ ai/                            НЕ часть игры: эволюционны�
  ├─ inject-seeds.mjs            внедряет 10 пулов сидов в index.html
  ├─ report.mjs                  самодостаточный отчёт ai/index.html
  └─ replay.json / *.json        чемпион, история, результаты, реплей
+
+manifest.json / sw.js / icons/ / favicon.svg / apple-touch-icon.png
+                               PWA: установка, офлайн, maskable-иконки
+scripts/                       генерация иконок/баннера/скриншотов, sync ассетов,
+                               release:check, version:bump
+android/                       Gradle 8.13 / AGP 8.13 / JDK 17, WebView + AssetLoader,
+                               app/src/main/assets/www/ = точная копия веб-файлов
+store/                         листинг, политика, Data safety, assetlinks, графика
+RELEASE.md                     чек-лист подписи, AAB/APK и публикации
 ```
 
 Состояние — плоский JSON (включая `rng`), поэтому автосохранение и тесты тривиальны.
@@ -390,8 +399,9 @@ ai/                            НЕ часть игры: эволюционны�
 ### Тесты
 
 ```bash
-npm install          # только dev-зависимость: jsdom для UI smoke-тестов
-npm test             # node --test tests/*.test.mjs
+npm install          # dev-зависимости: jsdom (UI) и playwright-core (скриншоты)
+npm test             # 124 теста: 72 игровых/ИИ + 52 релизных (node --test tests/*.test.mjs)
+npm run test:release # только проверки готовности Android-релиза
 npm run test:engine  # 34 теста: генерация (200 сидов), импульс/домино, цепные взрывы,
                      #            крюк/бросок, щит, ИИ архетипов, откаты, 7 этажей,
                      #            детерминизм, JSON-сохранение, фазз 30×250 ходов,
@@ -408,7 +418,54 @@ npm run test:ai     # 14 тестов: загрузка движка, легал
 ```
 
 Движок вытаскивается из `index.html` по маркерам и исполняется в `node:vm` — дублирования
-кода нет. `jsdom` нужен только тестам, сама игра зависимостей не имеет.
+кода нет. `jsdom` и `playwright-core` нужны только тестам и пересъёмке скриншотов; сама игра
+зависимостей не имеет.
+
+Дополнительно к игровым/ИИ-тестам есть `npm run test:release` (и `npm run release:check`):
+он сверяет manifest, service worker, иконки, синхронность APK-ассетов, `targetSdk`,
+отсутствие разрешения `INTERNET`, материалы магазина и отсутствие секретов в Git.
+
+---
+
+## Android-релиз и PWA
+
+Игра остаётся **одним `index.html`** без рантайм-зависимостей. Вокруг него подготовлены две
+оболочки: installable PWA и нативный Android-проект с теми же файлами внутри APK.
+
+| Слой | Файлы | Что даёт |
+| --- | --- | --- |
+| PWA | `manifest.json`, `sw.js`, `favicon.svg`, `apple-touch-icon.png`, `icons/` | Установка на Android, офлайн-кэш, maskable-иконки с безопасной зоной Ø80%, портретный `standalone`. |
+| Нативный APK/AAB | `android/` | `WebView` + `WebViewAssetLoader` отдаёт `assets/www/` с виртуального `https://appassets.androidplatform.net/`. Нужен `localStorage`, secure origin, без `file://`. |
+| Магазин | `store/` | Иконка 512, баннер 1024×500, 3 скриншота, листинг RU/EN, политика, Data safety, `assetlinks.json`, release notes. |
+| Автоматизация | `scripts/`, `tests/release.test.mjs`, `RELEASE.md` | Генерация ассетов, синхронизация, bump версии, гейт готовности, чек-лист подписи и публикации. |
+
+Ключевые решения:
+
+- **`targetSdk 36` / `compileSdk 36`** — с 31 августа 2026 Google Play принимает новые приложения
+  и обновления только с Android 16 (API 36) или выше; `minSdk 26` выбран под современный WebView
+  с `100dvh`/`clamp()` ([требование Play](https://support.google.com/googleplay/android-developer/answer/11926878?hl=en)).
+- **Нет разрешения `INTERNET`**, только `VIBRATE`. Все HTML/CSS/JS/PNG/JSON уже в APK;
+  `WebViewAssetLoader` перехватывает запросы до сети ([AndroidX Webkit](https://developer.android.com/reference/androidx/webkit/WebViewAssetLoader)).
+  `allowBackup=false` + `data_extraction_rules.xml` отключают выгрузку прогресса.
+- **Service worker не регистрируется внутри APK**: страница открывается с `?native=1`, офлайн
+  там обеспечивает сам APK. В браузере `sw.js` кэширует игру, отчёт ИИ, политику и скриншоты.
+- **Оба канала**: `./gradlew :app:bundleRelease` → AAB для Play, `:app:assembleRelease` → APK
+  для прямой раздачи. Один `applicationId` — `com.kubiknubika.edgepush`.
+
+```bash
+npm run icons             # пересобрать все PNG/SVG-иконки
+npm run store:art         # баннер 1024×500 (нужен ImageMagick)
+npm start                 # в другом терминале, затем:
+npm run store:screenshots # 3 скриншота 390×780 (CHROMIUM_PATH=/путь/к/chrome)
+npm run android:assets    # скопировать веб-файлы в android/app/src/main/assets/www/
+npm run pwa:build         # статический dist/ для любого HTTPS-хостинга
+npm run release:check     # обязательный gate перед сборкой
+npm run version:bump 1.0.1
+```
+
+Полный порядок подписи, сборки, тестирования на устройстве и публикации в Play и напрямую —
+в **`RELEASE.md`**. Бинарный APK/AAB в этом репозитории не лежит: в песочнице нет Android SDK,
+поэтому подготовлен именно исходный проект, собираемый в Android Studio / Gradle.
 
 ---
 
