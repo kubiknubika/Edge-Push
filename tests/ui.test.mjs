@@ -25,7 +25,8 @@ function engineFromHtml() {
 const E = engineFromHtml();
 
 const DEFAULT_STATE = () => E.createGame(2026);   // фиксированный сид = детерминированные тесты
-function boot(seedState) {
+function boot(seedState, opts) {
+  const options = opts || {};
   if (seedState === undefined) seedState = DEFAULT_STATE();
   const errors = [];
   const vc = new VirtualConsole();
@@ -38,6 +39,7 @@ function boot(seedState) {
     virtualConsole:vc,
     beforeParse(window) {
       if (seedState) window.localStorage.setItem(SAVE_KEY, JSON.stringify(seedState));
+      if (!options.freshTutorial) window.localStorage.setItem('edge-push:tutorial:v1', 'done');
       window.addEventListener('error', e => errors.push('window.error: ' + e.message));
     }
   });
@@ -192,6 +194,85 @@ test('UI: экраны победы/поражения и «Заново» с п
   assert.ok(doc.querySelector('#overlay').classList.contains('hidden'));
   tap(doc, doc.querySelector('#helpBtn'));
   assert.match(doc.querySelector('#overlay').textContent, /КАК ИГРАТЬ/);
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: обучение при первом запуске — 6 шагов, подсветка кнопок и пропуск', async () => {
+  const { dom, win, doc, errors } = boot(undefined, { freshTutorial:true });
+  await pause(30);
+  const tut = doc.querySelector('#tutorial');
+  assert.ok(!tut.classList.contains('hidden'), 'карточка обучения видна при первом запуске');
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 1\/6/);
+  assert.ok(doc.getElementById('app').classList.contains('tutorial-on'));
+  assert.equal(win.localStorage.getItem('edge-push:tutorial:v1'), null, 'флаг ещё не выставлен');
+
+  tap(doc, tut.querySelector('[data-tut="next"]'));
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 2\/6/);
+  assert.equal(doc.querySelectorAll('.dir.tut-glow').length, 4, 'шаг 2 подсвечивает крестовину');
+
+  tap(doc, tut.querySelector('[data-tut="next"]'));
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 3\/6/);
+  tap(doc, tut.querySelector('[data-tut="next"]'));
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 4\/6/);
+  assert.equal(doc.querySelectorAll('#board.tut-glow').length, 1, 'шаг 4 подсвечивает поле');
+
+  tap(doc, tut.querySelector('[data-tut="next"]'));
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 5\/6/);
+  assert.equal(doc.querySelectorAll('.ability.tut-glow').length, 3, 'шаг 5 подсвечивает приёмы');
+
+  tap(doc, tut.querySelector('[data-tut="next"]'));
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 6\/6/);
+  assert.match(tut.textContent, /ИГРАТЬ/);
+  tap(doc, tut.querySelector('[data-tut="next"]'));
+  assert.ok(tut.classList.contains('hidden'), 'последний шаг закрывает обучение');
+  assert.equal(win.localStorage.getItem('edge-push:tutorial:v1'), 'done');
+  assert.equal(doc.querySelectorAll('.tut-glow').length, 0, 'подсветка снята');
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: обучение не блокирует игру и шаг завершается реальным ходом', async () => {
+  const { dom, win, doc, errors } = boot(undefined, { freshTutorial:true });
+  await pause(25);
+  const tut = doc.querySelector('#tutorial');
+  const saved = () => JSON.parse(win.localStorage.getItem(SAVE_KEY));
+  tap(doc, tut.querySelector('[data-tut="next"]'));           // шаг 2 (waitAction)
+  const t0 = saved().turn;
+  const dir = firstValidDir(saved());
+  assert.ok(dir);
+  key(win, KEYS[dir]);
+  await pause(650);
+  assert.ok(saved().turn > t0, 'ход прошёл, хотя обучение открыто');
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 3\/6/, 'интерактивный шаг завершился ходом');
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: пропуск обучения и повтор из справки', async () => {
+  const { dom, win, doc, errors } = boot(undefined, { freshTutorial:true });
+  await pause(25);
+  const tut = doc.querySelector('#tutorial');
+  tap(doc, tut.querySelector('[data-tut="skip"]'));
+  assert.ok(tut.classList.contains('hidden'));
+  assert.equal(win.localStorage.getItem('edge-push:tutorial:v1'), 'done');
+
+  tap(doc, doc.querySelector('#helpBtn'));
+  assert.match(doc.querySelector('#overlay').textContent, /КАК ИГРАТЬ/);
+  tap(doc, doc.querySelector('[data-act="tutorial"]'));
+  assert.ok(!tut.classList.contains('hidden'), 'обучение открылось заново');
+  assert.match(tut.textContent, /ОБУЧЕНИЕ 1\/6/);
+  assert.equal(win.localStorage.getItem('edge-push:tutorial:v1'), null);
+  assert.ok(doc.querySelector('#overlay').classList.contains('hidden'));
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: у прошедшего обучение игрока карточка не появляется', async () => {
+  const { dom, doc, errors } = boot();
+  await pause(25);
+  assert.ok(doc.querySelector('#tutorial').classList.contains('hidden'));
+  assert.equal(doc.querySelectorAll('.tut-glow').length, 0);
   assert.deepEqual(errors, [], 'нет ошибок в консоли');
   dom.window.close();
 });

@@ -264,6 +264,34 @@ body{
 .ov-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .rules{font-size:11.5px;color:#c3cddd;line-height:1.65;max-width:360px;max-height:52dvh;overflow:auto;padding:0 4px}
 .rules b{color:var(--cyan)}
+#tutorial{
+  position:absolute;left:50%;bottom:calc(45% + 12px);transform:translateX(-50%);
+  width:min(92vw,440px);z-index:18;padding:8px 11px 9px;border-radius:16px;
+  background:linear-gradient(180deg,rgba(12,20,34,.95),rgba(9,13,23,.97));
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  border:1px solid rgba(0,229,255,.55);
+  box-shadow:0 12px 34px rgba(0,0,0,.65),0 0 26px rgba(0,229,255,.16);
+  display:flex;flex-direction:column;gap:4px;
+}
+#tutorial.hidden{display:none}
+.tut-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tut-step{font-size:10px;font-weight:900;letter-spacing:.1em;color:var(--cyan)}
+.tut-skip{border:0;background:none;color:var(--muted);font-size:10px;letter-spacing:.05em;cursor:pointer;padding:4px}
+.tut-skip:active{color:var(--ink)}
+.tut-title{font-size:12.5px;font-weight:900;color:var(--ink);letter-spacing:.02em}
+.tut-text{font-size:11px;line-height:1.34;color:#c8d3e6}
+.tut-text b{color:var(--cyan)}
+.tut-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tut-hint{font-size:10px;color:var(--amber);letter-spacing:.03em}
+.tut-next{
+  min-height:33px;padding:6px 15px;border-radius:11px;cursor:pointer;
+  border:1px solid var(--cyan);background:rgba(0,229,255,.14);color:var(--ink);
+  font-size:11px;font-weight:900;letter-spacing:.06em;white-space:nowrap;
+}
+.tut-next:active{transform:scale(.97)}
+.tutorial-on #tip{opacity:0}
+.tut-glow{animation:tutpulse 1.15s ease-in-out infinite}
+@keyframes tutpulse{50%{box-shadow:0 0 0 2px rgba(0,229,255,.55),0 0 22px rgba(0,229,255,.45)}}
 #toast{
   position:absolute;left:50%;top:46px;transform:translateX(-50%) translateY(-8px);
   z-index:30;padding:8px 14px;border-radius:999px;font-size:11px;white-space:nowrap;
@@ -314,6 +342,9 @@ body{
   #board{width:max(160px,min(88vw,42dvh,calc(55dvh - 82px),400px))}
   .ability{min-height:56px}.dpad{--btn:clamp(54px,15vw,66px)}
   .hud-row{min-height:26px}
+  #tutorial{padding:6px 10px;gap:4px;bottom:calc(45% + 8px)}
+  .tut-text{font-size:10.5px;line-height:1.3}.tut-title{font-size:12px}
+  .tut-next{min-height:32px}
 }
 </style>
 </head>
@@ -372,6 +403,7 @@ body{
     <div class="hint">Свайп в любом месте экрана · клавиши ←↑→↓ / 1 / 2 / 3</div>
   </section>
 
+  <div id="tutorial" class="hidden"></div>
   <div id="rotate-hint">↻ Для удобства поверните телефон вертикально</div>
   <div id="overlay" class="hidden"></div>
   <div id="toast"></div>
@@ -1208,6 +1240,83 @@ function toast(msg) {
 const restored = load();
 state = restored || E.createGame((Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0);
 
+/* ---------- обучение при первом запуске ---------- */
+const TUT_KEY = 'edge-push:tutorial:v1';
+const TUTORIAL = [
+  {
+    title:'Добро пожаловать в КРАЙ',
+    text:'Прямых ударов нет. <b>Толкай</b> врагов в пропасть, лаву, колонны, бочки и друг в друга. Впереди 7 этажей.',
+    spot:null, hint:'6 коротких шагов · можно пропустить'
+  },
+  {
+    title:'Один палец — один ход',
+    text:'Свайпни <b>в любом месте экрана</b> или нажми ▲ ▼ ◄ ► внизу. Пустая клетка — шаг, в пропасть герой не шагнёт.',
+    spot:'dpad', hint:'Сделай любой ход ↓', waitAction:true
+  },
+  {
+    title:'Толчок щитом',
+    text:'Враг или бочка перед тобой? Нажми в их сторону — цель летит на <b>2 клетки</b>. Край карты и пропасть смертельны.',
+    spot:'dpad', hint:'Попробуй толкнуть ↓', waitAction:true
+  },
+  {
+    title:'Только 2 угрозы',
+    text:'Яркие враги с <b>⚡</b> действуют в этот ход, остальные спят. Красные стрелки показывают намерение: уйди вбок или подставь союзника.',
+    spot:'board', hint:'Читай поле за полсекунды'
+  },
+  {
+    title:'Три приёма',
+    text:'<b>КРЮК</b> тянет цель с луча · <b>БРОСОК</b> кидает врага за спину · <b>ЖДАТЬ</b> даёт щит на один удар. Откат приёмов — 2 хода.',
+    spot:'abilities', hint:'Режим включается тапом по кнопке'
+  },
+  {
+    title:'Забег начался',
+    text:'После каждого этажа бери <b>1 из 3 перков</b>. Партия сохраняется после каждого действия — телефон можно убрать в карман.',
+    spot:null, hint:'Удачи на краю!'
+  }
+];
+let tutActive = true, tutStep = 0, tutRendered = -2;
+try { tutActive = localStorage.getItem(TUT_KEY) !== 'done'; } catch (e) { tutActive = true; }
+
+function finishTutorial() {
+  tutActive = false;
+  tutStep = TUTORIAL.length;
+  try { localStorage.setItem(TUT_KEY, 'done'); } catch (e) {}
+  renderTutorial();
+}
+function advanceTutorial(fromAction) {
+  if (!tutActive) return;
+  if (fromAction && !TUTORIAL[tutStep].waitAction) return;
+  tutStep += 1;
+  if (tutStep >= TUTORIAL.length) finishTutorial();
+  else renderTutorial();
+}
+function renderTutorial(cur) {
+  const app = document.getElementById('app');
+  const el = $('#tutorial');
+  const st8 = cur || state;
+  const blocked = !!modal || !st8 || st8.phase !== 'PLAYER';
+  el.classList.toggle('hidden', !tutActive || blocked);
+  const key = tutActive ? tutStep : -1;
+  if (key === tutRendered) return;
+  tutRendered = key;
+  app.classList.toggle('tutorial-on', tutActive);
+  for (const n of document.querySelectorAll('.tut-glow')) n.classList.remove('tut-glow');
+  if (!tutActive) { el.innerHTML = ''; return; }
+  const st = TUTORIAL[tutStep];
+  const last = tutStep === TUTORIAL.length - 1;
+  el.innerHTML =
+    '<div class="tut-head"><span class="tut-step">ОБУЧЕНИЕ ' + (tutStep + 1) + '/' + TUTORIAL.length + '</span>' +
+    '<button class="tut-skip" data-tut="skip" type="button">ПРОПУСТИТЬ</button></div>' +
+    '<div class="tut-title">' + st.title + '</div>' +
+    '<div class="tut-text">' + st.text + '</div>' +
+    '<div class="tut-row"><span class="tut-hint">' + st.hint + '</span>' +
+    '<button class="tut-next" data-tut="next" type="button">' + (last ? 'ИГРАТЬ' : 'ДАЛЬШЕ') + '</button></div>';
+  const targets = st.spot === 'dpad' ? document.querySelectorAll('.dir') :
+                  st.spot === 'abilities' ? document.querySelectorAll('.ability') :
+                  st.spot === 'board' ? [$('#board')] : [];
+  for (const n of targets) n.classList.add('tut-glow');
+}
+
 /* ---------- плитки ---------- */
 for (let i = 0; i < 25; i++) {
   const d = document.createElement('div');
@@ -1474,6 +1583,7 @@ function perkCard(id, level) {
     '<span class="pc-lvl"> УР. ' + level + '</span><div class="pc-desc">' + E.describePerk(id, level) + '</div></span></button>';
 }
 function renderOverlay(s) {
+  renderTutorial(s);
   if (modal === 'restart') {
     overlay.innerHTML = '<div class="ov-title">НАЧАТЬ ЗАНОВО?</div>' +
       '<div class="ov-sub">Текущий забег будет сброшен. Прогресс сохраняется только для последней партии.</div>' +
@@ -1492,7 +1602,9 @@ function renderOverlay(s) {
       '<b>Активные угрозы:</b> не больше двух за ход. Остальные враги «спят» и не двигаются. Красные стрелки показывают их намерение: уйдите в сторону или подставьте союзника.<br><br>' +
       '<b>Бочки и бомберы</b> взрываются от любого урона: 2 урона в квадрате 3×3 и разлёт соседей.<br><br>' +
       'После каждого этажа — 1 из 3 перков. Партия сохраняется после каждого действия.' +
-      '</div><div class="ov-row"><button class="ov-btn" data-act="close" type="button">ПОНЯТНО</button></div>';
+      '</div><div class="ov-row">' +
+      '<button class="ov-btn ghost" data-act="tutorial" type="button">ПОВТОРИТЬ ОБУЧЕНИЕ</button>' +
+      '<button class="ov-btn" data-act="close" type="button">ПОНЯТНО</button></div>';
     overlay.classList.remove('hidden'); return;
   }
   if (s.phase === 'PERKS') {
@@ -1529,6 +1641,7 @@ function render(s, events, showPreview) {
   renderHud(s);
   renderControls(s, pv);
   renderOverlay(s);
+  renderTutorial(s);
   if (events && events.length) playFx(events);
 }
 
@@ -1566,6 +1679,7 @@ async function doAction(action) {
   }
   state = res.state;
   save();
+  advanceTutorial(true);       // интерактивные шаги обучения завершаются реальным ходом
   render(state, [], true);
   busy = false;
 }
@@ -1591,7 +1705,20 @@ overlay.addEventListener('click', e => {
   const act = e.target.closest('[data-act]');
   if (!act) return;
   if (act.dataset.act === 'new') newRun();
+  else if (act.dataset.act === 'tutorial') {
+    try { localStorage.removeItem(TUT_KEY); } catch (e) {}
+    tutActive = true; tutStep = 0; tutRendered = -2; modal = null;
+    renderTutorial();
+    render(state, [], true);
+    toast('ОБУЧЕНИЕ ЗАНОВО');
+  }
   else { modal = null; renderOverlay(state); }
+});
+
+$('#tutorial').addEventListener('click', e => {
+  if (suppressClick) return;
+  if (e.target.closest('[data-tut="skip"]')) { finishTutorial(); toast('ОБУЧЕНИЕ ПРОПУЩЕНО'); return; }
+  if (e.target.closest('[data-tut="next"]')) advanceTutorial(false);
 });
 
 /* Свайп в ЛЮБОЙ точке экрана, порог 30px. */
