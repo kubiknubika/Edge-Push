@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T14:25:53.664Z",
+  "generatedAt": "2026-11-02T20:43:51.934Z",
   "config": {
     "heldOutSeeds": [
       1001,
@@ -18,8 +18,8 @@
     "seedPoolSize": 32,
     "seedsPerGen": 8,
     "calibrationSeeds": 16,
-    "bestFitness": 6592.75,
-    "seconds": 335.8,
+    "bestFitness": 9230.38,
+    "seconds": 354.8,
     "initialFitness": 1409.56,
     "finalWinRate": 0.188
   },
@@ -30,8 +30,8 @@
       "wins": 0,
       "winRate": 0,
       "avgFloors": 0.15,
-      "avgKills": 1.95,
-      "avgFitness": 126,
+      "avgKills": 1.99,
+      "avgFitness": 127.2,
       "floorDistribution": [
         88,
         9,
@@ -48,13 +48,13 @@
       "seeds": 100,
       "wins": 0,
       "winRate": 0,
-      "avgFloors": 0.45,
-      "avgKills": 2.91,
-      "avgFitness": 514.3,
+      "avgFloors": 0.46,
+      "avgKills": 2.95,
+      "avgFitness": 533.4,
       "floorDistribution": [
         67,
-        22,
-        10,
+        21,
+        11,
         1,
         0,
         0,
@@ -67,14 +67,14 @@
       "seeds": 100,
       "wins": 1,
       "winRate": 0.01,
-      "avgFloors": 0.75,
-      "avgKills": 4.04,
-      "avgFitness": 923.9,
+      "avgFloors": 0.78,
+      "avgKills": 4.15,
+      "avgFitness": 967.4,
       "floorDistribution": [
-        58,
+        57,
         24,
         11,
-        2,
+        3,
         4,
         0,
         0,
@@ -84,20 +84,20 @@
     {
       "name": "Эволюционировавший ИИ",
       "seeds": 100,
-      "wins": 6,
-      "winRate": 0.06,
-      "avgFloors": 2.38,
-      "avgKills": 10.34,
-      "avgFitness": 3612.4,
+      "wins": 18,
+      "winRate": 0.18,
+      "avgFloors": 3.25,
+      "avgKills": 13.78,
+      "avgFitness": 5596.8,
       "floorDistribution": [
-        21,
-        19,
-        22,
+        18,
+        13,
         15,
-        4,
-        6,
+        11,
+        9,
+        9,
         7,
-        6
+        18
       ]
     }
   ],
@@ -239,12 +239,12 @@
         "seed": 1013,
         "win": false,
         "floors": 0,
-        "kills": 0,
-        "turns": 10,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": -160
+        "kills": 2,
+        "turns": 90,
+        "hp": 3,
+        "dead": false,
+        "timeout": true,
+        "fitness": -135
       },
       {
         "seed": 1014,
@@ -449,11 +449,11 @@
         "win": false,
         "floors": 2,
         "kills": 8,
-        "turns": 54,
+        "turns": 62,
         "hp": 0,
         "dead": true,
         "timeout": false,
-        "fitness": 2574
+        "fitness": 2542
       },
       {
         "seed": 1033,
@@ -1086,12 +1086,12 @@
         "seed": 1090,
         "win": false,
         "floors": 0,
-        "kills": 1,
-        "turns": 4,
+        "kills": 3,
+        "turns": 11,
         "hp": 0,
         "dead": true,
         "timeout": false,
-        "fitness": -91
+        "fitness": 31
       },
       {
         "seed": 1091,
@@ -1241,13 +1241,13 @@
       {
         "seed": 1004,
         "win": false,
-        "floors": 1,
-        "kills": 5,
-        "turns": 90,
-        "hp": 2,
-        "dead": false,
-        "timeout": true,
-        "fitness": 1235
+        "floors": 2,
+        "kills": 8,
+        "turns": 10,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": 2750
       },
       {
         "seed": 1005,
@@ -1341,12 +1341,12 @@
         "seed": 1013,
         "win": false,
         "floors": 0,
-        "kills": 0,
-        "turns": 90,
-        "hp": 2,
-        "dead": false,
-        "timeout": true,
-        "fitness": -310
+        "kills": 1,
+        "turns": 2,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": -83
       },
       {
         "seed": 1014,
@@ -2189,11 +2189,11 @@
         "win": false,
         "floors": 0,
         "kills": 2,
-        "turns": 90,
-        "hp": 2,
-        "dead": false,
-        "timeout": true,
-        "fitness": -190
+        "turns": 5,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": -20
       },
       {
         "seed": 1091,
@@ -2443,12 +2443,12 @@
         "seed": 1013,
         "win": false,
         "floors": 0,
-        "kills": 0,
+        "kills": 2,
         "turns": 90,
-        "hp": 3,
+        "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": -285
+        "fitness": -215
       },
       {
         "seed": 1014,
@@ -2872,12 +2872,12 @@
         "seed": 1052,
         "win": false,
         "floors": 4,
-        "kills": 17,
+        "kills": 16,
         "turns": 90,
         "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 5350
+        "fitness": 5305
       },
       {
         "seed": 1053,
@@ -3289,13 +3289,13 @@
       {
         "seed": 1090,
         "win": false,
-        "floors": 0,
-        "kills": 2,
+        "floors": 3,
+        "kills": 12,
         "turns": 90,
-        "hp": 3,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": -135
+        "fitness": 4190
       },
       {
         "seed": 1091,
@@ -3412,24 +3412,24 @@
       {
         "seed": 1001,
         "win": false,
-        "floors": 2,
-        "kills": 9,
+        "floors": 5,
+        "kills": 18,
         "turns": 90,
-        "hp": 1,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 2710
+        "fitness": 6800
       },
       {
         "seed": 1002,
         "win": false,
-        "floors": 6,
-        "kills": 26,
+        "floors": 3,
+        "kills": 13,
         "turns": 90,
-        "hp": 1,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 8725
+        "fitness": 4165
       },
       {
         "seed": 1003,
@@ -3437,10 +3437,10 @@
         "floors": 1,
         "kills": 4,
         "turns": 90,
-        "hp": 3,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 1185
+        "fitness": 1210
       },
       {
         "seed": 1004,
@@ -3448,21 +3448,21 @@
         "floors": 1,
         "kills": 5,
         "turns": 90,
-        "hp": 2,
+        "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 1235
+        "fitness": 1180
       },
       {
         "seed": 1005,
         "win": false,
         "floors": 6,
         "kills": 27,
-        "turns": 48,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 8583
+        "turns": 90,
+        "hp": 1,
+        "dead": false,
+        "timeout": true,
+        "fitness": 8560
       },
       {
         "seed": 1006,
@@ -3478,126 +3478,27 @@
       {
         "seed": 1007,
         "win": false,
-        "floors": 4,
-        "kills": 17,
+        "floors": 5,
+        "kills": 22,
         "turns": 90,
-        "hp": 2,
+        "hp": 5,
         "dead": false,
         "timeout": true,
-        "fitness": 5555
+        "fitness": 7115
       },
       {
         "seed": 1008,
         "win": false,
-        "floors": 0,
-        "kills": 1,
+        "floors": 4,
+        "kills": 17,
         "turns": 90,
-        "hp": 2,
+        "hp": 3,
         "dead": false,
         "timeout": true,
-        "fitness": -235
+        "fitness": 5640
       },
       {
         "seed": 1009,
-        "win": false,
-        "floors": 3,
-        "kills": 13,
-        "turns": 90,
-        "hp": 1,
-        "dead": false,
-        "timeout": true,
-        "fitness": 4210
-      },
-      {
-        "seed": 1010,
-        "win": false,
-        "floors": 3,
-        "kills": 11,
-        "turns": 20,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 4165
-      },
-      {
-        "seed": 1011,
-        "win": false,
-        "floors": 2,
-        "kills": 7,
-        "turns": 20,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 2695
-      },
-      {
-        "seed": 1012,
-        "win": false,
-        "floors": 3,
-        "kills": 13,
-        "turns": 90,
-        "hp": 1,
-        "dead": false,
-        "timeout": true,
-        "fitness": 4090
-      },
-      {
-        "seed": 1013,
-        "win": false,
-        "floors": 0,
-        "kills": 2,
-        "turns": 90,
-        "hp": 3,
-        "dead": false,
-        "timeout": true,
-        "fitness": -195
-      },
-      {
-        "seed": 1014,
-        "win": false,
-        "floors": 1,
-        "kills": 4,
-        "turns": 90,
-        "hp": 1,
-        "dead": false,
-        "timeout": true,
-        "fitness": 1165
-      },
-      {
-        "seed": 1015,
-        "win": false,
-        "floors": 2,
-        "kills": 9,
-        "turns": 90,
-        "hp": 1,
-        "dead": false,
-        "timeout": true,
-        "fitness": 2650
-      },
-      {
-        "seed": 1016,
-        "win": false,
-        "floors": 1,
-        "kills": 5,
-        "turns": 90,
-        "hp": 3,
-        "dead": false,
-        "timeout": true,
-        "fitness": 1260
-      },
-      {
-        "seed": 1017,
-        "win": false,
-        "floors": 0,
-        "kills": 2,
-        "turns": 90,
-        "hp": 2,
-        "dead": false,
-        "timeout": true,
-        "fitness": -160
-      },
-      {
-        "seed": 1018,
         "win": false,
         "floors": 2,
         "kills": 8,
@@ -3605,164 +3506,65 @@
         "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 2545
+        "fitness": 2635
       },
       {
-        "seed": 1019,
-        "win": false,
-        "floors": 5,
-        "kills": 21,
-        "turns": 34,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 7079
-      },
-      {
-        "seed": 1020,
-        "win": false,
-        "floors": 6,
-        "kills": 27,
-        "turns": 90,
-        "hp": 6,
-        "dead": false,
-        "timeout": true,
-        "fitness": 8775
-      },
-      {
-        "seed": 1021,
-        "win": false,
-        "floors": 3,
-        "kills": 12,
-        "turns": 22,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 4232
-      },
-      {
-        "seed": 1022,
-        "win": false,
-        "floors": 2,
-        "kills": 9,
-        "turns": 22,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 2807
-      },
-      {
-        "seed": 1023,
-        "win": true,
-        "floors": 7,
-        "kills": 28,
-        "turns": 43,
-        "hp": 2,
-        "dead": false,
-        "timeout": false,
-        "fitness": 15988
-      },
-      {
-        "seed": 1024,
-        "win": false,
-        "floors": 1,
-        "kills": 3,
-        "turns": 90,
-        "hp": 3,
-        "dead": false,
-        "timeout": true,
-        "fitness": 1140
-      },
-      {
-        "seed": 1025,
-        "win": false,
-        "floors": 5,
-        "kills": 22,
-        "turns": 90,
-        "hp": 1,
-        "dead": false,
-        "timeout": true,
-        "fitness": 7105
-      },
-      {
-        "seed": 1026,
-        "win": false,
-        "floors": 1,
-        "kills": 5,
-        "turns": 90,
-        "hp": 1,
-        "dead": false,
-        "timeout": true,
-        "fitness": 1240
-      },
-      {
-        "seed": 1027,
-        "win": false,
-        "floors": 1,
-        "kills": 5,
-        "turns": 90,
-        "hp": 2,
-        "dead": false,
-        "timeout": true,
-        "fitness": 1235
-      },
-      {
-        "seed": 1028,
-        "win": true,
-        "floors": 7,
-        "kills": 28,
-        "turns": 50,
-        "hp": 3,
-        "dead": false,
-        "timeout": false,
-        "fitness": 16165
-      },
-      {
-        "seed": 1029,
-        "win": false,
-        "floors": 3,
-        "kills": 13,
-        "turns": 90,
-        "hp": 2,
-        "dead": false,
-        "timeout": true,
-        "fitness": 4115
-      },
-      {
-        "seed": 1030,
+        "seed": 1010,
         "win": false,
         "floors": 0,
-        "kills": 1,
+        "kills": 2,
         "turns": 90,
         "hp": 3,
         "dead": false,
         "timeout": true,
-        "fitness": -210
+        "fitness": -165
       },
       {
-        "seed": 1031,
+        "seed": 1011,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 46,
+        "hp": 1,
+        "dead": false,
+        "timeout": false,
+        "fitness": 15951
+      },
+      {
+        "seed": 1012,
+        "win": false,
+        "floors": 6,
+        "kills": 25,
+        "turns": 90,
+        "hp": 5,
+        "dead": false,
+        "timeout": true,
+        "fitness": 8390
+      },
+      {
+        "seed": 1013,
+        "win": false,
+        "floors": 1,
+        "kills": 4,
+        "turns": 8,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": 1288
+      },
+      {
+        "seed": 1014,
         "win": false,
         "floors": 1,
         "kills": 5,
         "turns": 90,
-        "hp": 2,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 1205
+        "fitness": 1285
       },
       {
-        "seed": 1032,
-        "win": false,
-        "floors": 2,
-        "kills": 9,
-        "turns": 90,
-        "hp": 3,
-        "dead": false,
-        "timeout": true,
-        "fitness": 2700
-      },
-      {
-        "seed": 1033,
+        "seed": 1015,
         "win": false,
         "floors": 4,
         "kills": 17,
@@ -3770,21 +3572,131 @@
         "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 5590
+        "fitness": 5470
       },
       {
-        "seed": 1034,
+        "seed": 1016,
         "win": false,
-        "floors": 0,
-        "kills": 1,
+        "floors": 3,
+        "kills": 12,
+        "turns": 90,
+        "hp": 4,
+        "dead": false,
+        "timeout": true,
+        "fitness": 4030
+      },
+      {
+        "seed": 1017,
+        "win": false,
+        "floors": 3,
+        "kills": 13,
+        "turns": 90,
+        "hp": 4,
+        "dead": false,
+        "timeout": true,
+        "fitness": 4255
+      },
+      {
+        "seed": 1018,
+        "win": false,
+        "floors": 3,
+        "kills": 11,
+        "turns": 90,
+        "hp": 1,
+        "dead": false,
+        "timeout": true,
+        "fitness": 3970
+      },
+      {
+        "seed": 1019,
+        "win": false,
+        "floors": 1,
+        "kills": 4,
         "turns": 90,
         "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": -235
+        "fitness": 1190
       },
       {
-        "seed": 1035,
+        "seed": 1020,
+        "win": false,
+        "floors": 1,
+        "kills": 4,
+        "turns": 90,
+        "hp": 4,
+        "dead": false,
+        "timeout": true,
+        "fitness": 1210
+      },
+      {
+        "seed": 1021,
+        "win": false,
+        "floors": 2,
+        "kills": 9,
+        "turns": 90,
+        "hp": 4,
+        "dead": false,
+        "timeout": true,
+        "fitness": 2755
+      },
+      {
+        "seed": 1022,
+        "win": false,
+        "floors": 2,
+        "kills": 8,
+        "turns": 90,
+        "hp": 4,
+        "dead": false,
+        "timeout": true,
+        "fitness": 2650
+      },
+      {
+        "seed": 1023,
+        "win": false,
+        "floors": 4,
+        "kills": 17,
+        "turns": 39,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": 5739
+      },
+      {
+        "seed": 1024,
+        "win": false,
+        "floors": 0,
+        "kills": 2,
+        "turns": 90,
+        "hp": 1,
+        "dead": false,
+        "timeout": true,
+        "fitness": -215
+      },
+      {
+        "seed": 1025,
+        "win": false,
+        "floors": 5,
+        "kills": 22,
+        "turns": 90,
+        "hp": 2,
+        "dead": false,
+        "timeout": true,
+        "fitness": 7190
+      },
+      {
+        "seed": 1026,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 65,
+        "hp": 1,
+        "dead": false,
+        "timeout": false,
+        "fitness": 15875
+      },
+      {
+        "seed": 1027,
         "win": false,
         "floors": 1,
         "kills": 5,
@@ -3795,15 +3707,103 @@
         "fitness": 1180
       },
       {
-        "seed": 1036,
+        "seed": 1028,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 47,
+        "hp": 3,
+        "dead": false,
+        "timeout": false,
+        "fitness": 16207
+      },
+      {
+        "seed": 1029,
+        "win": false,
+        "floors": 0,
+        "kills": 1,
+        "turns": 90,
+        "hp": 3,
+        "dead": false,
+        "timeout": true,
+        "fitness": -210
+      },
+      {
+        "seed": 1030,
         "win": false,
         "floors": 2,
-        "kills": 8,
-        "turns": 15,
+        "kills": 9,
+        "turns": 90,
+        "hp": 4,
+        "dead": false,
+        "timeout": true,
+        "fitness": 2725
+      },
+      {
+        "seed": 1031,
+        "win": false,
+        "floors": 6,
+        "kills": 28,
+        "turns": 71,
         "hp": 0,
         "dead": true,
         "timeout": false,
-        "fitness": 2760
+        "fitness": 8566
+      },
+      {
+        "seed": 1032,
+        "win": false,
+        "floors": 2,
+        "kills": 7,
+        "turns": 90,
+        "hp": 4,
+        "dead": false,
+        "timeout": true,
+        "fitness": 2605
+      },
+      {
+        "seed": 1033,
+        "win": false,
+        "floors": 3,
+        "kills": 13,
+        "turns": 90,
+        "hp": 4,
+        "dead": false,
+        "timeout": true,
+        "fitness": 4225
+      },
+      {
+        "seed": 1034,
+        "win": false,
+        "floors": 6,
+        "kills": 26,
+        "turns": 90,
+        "hp": 1,
+        "dead": false,
+        "timeout": true,
+        "fitness": 8395
+      },
+      {
+        "seed": 1035,
+        "win": false,
+        "floors": 0,
+        "kills": 0,
+        "turns": 90,
+        "hp": 3,
+        "dead": false,
+        "timeout": true,
+        "fitness": -285
+      },
+      {
+        "seed": 1036,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 60,
+        "hp": 4,
+        "dead": false,
+        "timeout": false,
+        "fitness": 16270
       },
       {
         "seed": 1037,
@@ -3811,21 +3811,21 @@
         "floors": 1,
         "kills": 5,
         "turns": 90,
-        "hp": 3,
+        "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 1260
+        "fitness": 1210
       },
       {
         "seed": 1038,
         "win": false,
-        "floors": 3,
-        "kills": 11,
-        "turns": 22,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 4067
+        "floors": 1,
+        "kills": 4,
+        "turns": 90,
+        "hp": 3,
+        "dead": false,
+        "timeout": true,
+        "fitness": 1185
       },
       {
         "seed": 1039,
@@ -3841,46 +3841,46 @@
       {
         "seed": 1040,
         "win": false,
-        "floors": 1,
-        "kills": 4,
-        "turns": 11,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 1336
-      },
-      {
-        "seed": 1041,
-        "win": false,
-        "floors": 2,
-        "kills": 9,
+        "floors": 4,
+        "kills": 17,
         "turns": 90,
         "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 2710
+        "fitness": 5470
+      },
+      {
+        "seed": 1041,
+        "win": false,
+        "floors": 0,
+        "kills": 2,
+        "turns": 90,
+        "hp": 3,
+        "dead": false,
+        "timeout": true,
+        "fitness": -135
       },
       {
         "seed": 1042,
         "win": false,
-        "floors": 4,
-        "kills": 16,
+        "floors": 1,
+        "kills": 5,
         "turns": 90,
         "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 5620
+        "fitness": 1285
       },
       {
         "seed": 1043,
         "win": false,
         "floors": 1,
-        "kills": 5,
+        "kills": 4,
         "turns": 90,
-        "hp": 3,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 1230
+        "fitness": 1150
       },
       {
         "seed": 1044,
@@ -3888,43 +3888,43 @@
         "floors": 2,
         "kills": 9,
         "turns": 90,
-        "hp": 1,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 2710
+        "fitness": 2705
       },
       {
         "seed": 1045,
         "win": true,
         "floors": 7,
         "kills": 28,
-        "turns": 53,
-        "hp": 3,
+        "turns": 41,
+        "hp": 4,
         "dead": false,
         "timeout": false,
-        "fitness": 16123
+        "fitness": 16076
       },
       {
         "seed": 1046,
         "win": false,
         "floors": 1,
-        "kills": 3,
+        "kills": 5,
         "turns": 90,
-        "hp": 1,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 1060
+        "fitness": 1175
       },
       {
         "seed": 1047,
-        "win": false,
-        "floors": 5,
-        "kills": 22,
-        "turns": 90,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 51,
         "hp": 1,
         "dead": false,
-        "timeout": true,
-        "fitness": 7165
+        "timeout": false,
+        "fitness": 15901
       },
       {
         "seed": 1048,
@@ -3953,55 +3953,55 @@
         "win": true,
         "floors": 7,
         "kills": 28,
-        "turns": 58,
+        "turns": 51,
         "hp": 2,
         "dead": false,
         "timeout": false,
-        "fitness": 16048
+        "fitness": 15836
       },
       {
         "seed": 1051,
         "win": false,
-        "floors": 2,
-        "kills": 8,
-        "turns": 15,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 2670
+        "floors": 3,
+        "kills": 13,
+        "turns": 90,
+        "hp": 2,
+        "dead": false,
+        "timeout": true,
+        "fitness": 4055
       },
       {
         "seed": 1052,
-        "win": false,
-        "floors": 3,
-        "kills": 11,
-        "turns": 90,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 37,
         "hp": 1,
         "dead": false,
-        "timeout": true,
-        "fitness": 3910
+        "timeout": false,
+        "fitness": 16077
       },
       {
         "seed": 1053,
-        "win": false,
-        "floors": 2,
-        "kills": 8,
-        "turns": 90,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 63,
         "hp": 1,
         "dead": false,
-        "timeout": true,
-        "fitness": 2605
+        "timeout": false,
+        "fitness": 15943
       },
       {
         "seed": 1054,
         "win": false,
-        "floors": 0,
-        "kills": 2,
+        "floors": 5,
+        "kills": 21,
         "turns": 90,
-        "hp": 3,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": -135
+        "fitness": 7085
       },
       {
         "seed": 1055,
@@ -4009,120 +4009,120 @@
         "floors": 2,
         "kills": 9,
         "turns": 90,
-        "hp": 3,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 2640
+        "fitness": 2675
       },
       {
         "seed": 1056,
-        "win": false,
-        "floors": 3,
-        "kills": 10,
-        "turns": 90,
-        "hp": 1,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 38,
+        "hp": 4,
         "dead": false,
-        "timeout": true,
-        "fitness": 3955
+        "timeout": false,
+        "fitness": 16208
       },
       {
         "seed": 1057,
         "win": false,
-        "floors": 1,
-        "kills": 4,
+        "floors": 0,
+        "kills": 1,
         "turns": 90,
-        "hp": 1,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 1165
+        "fitness": -235
       },
       {
         "seed": 1058,
-        "win": false,
-        "floors": 3,
-        "kills": 11,
-        "turns": 25,
-        "hp": 0,
-        "dead": true,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 47,
+        "hp": 2,
+        "dead": false,
         "timeout": false,
-        "fitness": 4205
+        "fitness": 16122
       },
       {
         "seed": 1059,
         "win": false,
         "floors": 0,
-        "kills": 2,
+        "kills": 1,
         "turns": 90,
         "hp": 3,
         "dead": false,
         "timeout": true,
-        "fitness": -135
+        "fitness": -210
       },
       {
         "seed": 1060,
         "win": false,
-        "floors": 5,
-        "kills": 21,
-        "turns": 42,
+        "floors": 4,
+        "kills": 17,
+        "turns": 43,
         "hp": 0,
         "dead": true,
         "timeout": false,
-        "fitness": 7077
+        "fitness": 5663
       },
       {
         "seed": 1061,
         "win": false,
-        "floors": 0,
-        "kills": 2,
+        "floors": 5,
+        "kills": 21,
         "turns": 90,
-        "hp": 3,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": -195
+        "fitness": 6965
       },
       {
         "seed": 1062,
-        "win": false,
-        "floors": 1,
-        "kills": 5,
-        "turns": 15,
-        "hp": 0,
-        "dead": true,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 41,
+        "hp": 5,
+        "dead": false,
         "timeout": false,
-        "fitness": 1365
+        "fitness": 16161
       },
       {
         "seed": 1063,
-        "win": false,
-        "floors": 1,
-        "kills": 5,
-        "turns": 90,
-        "hp": 1,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 56,
+        "hp": 2,
         "dead": false,
-        "timeout": true,
-        "fitness": 1240
+        "timeout": false,
+        "fitness": 16176
       },
       {
         "seed": 1064,
-        "win": false,
-        "floors": 2,
-        "kills": 9,
-        "turns": 19,
-        "hp": 0,
-        "dead": true,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 62,
+        "hp": 1,
+        "dead": false,
         "timeout": false,
-        "fitness": 2729
+        "fitness": 15977
       },
       {
         "seed": 1065,
         "win": false,
         "floors": 3,
-        "kills": 13,
+        "kills": 10,
         "turns": 90,
-        "hp": 1,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 4090
+        "fitness": 3860
       },
       {
         "seed": 1066,
@@ -4130,24 +4130,35 @@
         "floors": 6,
         "kills": 27,
         "turns": 90,
-        "hp": 1,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 8680
+        "fitness": 8585
       },
       {
         "seed": 1067,
         "win": false,
-        "floors": 3,
-        "kills": 13,
+        "floors": 6,
+        "kills": 28,
+        "turns": 58,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": 8648
+      },
+      {
+        "seed": 1068,
+        "win": false,
+        "floors": 4,
+        "kills": 17,
         "turns": 90,
         "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 4145
+        "fitness": 5525
       },
       {
-        "seed": 1068,
+        "seed": 1069,
         "win": false,
         "floors": 2,
         "kills": 9,
@@ -4155,29 +4166,18 @@
         "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 2590
-      },
-      {
-        "seed": 1069,
-        "win": false,
-        "floors": 0,
-        "kills": 0,
-        "turns": 90,
-        "hp": 3,
-        "dead": false,
-        "timeout": true,
-        "fitness": -285
+        "fitness": 2620
       },
       {
         "seed": 1070,
         "win": false,
-        "floors": 5,
-        "kills": 22,
-        "turns": 44,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 7144
+        "floors": 0,
+        "kills": 2,
+        "turns": 90,
+        "hp": 1,
+        "dead": false,
+        "timeout": true,
+        "fitness": -185
       },
       {
         "seed": 1071,
@@ -4196,32 +4196,32 @@
         "floors": 2,
         "kills": 9,
         "turns": 90,
-        "hp": 1,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 2620
+        "fitness": 2725
       },
       {
         "seed": 1073,
-        "win": false,
-        "floors": 2,
-        "kills": 7,
-        "turns": 90,
-        "hp": 1,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 66,
+        "hp": 3,
         "dead": false,
-        "timeout": true,
-        "fitness": 2410
+        "timeout": false,
+        "fitness": 15981
       },
       {
         "seed": 1074,
         "win": false,
-        "floors": 1,
-        "kills": 5,
+        "floors": 3,
+        "kills": 12,
         "turns": 90,
-        "hp": 1,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 1180
+        "fitness": 4120
       },
       {
         "seed": 1075,
@@ -4237,24 +4237,24 @@
       {
         "seed": 1076,
         "win": false,
-        "floors": 6,
-        "kills": 24,
-        "turns": 90,
-        "hp": 2,
-        "dead": false,
-        "timeout": true,
-        "fitness": 8420
+        "floors": 2,
+        "kills": 8,
+        "turns": 22,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": 2642
       },
       {
         "seed": 1077,
-        "win": true,
-        "floors": 7,
-        "kills": 28,
-        "turns": 49,
-        "hp": 1,
+        "win": false,
+        "floors": 5,
+        "kills": 22,
+        "turns": 90,
+        "hp": 5,
         "dead": false,
-        "timeout": false,
-        "fitness": 16119
+        "timeout": true,
+        "fitness": 7235
       },
       {
         "seed": 1078,
@@ -4269,14 +4269,14 @@
       },
       {
         "seed": 1079,
-        "win": true,
-        "floors": 7,
-        "kills": 28,
-        "turns": 50,
-        "hp": 2,
+        "win": false,
+        "floors": 4,
+        "kills": 16,
+        "turns": 90,
+        "hp": 4,
         "dead": false,
-        "timeout": false,
-        "fitness": 15990
+        "timeout": true,
+        "fitness": 5410
       },
       {
         "seed": 1080,
@@ -4292,13 +4292,13 @@
       {
         "seed": 1081,
         "win": false,
-        "floors": 1,
-        "kills": 5,
+        "floors": 5,
+        "kills": 21,
         "turns": 90,
-        "hp": 1,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 1240
+        "fitness": 7105
       },
       {
         "seed": 1082,
@@ -4306,24 +4306,13 @@
         "floors": 1,
         "kills": 4,
         "turns": 90,
-        "hp": 3,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 1215
+        "fitness": 1210
       },
       {
         "seed": 1083,
-        "win": false,
-        "floors": 6,
-        "kills": 24,
-        "turns": 90,
-        "hp": 1,
-        "dead": false,
-        "timeout": true,
-        "fitness": 8425
-      },
-      {
-        "seed": 1084,
         "win": false,
         "floors": 6,
         "kills": 27,
@@ -4331,161 +4320,172 @@
         "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 8530
+        "fitness": 8380
+      },
+      {
+        "seed": 1084,
+        "win": false,
+        "floors": 0,
+        "kills": 2,
+        "turns": 90,
+        "hp": 3,
+        "dead": false,
+        "timeout": true,
+        "fitness": -135
       },
       {
         "seed": 1085,
         "win": false,
         "floors": 2,
-        "kills": 9,
+        "kills": 8,
         "turns": 90,
-        "hp": 1,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 2710
+        "fitness": 2680
       },
       {
         "seed": 1086,
         "win": false,
         "floors": 5,
         "kills": 22,
-        "turns": 29,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 7144
+        "turns": 90,
+        "hp": 1,
+        "dead": false,
+        "timeout": true,
+        "fitness": 7045
       },
       {
         "seed": 1087,
         "win": false,
-        "floors": 3,
-        "kills": 11,
-        "turns": 25,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 4055
+        "floors": 2,
+        "kills": 8,
+        "turns": 90,
+        "hp": 2,
+        "dead": false,
+        "timeout": true,
+        "fitness": 2630
       },
       {
         "seed": 1088,
         "win": false,
-        "floors": 2,
-        "kills": 8,
-        "turns": 90,
-        "hp": 1,
-        "dead": false,
-        "timeout": true,
-        "fitness": 2635
+        "floors": 3,
+        "kills": 13,
+        "turns": 35,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": 4135
       },
       {
         "seed": 1089,
-        "win": false,
-        "floors": 0,
-        "kills": 2,
-        "turns": 90,
-        "hp": 1,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 67,
+        "hp": 4,
         "dead": false,
-        "timeout": true,
-        "fitness": -215
+        "timeout": false,
+        "fitness": 16062
       },
       {
         "seed": 1090,
-        "win": false,
-        "floors": 0,
-        "kills": 2,
-        "turns": 90,
-        "hp": 3,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 74,
+        "hp": 4,
         "dead": false,
-        "timeout": true,
-        "fitness": -135
+        "timeout": false,
+        "fitness": 16064
       },
       {
         "seed": 1091,
         "win": false,
-        "floors": 2,
-        "kills": 9,
+        "floors": 0,
+        "kills": 1,
         "turns": 90,
         "hp": 1,
         "dead": false,
         "timeout": true,
-        "fitness": 2560
+        "fitness": -260
       },
       {
         "seed": 1092,
         "win": false,
-        "floors": 2,
-        "kills": 9,
-        "turns": 15,
-        "hp": 0,
-        "dead": true,
-        "timeout": false,
-        "fitness": 2835
+        "floors": 3,
+        "kills": 13,
+        "turns": 90,
+        "hp": 2,
+        "dead": false,
+        "timeout": true,
+        "fitness": 4175
       },
       {
         "seed": 1093,
         "win": false,
-        "floors": 0,
-        "kills": 0,
+        "floors": 5,
+        "kills": 19,
         "turns": 90,
-        "hp": 3,
+        "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": -285
+        "fitness": 6905
       },
       {
         "seed": 1094,
         "win": false,
-        "floors": 3,
-        "kills": 13,
-        "turns": 90,
-        "hp": 2,
-        "dead": false,
-        "timeout": true,
-        "fitness": 4115
+        "floors": 4,
+        "kills": 16,
+        "turns": 26,
+        "hp": 0,
+        "dead": true,
+        "timeout": false,
+        "fitness": 5566
       },
       {
         "seed": 1095,
         "win": false,
-        "floors": 4,
-        "kills": 17,
+        "floors": 2,
+        "kills": 8,
         "turns": 90,
-        "hp": 2,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 5555
+        "fitness": 2710
       },
       {
         "seed": 1096,
         "win": false,
-        "floors": 2,
-        "kills": 9,
+        "floors": 3,
+        "kills": 13,
         "turns": 90,
         "hp": 2,
         "dead": false,
         "timeout": true,
-        "fitness": 2735
+        "fitness": 4175
       },
       {
         "seed": 1097,
-        "win": false,
-        "floors": 0,
-        "kills": 2,
-        "turns": 90,
-        "hp": 3,
+        "win": true,
+        "floors": 7,
+        "kills": 28,
+        "turns": 55,
+        "hp": 5,
         "dead": false,
-        "timeout": true,
-        "fitness": -135
+        "timeout": false,
+        "fitness": 16045
       },
       {
         "seed": 1098,
         "win": false,
-        "floors": 3,
-        "kills": 13,
+        "floors": 2,
+        "kills": 9,
         "turns": 90,
-        "hp": 1,
+        "hp": 4,
         "dead": false,
         "timeout": true,
-        "fitness": 4120
+        "fitness": 2755
       },
       {
         "seed": 1099,
@@ -4501,39 +4501,39 @@
       {
         "seed": 1100,
         "win": false,
-        "floors": 3,
-        "kills": 13,
+        "floors": 4,
+        "kills": 17,
         "turns": 90,
-        "hp": 1,
+        "hp": 3,
         "dead": false,
         "timeout": true,
-        "fitness": 4180
+        "fitness": 5520
       }
     ]
   },
   "guidedSearch": {
     "attemptsPerSeed": 12,
-    "guidedWins": 37,
-    "championWins": 6,
-    "beamWins": 90,
+    "guidedWins": 49,
+    "championWins": 18,
+    "beamWins": 94,
     "beamWidth": 96,
     "beamBranch": 13,
-    "beamAvgFloors": 6.73,
-    "unionWins": 93,
-    "winRate": 0.93,
-    "guidedRate": 0.37,
-    "beamRate": 0.9,
+    "beamAvgFloors": 6.87,
+    "unionWins": 95,
+    "winRate": 0.95,
+    "guidedRate": 0.49,
+    "beamRate": 0.94,
     "perSeed": [
       {
         "seed": 1001,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
       },
       {
         "seed": 1002,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4547,10 +4547,10 @@
       },
       {
         "seed": 1004,
-        "guided": false,
-        "beam": false,
-        "found": false,
-        "beamFloors": 1
+        "guided": true,
+        "beam": true,
+        "found": true,
+        "beamFloors": 7
       },
       {
         "seed": 1005,
@@ -4561,7 +4561,7 @@
       },
       {
         "seed": 1006,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4583,9 +4583,9 @@
       {
         "seed": 1009,
         "guided": false,
-        "beam": true,
-        "found": true,
-        "beamFloors": 7
+        "beam": false,
+        "found": false,
+        "beamFloors": 6
       },
       {
         "seed": 1010,
@@ -4610,7 +4610,7 @@
       },
       {
         "seed": 1013,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4624,7 +4624,7 @@
       },
       {
         "seed": 1015,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4659,7 +4659,7 @@
       },
       {
         "seed": 1020,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4673,7 +4673,7 @@
       },
       {
         "seed": 1022,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4694,7 +4694,7 @@
       },
       {
         "seed": 1025,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4715,7 +4715,7 @@
       },
       {
         "seed": 1028,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4744,13 +4744,13 @@
       {
         "seed": 1032,
         "guided": false,
-        "beam": false,
-        "found": false,
-        "beamFloors": 5
+        "beam": true,
+        "found": true,
+        "beamFloors": 7
       },
       {
         "seed": 1033,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4771,21 +4771,21 @@
       },
       {
         "seed": 1036,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
       },
       {
         "seed": 1037,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
       },
       {
         "seed": 1038,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4813,7 +4813,7 @@
       },
       {
         "seed": 1042,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4834,7 +4834,7 @@
       },
       {
         "seed": 1045,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4848,21 +4848,21 @@
       },
       {
         "seed": 1047,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
       },
       {
         "seed": 1048,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
       },
       {
         "seed": 1049,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4883,10 +4883,10 @@
       },
       {
         "seed": 1052,
-        "guided": false,
-        "beam": false,
-        "found": false,
-        "beamFloors": 6
+        "guided": true,
+        "beam": true,
+        "found": true,
+        "beamFloors": 7
       },
       {
         "seed": 1053,
@@ -4897,10 +4897,10 @@
       },
       {
         "seed": 1054,
-        "guided": true,
+        "guided": false,
         "beam": false,
-        "found": true,
-        "beamFloors": 6
+        "found": false,
+        "beamFloors": 5
       },
       {
         "seed": 1055,
@@ -4911,7 +4911,7 @@
       },
       {
         "seed": 1056,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4953,7 +4953,7 @@
       },
       {
         "seed": 1062,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -4974,14 +4974,14 @@
       },
       {
         "seed": 1065,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
       },
       {
         "seed": 1066,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5002,7 +5002,7 @@
       },
       {
         "seed": 1069,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5017,9 +5017,9 @@
       {
         "seed": 1071,
         "guided": false,
-        "beam": false,
-        "found": false,
-        "beamFloors": 4
+        "beam": true,
+        "found": true,
+        "beamFloors": 7
       },
       {
         "seed": 1072,
@@ -5031,13 +5031,13 @@
       {
         "seed": 1073,
         "guided": false,
-        "beam": false,
-        "found": false,
-        "beamFloors": 6
+        "beam": true,
+        "found": true,
+        "beamFloors": 7
       },
       {
         "seed": 1074,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5051,14 +5051,14 @@
       },
       {
         "seed": 1076,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
       },
       {
         "seed": 1077,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5080,16 +5080,16 @@
       {
         "seed": 1080,
         "guided": false,
-        "beam": false,
-        "found": false,
-        "beamFloors": 2
-      },
-      {
-        "seed": 1081,
-        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
+      },
+      {
+        "seed": 1081,
+        "guided": false,
+        "beam": false,
+        "found": false,
+        "beamFloors": 5
       },
       {
         "seed": 1082,
@@ -5107,7 +5107,7 @@
       },
       {
         "seed": 1084,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5121,21 +5121,21 @@
       },
       {
         "seed": 1086,
-        "guided": true,
+        "guided": false,
         "beam": false,
-        "found": true,
+        "found": false,
         "beamFloors": 5
       },
       {
         "seed": 1087,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
       },
       {
         "seed": 1088,
-        "guided": true,
+        "guided": false,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5149,7 +5149,7 @@
       },
       {
         "seed": 1090,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5177,7 +5177,7 @@
       },
       {
         "seed": 1094,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5191,7 +5191,7 @@
       },
       {
         "seed": 1096,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7
@@ -5212,7 +5212,7 @@
       },
       {
         "seed": 1099,
-        "guided": false,
+        "guided": true,
         "beam": true,
         "found": true,
         "beamFloors": 7

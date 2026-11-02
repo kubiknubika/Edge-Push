@@ -5,20 +5,23 @@
  *
  *   node ai/report.mjs
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const read = f => JSON.parse(readFileSync(resolve('ai/' + f), 'utf8'));
 const training = read('training.json');
 const results = read('results.json');
 const replay = read('replay.json');
+const mastery = existsSync(resolve('ai/mastery.json')) ? read('mastery.json') : null;
+const rankCount = mastery ? new Set(mastery.config.plan.flatMap(x => x.ranks)).size : 0;
 const html = readFileSync(resolve('index.html'), 'utf8');
 const engineSrc = html.match(/\/\* ===== ENGINE START ===== \*\/([\s\S]*?)\/\* ===== ENGINE END ===== \*\//)[1];
 const perkTitles = Object.fromEntries(
   Array.from(engineSrc.matchAll(/id:'([A-Z_]+)',\s*icon:'[^']*',\s*title:'([^']+)'/g)).map(m => [m[1], m[2]])
 );
 
-const data = { training, results, replay, perkTitles };
+const data = { training, results, replay, perkTitles,
+  masteryReplay: mastery ? mastery.replay : null };
 const json = JSON.stringify(data).replace(/</g, '\\u003c');
 
 const h = training.history;
@@ -216,6 +219,37 @@ const page = `<!doctype html>
   <p class="muted">ИИ обучался с нуля генетическим алгоритмом, играя тем же детерминированным движком,
   что и браузерная версия. Проверка — на сидах, которых он никогда не видел.</p>
 
+  ${mastery ? `<div class="card verdict" style="border-color:${mastery.verdict === 'CONFIDENT_100' ? 'var(--safe)' : 'var(--hostile)'};background:linear-gradient(135deg,rgba(92,255,176,.13),rgba(0,229,255,.06))">
+    <p class="muted mono" style="margin:0 0 8px">ЭТАП 2 · НЕ СЛУЧАЙНО, А НАУЧЕНО</p>
+    <span class="badge" style="background:${mastery.verdict === 'CONFIDENT_100' ? 'rgba(92,255,176,.16)' : 'rgba(255,71,87,.16)'};color:${mastery.verdict === 'CONFIDENT_100' ? 'var(--safe)' : 'var(--hostile)'}">
+      ${mastery.verdict === 'CONFIDENT_100' ? '100% ПОБЕД · УВЕРЕННО' : 'ЧАСТИЧНАЯ ПОБЕДА'}</span>
+    <h1 style="font-size:clamp(22px,4vw,32px);margin:14px 0 6px">${mastery.totalWins} / ${mastery.totalSeeds} выигранных партий</h1>
+    <p>Один и тот же обученный ИИ выиграл <b>каждую</b> партию на двух независимых выборках
+    сидов: <b>${mastery.setA.summary.wins}/${mastery.setA.summary.seeds}</b> (${mastery.config.seedSetA.join('–')}) и
+    <b>${mastery.setB.summary.wins}/${mastery.setB.summary.seeds}</b> (${mastery.config.seedSetB.join('–')}).
+    Вторая выборка не использовалась ни при обучении, ни при калибровке, ни в первой проверке —
+    это проверка обобщения, а не заучивание ответов.</p>
+    <div class="kpis">
+      <div class="kpi"><b>${mastery.setA.summary.winRate * 100}%</b><span>выборка A, ${mastery.setA.summary.seeds} сидов</span></div>
+      <div class="kpi"><b>${mastery.setB.summary.winRate * 100}%</b><span>выборка B, новые ${mastery.setB.summary.seeds} сидов</span></div>
+      <div class="kpi"><b>${mastery.setB.summary.avgAttempts}</b><span>ср. попыток планирования на сид</span></div>
+      <div class="kpi"><b>${mastery.reproducibility.identical ? 'ДА' : 'НЕТ'}</b><span>прогон воспроизводим (${mastery.reproducibility.hash1})</span></div>
+    </div>
+    ${mastery.generatorGuard ? `<p style="font-size:13px;margin:12px 0 0;padding:10px 12px;border-left:3px solid var(--neutral);background:rgba(255,176,55,.07)">
+      <b>Игра исправлена по вашему решению.</b> Раньше генератор иногда собирал математически
+      непроходимый этаж, и 100% побед был невозможен. Теперь каждый этаж проверяется полным
+      перебором своих состояний; тупиковые расклады отбраковываются. На контрольных
+      ${mastery.generatorGuard.seeds} сидах (${mastery.generatorGuard.floors} этажей) проверено
+      ${mastery.generatorGuard.checked} раскладов, отбраковано ${mastery.generatorGuard.rejected},
+      сбоев гарантии — ${mastery.generatorGuard.failed}.</p>` : ''}
+    <p class="muted" style="font-size:12px">Метод: детерминированный адаптивный поиск лучом
+    по исправленному генератору; обученная политика проверена отдельно в разделе 2.1.
+    Ширина луча эскалируется
+    ${mastery.config.plan.map(x => x.width).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')} только для сидов,
+    которые не решились дешевле; до ${mastery.config.maxTurns} ходов, без случайных чисел.</p>
+  </div>` : ''}
+
+  <p class="muted mono" style="margin:22px 0 8px">ЭТАП 1 · ОТВЕТ НА ПЕРВЫЙ ВОПРОС</p>
   <div class="card verdict">
     <span class="badge">${verdictTitle}</span>
     <p>${verdictText}</p>
@@ -266,9 +300,77 @@ const page = `<!doctype html>
   <h3>Как далеко дошёл чемпион на ${total} новых сидах</h3>
   <div class="card"><div class="dist">${distHtml}</div></div>
 
+  ${mastery ? `<h2>2.1 Что именно доказано — и что нет</h2>
+  <div class="card">
+    <p><b>Обобщение.</b> Выборка B (${mastery.config.seedSetB.join('–')}) не встречалась ни в пуле
+    обучения (11…787), ни в калибровке (2001…2016), ни в первой проверке (1001…1100).
+    ${mastery.setB.summary.wins}/${mastery.setB.summary.seeds} побед на ней — это не подгонка под
+    известные сиды. ${mastery.config.disjoint}.</p>
+    <p><b>Воспроизводимость.</b> Два независимых прогона на ${mastery.reproducibility.seeds.length}
+    контрольных сидах дали одинаковые отпечатки <span class="mono">${mastery.reproducibility.hash1}</span>
+    и <span class="mono">${mastery.reproducibility.hash2}</span>. В решателе нет ГПСЧ:
+    порядок попыток фиксирован, сид задаёт все 7 этажей.</p>
+    <p><b>Обучение.</b> Главное доказательство — игра <b>без всякого поиска</b>, одной
+    реактивной политикой. На тех же 100 невидимых сидах:</p>
+    <div class="table-card"><table><thead><tr><th>Политика</th><th>Побед</th><th>Ср. этажей</th><th>Ср. фитнес</th></tr></thead><tbody>
+    ${pol.map((x, i) => `<tr><td>${i === 3 ? '<b>' + x.name + '</b>' : x.name}</td>
+      <td>${i === 3 ? '<b>' + x.wins + '</b>' : x.wins}</td>
+      <td>${x.avgFloors.toFixed(2)}</td><td>${x.avgFitness.toFixed(0)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <p>Эволюция подняла рекорд на калибровке с <b>${h[0].best.toFixed(0)}</b> до
+    <b>${h[h.length-1].best.toFixed(0)}</b> и довела чемпиона до <b>${champ.wins}/100</b> побед
+    против <b>${pol[0].wins}</b> у случайных ходов и <b>${pol[1].wins}</b> у поколения 0.
+    Это обобщение, а не случайное везение: сиды тестовые в обучении не участвовали.</p>
+    <p><b>Честно про планировщик.</b> Тот же луч W=384 на 20 самых трудных сидах,
+    но с разными весами оценки действий:</p>
+    <div class="table-card"><table><thead><tr><th>Оценка действий</th><th>Побед</th><th>Доля</th></tr></thead><tbody>
+    ${mastery.ablation.map(a => `<tr><td>${a.name}</td><td>${a.wins}/${a.seeds}</td>
+      <td>${(a.winRate*100).toFixed(0)}%</td></tr>`).join('')}
+    </tbody></table></div>
+    <p class="muted" style="font-size:12px">Здесь <b>нулевые веса выигрывают чаще чемпиона</b>
+    (${mastery.ablation[3].wins}/${mastery.ablation[3].seeds} против ${mastery.ablation[0].wins}/${mastery.ablation[0].seeds}).
+    Причина проверена отдельно: <span class="mono">Q</span> обучалась под жадный один ход, а в
+    ранге луча доминирует прогресс этажа; при весе Q от 0.001 до 2 чемпион ни разу не обошёл
+    нулевые веса, а при <span class="mono">branch=13</span> луч вообще раскрывает все действия
+    и оценка почти не влияет на отбор. Поэтому <b>100% — заслуга исправленного генератора и
+    детерминированного перебора, а не выученных весов</b>. Выученная политика критична в режиме
+    без поиска; планировщик критичен для уверенной победы. Это разные сильные стороны, и
+    отчёт их не смешивает.</p>
+    <p class="muted" style="font-size:12px">Распределение побед по ширине луча на выборке A:
+    ${Object.entries(mastery.setA.summary.byWidth).map(([k,v]) => 'W='+k+': '+v).join(', ')};
+    на выборке B: ${Object.entries(mastery.setB.summary.byWidth).map(([k,v]) => 'W='+k+': '+v).join(', ')}.
+    Среднее число попыток ${mastery.setA.summary.avgAttempts} / ${mastery.setB.summary.avgAttempts}.</p>
+  </div>` : ''}
+
+  ${mastery && mastery.generatorGuard ? `<h2>2.2 Почему пришлось исправить генератор</h2>
+  <div class="card">
+    <p>На исходной версии игры 100% побед был <b>математически недостижим</b>: сид 4095
+    оказался непроходимым. Исчерпывающий перебор первого этажа насчитал 577 различных
+    состояний, все ветви заканчивались гибелью героя к 12-му ходу, ни одна не приводила
+    к «этаж зачищен». Дело не в ИИ: выигрышной линии просто не существовало.</p>
+    <p>По вашему решению генератор был исправлен. Теперь <span class="mono">generateFloor</span>
+    перед выдачей этажа запускает полный перебор его состояний (BFS с дедупликацией по всем
+    полям, кроме декоративного счётчика ходов) и принимает расклад только если найден путь
+    до <span class="mono">PERKS</span> / <span class="mono">WIN</span>. Тупиковый расклад
+    детерминированно перегенерируется. Кэш по (ГПСЧ, этаж, HP, перки) делает проверку
+    одноразовой для каждого сида, поэтому ИИ и браузер не платят за неё повторно.</p>
+    <div class="kpis">
+      <div class="kpi"><b>${mastery.generatorGuard.checked}</b><span>раскладов проверено</span></div>
+      <div class="kpi"><b>${mastery.generatorGuard.rejected}</b><span>тупиковых отбраковано</span></div>
+      <div class="kpi"><b>${mastery.generatorGuard.maxAttempts}</b><span>макс. попыток на этаж</span></div>
+      <div class="kpi"><b>${mastery.generatorGuard.failed}</b><span>сбоев гарантии</span></div>
+    </div>
+    <p class="muted" style="font-size:12px">Это изменение игры, а не ИИ: этажи теперь гарантированно
+    имеют выигрышную линию, поэтому забеги стали заметно легче. Все прежние механики (сетка 5×5,
+    3–5 врагов, ≤2 активных угрозы, 3 HP, перки, толчки, взрывы) сохранены; добавлена только
+    проверка расклада. Движок по-прежнему детерминированный целочисленный автомат без внешних
+    библиотек; регрессионные тесты подтверждают проходимость каждого из 7 этажей.</p>
+  </div>` : ''}
+
   <h2>3. Реплей выигрышной партии</h2>
-  <p class="muted">Сид <b class="mono">${replay.seed}</b>, ${replay.turns} ходов, ${replay.floors}/7 этажей,
-  ${replay.kills} убийств. Источник: ${replay.source}. Каждый кадр — состояние <i>перед</i> ходом.</p>
+  <p class="muted" id="replayCaption">Сид <b class="mono">${replay.seed}</b>, ${replay.turns} ходов,
+  ${replay.floors}/7 этажей, ${replay.kills} убийств. Источник: ${replay.source}.
+  Каждый кадр — состояние <i>перед</i> ходом.</p>
   <div class="card replay">
     <div>
       <div id="board"></div>
@@ -277,6 +379,7 @@ const page = `<!doctype html>
         <button id="prev" class="ghost">← ШАГ</button>
         <button id="next" class="ghost">ШАГ →</button>
         <button id="speed" class="ghost">СКОРОСТЬ ×1</button>
+        ${mastery ? `<button id="swap" class="ghost">РЕПЛЕЙ SOLVER · СИД ${mastery.replay.seed}</button>` : ''}
       </div>
       <input type="range" id="seek" min="0" max="${replay.trace.length + (replay.final ? 1 : 0) - 1}" value="0">
       <div class="muted mono" id="counter"></div>
@@ -302,6 +405,19 @@ const page = `<!doctype html>
     ${training.config.mutationRate} с убыванием σ ${training.config.sigmaStart} → ${training.config.sigmaEnd},
     ${training.config.immigrants} случайных иммигранта на поколение. Никаких учителей, градиентов,
     A*, MCTS и подсмотренных правил: веса подбираются только по исходам целых партий.</p>
+    ${mastery ? `<p><b>Уверенная победа.</b> Реактивная политика видит только один ход вперёд.
+    Поэтому отдельно работает детерминированный планировщик: поиск лучом отсекает состояния по
+    прогрессу партии и эскалирует ширину
+    ${mastery.config.plan.map(x => x.width).filter((v,i,a)=>a.indexOf(v)===i).join(' → ')}
+    с ${rankCount} вариантами ранжирования только для сидов, не решённых дешевле. Он перебирает
+    действия через ту же функцию <span class="mono">Q(s,a)</span>, но решающий вклад даёт
+    эвристика прогресса этажа, а не веса: при <span class="mono">branch=13</span> раскрываются
+    все легальные действия. Поиск не обучается и не содержит случайности. Выученная политика
+    и планировщик оцениваются по отдельности — см. раздел 2.1.</p>` : ''}
+    <p><b>Гарантия проходимости.</b> Генератор проверяет каждый этаж полным перебором
+    состояний и отбраковывает тупиковые расклады — это отдельная от ИИ часть движка.
+    Благодаря этому «100% побед» вообще имеет смысл: на исходной версии игры часть сидов
+    была непроходима в принципе.</p>
     <p><b>Честность.</b> Обучение идёт на ротирующемся пуле из ${results.training.seedPoolSize} сидов
     (по ${results.training.seedsPerGen} на поколение), чемпион выбирается по отдельным
     ${results.training.calibrationSeeds} калибровочным сидам, а итоговая проверка — на третьей,
@@ -320,6 +436,15 @@ const page = `<!doctype html>
     последовательность для перечисленных сидов», а не
     «любой сид гарантированно проходим» и не «человек легко пройдёт игру». Отсутствие решения
     при данном бюджете поиска не равносильно доказательству непроходимости сида.</p>
+    ${mastery ? `<p>Результат «100%» относится к <b>${mastery.totalSeeds}</b> проверенным сидам
+    двух независимых выборок, а не ко всем возможным сидам. Он достигнут <b>с планированием</b>:
+    чистая политика «один ход без поиска» выигрывает ${(champ.winRate*100).toFixed(0)}%.
+    Уверенная победа обеспечена исправленным генератором и детерминированным поиском;
+    обучение доказано отдельно ростом чистой политики с ${pol[1].wins}/100 до ${champ.wins}/100.
+    Если бы даже максимальный бюджет не нашёл победу на каком-то сиде, отчёт показал бы
+    «частично», без округления до 100%.${(mastery.unwinnableSeeds || []).length
+      ? ' Доказательно непроходимых сидов: ' + mastery.unwinnableSeeds.map(u => u.seed).join(', ') + '.'
+      : ' Непроходимых сидов в обеих выборках не осталось — генератор их больше не создаёт.'}</p>` : ''}
     <p>Также ИИ не играет в браузере и не меняет саму игру: это отдельный инструмент анализа,
     который запускает тот же код движка из <span class="mono">index.html</span>.</p>
   </div>
@@ -330,9 +455,11 @@ const page = `<!doctype html>
 
 <script>
 const D = ${json};
-const trace = D.replay.final
+const championTrace = D.replay.final
   ? D.replay.trace.concat([{ state: D.replay.final, action: { type: 'WIN' } }])
   : D.replay.trace;
+const solverTrace = D.masteryReplay ? D.masteryReplay.trace : null;
+let trace = championTrace;
 const board = document.getElementById('board');
 const GL = { UP:'▲', DOWN:'▼', LEFT:'◄', RIGHT:'►' };
 const KIND = { STEP:'шаг', PUSH:'толчок', PULL:'крюк', FALL:'сброс в пропасть', VOID:'сброс за край',
@@ -391,6 +518,25 @@ document.getElementById('speed').onclick = e => {
   speed = speed === 1 ? 2 : speed === 2 ? 4 : 1;
   e.target.textContent = 'СКОРОСТЬ ×' + speed;
   if(timer){ stop(); play(); }
+};
+const cap = document.getElementById('replayCaption');
+let usingSolver = false;
+const swap = document.getElementById('swap');
+if (swap) swap.onclick = () => {
+  stop();
+  usingSolver = !usingSolver;
+  trace = usingSolver && solverTrace ? solverTrace : championTrace;
+  const max = trace.length - 1;
+  const seek = document.getElementById('seek');
+  seek.max = String(max);
+  cap.innerHTML = usingSolver
+    ? 'Сид <b class="mono">' + D.masteryReplay.seed + '</b>, ' + D.masteryReplay.turns + ' ходов, 7/7 этажей. ' +
+      'Источник: детерминированный решатель (W=' + D.masteryReplay.width + ', ' + D.masteryReplay.rank + '). ' +
+      (D.masteryReplay.purePolicyLost ? 'Чистая реактивная политика этот сид <b>проигрывала</b>.' : '')
+    : 'Сид <b class="mono">' + D.replay.seed + '</b>, ' + D.replay.turns + ' ходов, ' + D.replay.floors + '/7 этажей, ' +
+      D.replay.kills + ' убийств. Источник: ' + D.replay.source + '. Каждый кадр — состояние <i>перед</i> ходом.';
+  swap.textContent = usingSolver ? 'РЕПЛЕЙ ЧЕМПИОНА' : 'РЕПЛЕЙ SOLVER · СИД ' + D.masteryReplay.seed;
+  set(0);
 };
 render();
 </script>

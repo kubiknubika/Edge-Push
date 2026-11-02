@@ -6,6 +6,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   E, PERK_IDS, MAX_FLOOR, legalActions, applyAction, compact,
   stateKey, makeRng
@@ -127,4 +128,49 @@ test('ИИ: случайная политика не использует вес
   const a = playRun(5, null, { mode: 'random', maxTurns: 20, rng: makeRng(9) });
   const b = playRun(5, null, { mode: 'random', maxTurns: 20, rng: makeRng(9) });
   assert.deepEqual(a, b);
+});
+
+/* -------------------- уверенная победа (solver) -------------------- */
+import { RANKS, DEFAULT_PLAN, solve, solveSet } from '../ai/solver.mjs';
+import { parallelSolveSet } from '../ai/parallel.mjs';
+
+const championJSON = JSON.parse(readFileSync(new URL('../ai/training.json', import.meta.url), 'utf8')).champion;
+const solverGenome = genomeFromJSON(championJSON);
+
+test('ИИ: все варианты ранжирования конечны и детерминированы', () => {
+  const s = E.createGame(1023);
+  for (const [name, fn] of Object.entries(RANKS)) {
+    const a = fn(s, 1.25), b = fn(s, 1.25);
+    assert.ok(Number.isFinite(a), name);
+    assert.equal(a, b, name);
+  }
+  assert.ok(DEFAULT_PLAN.length >= 3);
+  assert.ok(DEFAULT_PLAN.every(x => x.width > 0 && x.ranks.length > 0));
+});
+
+test('ИИ: решатель выигрывает известный сид и воспроизводим', () => {
+  const plan = [{ width: 96, ranks: ['base'] }];
+  const a = solve(1023, solverGenome, { plan, maxTurns: 90, branch: 13 });
+  const b = solve(1023, solverGenome, { plan, maxTurns: 90, branch: 13 });
+  assert.equal(a.win, true);
+  assert.deepEqual(
+    { win: a.win, turns: a.turns, width: a.width, rank: a.rank, attempts: a.attempts },
+    { win: b.win, turns: b.turns, width: b.width, rank: b.rank, attempts: b.attempts });
+  assert.ok(a.trace.length > 0);
+  assert.equal(a.trace[a.trace.length - 1].action.type, 'WIN');
+});
+
+test('ИИ: solveSet и параллельный пул дают одинаковые результаты', async () => {
+  const seeds = [1023, 1040];
+  const plan = [{ width: 96, ranks: ['base', 'noEnemy'] }];
+  const serial = solveSet(seeds, solverGenome, { plan, maxTurns: 90, branch: 13 });
+  const { rows: parallel } = await parallelSolveSet(seeds, championJSON,
+    { plan, maxTurns: 90, branch: 13, workers: 2 });
+  assert.equal(serial.length, parallel.length);
+  for (let i = 0; i < seeds.length; i++) {
+    assert.equal(parallel[i].seed, serial[i].seed);
+    assert.equal(parallel[i].win, serial[i].win);
+    assert.equal(parallel[i].attempts, serial[i].attempts);
+    assert.equal(parallel[i].width, serial[i].width);
+  }
 });

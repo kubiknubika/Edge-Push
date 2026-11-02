@@ -767,14 +767,110 @@ function fallbackLayout(s, enemyCount) {
   return { grid:g, spawn, barrels:far.slice(0, barrelCount), enemies:far.slice(barrelCount, barrelCount + enemyCount) };
 }
 
-function generateFloor(s, floor, carry) {
-  const enemyCount = floor <= 2 ? 3 : (floor <= 5 ? 4 : 5);
-  let layout = null;
-  for (let attempt = 0; attempt < 300 && !layout; attempt++) layout = tryLayout(s, enemyCount);
-  if (!layout) layout = fallbackLayout(s, enemyCount);
+/* ===========================================================================
+ * 1a. ГАРАНТИЯ ПРОХОДИМОСТИ ЭТАЖА
+ * ===========================================================================
+ * Случайный расклад иногда собирал этаж, который невозможно пройти: герой с
+ * 3 HP не успевал справиться с двумя активными угрозами, и все ветви вели к
+ * гибели (например сид 4095: 577 состояний первого этажа, ни одного выхода
+ * в «этаж зачищен»). Такие сиды делали 100% побед математически недостижимым.
+ *
+ * Теперь каждый расклад проверяется полным перебором состояний своего этажа:
+ * если существует путь до PERKS / WIN — расклад принимается, иначе он
+ * перегенерируется. Счётчик ходов в логике не участвует, поэтому исключаем
+ * его из ключа — граф конечен. Кэш по (rng, этаж) делает проверку одноразовой
+ * для каждого сида: повторные забеги и инструмент ИИ не пересчитывают её.
+ */
+const _layoutCache = new Map();
+const _guardStats = { checked: 0, rejected: 0, maxAttempts: 0, cacheHits: 0, fallbacks: 0 };
+const GUARD_STATE_CAP = 1600;
+const GUARD_DEPTH_CAP = 30;
+const GUARD_ATTEMPTS = 40;
 
+function guardKey(s) {
+  const p = playerOf(s);
+  return JSON.stringify([
+    s.floor, s.rng, s.grid,
+    s.entities.filter(e => e.alive).map(e => [e.id, e.x, e.y, e.hp, e.type]),
+    p ? p.hp : 0, s.shield, s.hookCd, s.throwCd, s.mode, s.perks,
+    s.activeIds, s.intents.map(i => [i.id, i.kind, i.cells])
+  ]);
+}
+
+function guardActions(s) {
+  const out = [];
+  const modes = ['BASIC'];
+  if (s.hookCd === 0) modes.push('HOOK');
+  if (s.throwCd === 0) modes.push('THROW');
+  for (const mode of modes) {
+    let t = s;
+    if (t.mode !== 'BASIC') t = setMode(t, t.mode);
+    if (mode !== 'BASIC') t = setMode(t, mode);
+    const pv = preview(t);
+    for (const d of DIRS) {
+      if (pv.dirs[d.key] && pv.dirs[d.key].valid) out.push({ mode, type:'DIR', dir:d.key });
+    }
+  }
+  out.push({ mode:'BASIC', type:'WAIT' });
+  return out;
+}
+
+function guardStep(s0, a) {
+  let t = s0;
+  if (t.mode !== 'BASIC') t = setMode(t, t.mode);
+  if (a.mode !== 'BASIC') t = setMode(t, a.mode);
+  return performTurn(t, { type:a.type, dir:a.dir }).state;
+}
+
+/** Существует ли на этом этаже ХОТЯ БЫ ОДНА выигрышная линия. */
+function floorIsPassable(start) {
+  const s0 = clone(start);
+  s0.phase = 'PLAYER';
+  s0.perkChoices = [];
+  startPlayerTurn(s0);
+  const seen = new Set([guardKey(s0)]);
+  let level = [s0];
+  for (let depth = 0; depth < GUARD_DEPTH_CAP && level.length && seen.size < GUARD_STATE_CAP; depth++) {
+    const next = [];
+    for (const s of level) {
+      for (const a of guardActions(s)) {
+        const ns = guardStep(s, a);
+        if (ns.phase === 'PERKS' || ns.phase === 'WIN') return true;
+        if (ns.phase === 'DEAD') continue;
+        const k = guardKey(ns);
+        if (seen.has(k)) continue;
+        seen.add(k);
+        next.push(ns);
+      }
+    }
+    level = next;
+  }
+  return false;
+}
+
+function cacheLayout(key, s) {
+  // Ограничиваем рост кэша в длинной браузерной сессии.
+  if (_layoutCache.size > 600) _layoutCache.delete(_layoutCache.keys().next().value);
+  _layoutCache.set(key, {
+    grid: s.grid.map(row => row.slice()),
+    entities: s.entities.map(e => Object.assign({}, e)),
+    rng: s.rng, nextId: s.nextId
+  });
+}
+
+function restoreLayout(s, cached, carry) {
+  s.grid = cached.grid.map(row => row.slice());
+  s.entities = cached.entities.map(e => Object.assign({}, e));
+  s.rng = cached.rng;
+  s.nextId = cached.nextId;
+  const p = playerOf(s);
+  if (p) { p.hp = carry ? carry.hp : 3; p.maxHp = carry ? carry.maxHp : 3; }
+}
+
+function buildFloorEntities(s, layout, floor, carry) {
   s.grid = layout.grid;
   s.entities = [];
+  s.nextId = 1;
   addEntity(s, {
     kind:'PLAYER', x:layout.spawn.x, y:layout.spawn.y,
     hp:carry ? carry.hp : 3, maxHp:carry ? carry.maxHp : 3
@@ -787,6 +883,51 @@ function generateFloor(s, floor, carry) {
     const hp = ENEMY_HP[type];
     addEntity(s, { kind:'ENEMY', type, x:c.x, y:c.y, hp, maxHp:hp, spawn:i });
   });
+}
+
+function nextGuardRng(r) {
+  r = (Math.imul(r, 1664525) + 1013904223) >>> 0;
+  return r || 1;
+}
+
+function generateFloor(s, floor, carry) {
+  // Расклад зависит только от ГПСЧ и номера этажа: HP/перки относятся к герою
+  // и восстанавливаются в restoreLayout. Такое ключевание делает проверку
+  // одноразовой для сида даже при тысячах узлов поиска.
+  const cacheKey = floor + ':' + s.rng;
+  const cached = _layoutCache.get(cacheKey);
+  if (cached) { _guardStats.cacheHits++; restoreLayout(s, cached, carry); return; }
+
+  const enemyCount = floor <= 2 ? 3 : (floor <= 5 ? 4 : 5);
+  for (let guard = 0; guard < GUARD_ATTEMPTS; guard++) {
+    let layout = null;
+    for (let attempt = 0; attempt < 300 && !layout; attempt++) layout = tryLayout(s, enemyCount);
+    if (!layout) layout = fallbackLayout(s, enemyCount);
+    buildFloorEntities(s, layout, floor, carry);
+    _guardStats.checked++;
+    if (floorIsPassable(s)) {
+      _guardStats.maxAttempts = Math.max(_guardStats.maxAttempts, guard + 1);
+      cacheLayout(cacheKey, s);
+      return;
+    }
+    _guardStats.rejected++;
+    s.rng = nextGuardRng(s.rng);
+  }
+  // Резерв: простая связная арена, тоже проверяется тем же перебором.
+  // При наблюдаемой доле тупиков ~1% вероятность исчерпать 240 попыток ничтожна.
+  for (let extra = 0; extra < 200; extra++) {
+    buildFloorEntities(s, fallbackLayout(s, enemyCount), floor, carry);
+    _guardStats.checked++;
+    if (floorIsPassable(s)) {
+      _guardStats.fallbacks++;
+      cacheLayout(cacheKey, s);
+      return;
+    }
+    _guardStats.rejected++;
+    s.rng = nextGuardRng(s.rng);
+  }
+  _guardStats.failed = (_guardStats.failed || 0) + 1;
+  cacheLayout(cacheKey, s);
 }
 
 /* ===========================================================================
@@ -1364,7 +1505,8 @@ root.EdgeEngine = {
   SIZE, MAX_FLOOR, TILE, DIRS, DIR, PERKS, ENEMY_HP,
   createGame, performTurn, setMode, choosePerk, choosePerkCards, describePerk,
   preview, clone, inBounds, tileAt, unitAt, byId, playerOf, enemiesOf, perkLevel,
-  generateFloor, startPlayerTurn, computeIntent, resolvePush, flushBooms
+  generateFloor, startPlayerTurn, computeIntent, resolvePush, flushBooms,
+  floorIsPassable, guardStats: _guardStats
 };
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 /* ===== ENGINE END ===== */

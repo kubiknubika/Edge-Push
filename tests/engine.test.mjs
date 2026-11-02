@@ -644,3 +644,32 @@ test('фазз: 30 забегов по 250 ходов без исключени�
     }
   }
 });
+
+/* -------------------- гарантия проходимости генератора -------------------- */
+test('генератор: каждый этаж имеет подтверждённую выигрышную линию', () => {
+  for (let seed = 1; seed <= 60; seed++) {
+    const s = E.createGame(seed);
+    assert.equal(E.floorIsPassable(s), true, 'первый этаж проходим, сид ' + seed);
+  }
+  // Ранее математически непроходимый сид: все 577 состояний вели к гибели.
+  assert.equal(E.floorIsPassable(E.createGame(4095)), true, 'сид 4095 теперь проходим');
+  assert.equal(E.guardStats.failed || 0, 0, 'резервный контур ни разу не сдался');
+  assert.ok(E.guardStats.checked >= 60, 'проверка реально запускалась');
+});
+
+test('генератор: этажи 2–7 тоже проверены, детерминизм и кэш не ломают HP', () => {
+  for (let seed = 101; seed <= 112; seed++) {
+    let s = E.createGame(seed);
+    assert.equal(E.floorIsPassable(s), true);
+    for (let floor = 2; floor <= E.MAX_FLOOR; floor++) {
+      s.phase = 'PERKS';
+      s.perkChoices = E.choosePerkCards(s);
+      s = E.choosePerk(s, s.perkChoices[0]);
+      assert.equal(s.floor, floor);
+      assert.equal(E.floorIsPassable(s), true, 'этаж ' + floor + ', сид ' + seed);
+    }
+    assert.equal(E.playerOf(s).hp > 0, true);
+  }
+  // Повторный забег на том же сиде идентичен (проверка кэша раскладов).
+  assert.equal(JSON.stringify(E.createGame(4095)), JSON.stringify(E.createGame(4095)));
+});
