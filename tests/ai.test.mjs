@@ -174,3 +174,42 @@ test('ИИ: solveSet и параллельный пул дают одинако�
     assert.equal(parallel[i].width, serial[i].width);
   }
 });
+
+/* -------------------- 10 уровней сложности -------------------- */
+test('ИИ: 10 пулов сидов раздельны, упорядочены по сложности и проверены на проходимость', () => {
+  const d = JSON.parse(readFileSync(new URL('../ai/difficulty.json', import.meta.url), 'utf8'));
+  assert.equal(d.levels.length, 10);
+  assert.equal(d.config.levels, 10);
+  assert.ok(d.config.candidates >= d.config.perLevel * 10);
+  const all = [];
+  for (let i = 0; i < 10; i++) {
+    const l = d.levels[i];
+    assert.equal(l.level, i + 1);
+    assert.ok(l.name.length > 0);
+    assert.ok(l.hint.length > 0);
+    assert.equal(l.seeds.length, d.config.perLevel);
+    assert.ok(l.seeds.every(s => Number.isInteger(s) && s >= d.config.candidateSeeds[0] &&
+      s <= d.config.candidateSeeds[1]), 'сиды уровня ' + l.level + ' из диапазона кандидатов');
+    all.push(...l.seeds);
+    if (i > 0) assert.ok(l.medianScore >= d.levels[i - 1].medianScore,
+      'медианный балл уровня ' + l.level + ' не ниже предыдущего');
+  }
+  assert.equal(new Set(all).size, all.length, 'пулы не пересекаются');
+  const perSeed = new Map(d.perSeed.map(r => [r.seed, r]));
+  for (const seed of all) {
+    const r = perSeed.get(seed);
+    assert.ok(r, 'есть замер для сида ' + seed);
+    assert.ok(r.solverWidth > 0, 'решатель подтвердил победу на сиде ' + seed);
+  }
+});
+
+test('ИИ: все сиды 10 пулов дают проходимый первый этаж', () => {
+  const d = JSON.parse(readFileSync(new URL('../ai/difficulty.json', import.meta.url), 'utf8'));
+  for (const l of d.levels) {
+    for (const seed of l.seeds) {
+      const s = E.createGame(seed);
+      assert.equal(s.phase, 'PLAYER', 'сид ' + seed + ' стартует корректно');
+      assert.equal(E.floorIsPassable(s), true, 'первый этаж проходим, сид ' + seed);
+    }
+  }
+});

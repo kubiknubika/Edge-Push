@@ -13,6 +13,7 @@ const training = read('training.json');
 const results = read('results.json');
 const replay = read('replay.json');
 const mastery = existsSync(resolve('ai/mastery.json')) ? read('mastery.json') : null;
+const difficulty = existsSync(resolve('ai/difficulty.json')) ? read('difficulty.json') : null;
 const rankCount = mastery ? new Set(mastery.config.plan.flatMap(x => x.ranks)).size : 0;
 const html = readFileSync(resolve('index.html'), 'utf8');
 const engineSrc = html.match(/\/\* ===== ENGINE START ===== \*\/([\s\S]*?)\/\* ===== ENGINE END ===== \*\//)[1];
@@ -365,6 +366,35 @@ const page = `<!doctype html>
     3–5 врагов, ≤2 активных угрозы, 3 HP, перки, толчки, взрывы) сохранены; добавлена только
     проверка расклада. Движок по-прежнему детерминированный целочисленный автомат без внешних
     библиотек; регрессионные тесты подтверждают проходимость каждого из 7 этажей.</p>
+  </div>` : ''}
+
+  ${difficulty ? `<h2>2.3 Десять уровней сложности</h2>
+  <div class="card">
+    <p>Сложность в игре — это <b>переключатель из 10 уровней</b>. Механика при этом не меняется
+    вообще: меняется только то, из какого набора сидов берётся партия. Для
+    ${difficulty.config.candidates} сидов-кандидатов (${difficulty.config.candidateSeeds.join('–')})
+    измерили, как глубоко заходит обученная политика <b>без поиска</b>, сколько состояний
+    генератор перебрал, чтобы подтвердить выигрышную линию первого этажа, и сколько
+    попыток/какая ширина луча нужны решателю для победы. Сводный балл 0…1 разбили на
+    10 децилей; из каждого равномерно взяли по ${difficulty.config.perLevel} сидов.
+    В пулы попали только сиды, которые решатель <b>реально выиграл</b>
+    (${difficulty.config.winnable} из ${difficulty.config.candidates}, отсеяно ${difficulty.config.excluded}).</p>
+    <div class="table-card"><table><thead><tr>
+      <th>Ур.</th><th>Название</th><th>Балл</th><th>Без поиска</th><th>Планирование</th><th>Сидов</th>
+    </tr></thead><tbody>
+    ${difficulty.levels.map(l => `<tr>
+      <td><b>${l.level}</b></td><td>${l.name}</td>
+      <td>${l.scoreMin.toFixed(3)}–${l.scoreMax.toFixed(3)}</td>
+      <td>${l.median.policyFloors}/7 эт.</td>
+      <td>W=${l.median.solverWidth} · ${l.median.solverAttempts} поп.</td>
+      <td>${l.seedCount}</td></tr>`).join('')}
+    </tbody></table></div>
+    <p class="muted" style="font-size:12px">Медианный балл монотонно растёт от уровня 1 к 10:
+    на первом политика без поиска обычно доходит до края сама, на десятом — не проходит
+    и первого этажа. На всех уровнях этажи гарантированно проходимы (проверка генератора),
+    поэтому «сложно» означает «требует больше планирования», а не «невозможно».
+    Выбранный уровень и номер забега сохраняются в <span class="mono">localStorage</span>;
+    новый забег берёт следующий сид из пула.</p>
   </div>` : ''}
 
   <h2>3. Реплей выигрышной партии</h2>

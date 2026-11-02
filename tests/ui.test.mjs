@@ -38,6 +38,8 @@ function boot(seedState, opts) {
     pretendToBeVisual:true,
     virtualConsole:vc,
     beforeParse(window) {
+      if (options.extraStorage)
+        for (const [k, v] of Object.entries(options.extraStorage)) window.localStorage.setItem(k, String(v));
       if (seedState) window.localStorage.setItem(SAVE_KEY, JSON.stringify(seedState));
       if (!options.freshTutorial) window.localStorage.setItem('edge-push:tutorial:v1', 'done');
       window.addEventListener('error', e => errors.push('window.error: ' + e.message));
@@ -473,4 +475,136 @@ test('UI: НЕТ ПУТИ заметно — баннер, крест, тост,
   assert.equal(doc.querySelectorAll('.fx-deny').length, 0, 'баннер сам исчезает');
   assert.equal(doc.querySelectorAll('.fx-block').length, 0, 'крест сам исчезает');
   dom.window.close();
+});
+
+/* -------------------- 10 уровней сложности -------------------- */
+const DIFFICULTY_DATA = JSON.parse(
+  readFileSync(new URL('../ai/difficulty.json', import.meta.url), 'utf8'));
+const DIFF_KEY = 'edge-push:difficulty:v1';
+const RUN_KEY = 'edge-push:run:v1';
+const poolOf = n => DIFFICULTY_DATA.levels[n - 1].seeds;
+
+test('UI: кнопка СЛ открывает 10 уровней с названиями и подсказками', async () => {
+  const { dom, doc, errors } = boot();
+  await pause(25);
+  const btn = doc.querySelector('#diffBtn');
+  assert.ok(btn, 'кнопка сложности в шапке');
+  assert.match(btn.getAttribute('aria-label'), /Сложность/);
+  assert.equal(doc.querySelector('#diffNum').textContent.trim(), String(DIFFICULTY_DATA.levels.length / 2));
+  tap(doc, btn);
+  const ov = doc.querySelector('#overlay');
+  assert.match(ov.textContent, /СЛОЖНОСТЬ · 10 УРОВНЕЙ/);
+  assert.ok(ov.classList.contains('difficulty-mode'));
+  const items = ov.querySelectorAll('[data-diff]');
+  assert.equal(items.length, 10, 'ровно 10 уровней');
+  assert.equal(ov.querySelectorAll('.diff-item.active').length, 1, 'текущий уровень помечен');
+  for (const l of DIFFICULTY_DATA.levels) {
+    const el = ov.querySelector('[data-diff="' + l.level + '"]');
+    assert.ok(el, 'уровень ' + l.level);
+    assert.match(el.textContent, new RegExp(l.name));
+    assert.ok(el.querySelector('small').textContent.trim().length > 0, 'есть замер сложности');
+  }
+  tap(doc, ov.querySelector('[data-act="close"]'));
+  assert.ok(ov.classList.contains('hidden'));
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: смена уровня на старте выдаёт сид из его пула и сохраняется', async () => {
+  const level = 10;
+  const { dom, win, doc, errors } = boot();
+  await pause(25);
+  tap(doc, doc.querySelector('#diffBtn'));
+  tap(doc, doc.querySelector('[data-diff="' + level + '"]'));
+  await pause(30);
+  assert.equal(win.localStorage.getItem(DIFF_KEY), String(level), 'уровень в localStorage');
+  assert.equal(doc.querySelector('#diffNum').textContent.trim(), String(level));
+  const saved = JSON.parse(win.localStorage.getItem(SAVE_KEY));
+  assert.equal(saved.floor, 1);
+  assert.equal(saved.turn, 1);
+  assert.ok(poolOf(level).includes(saved.seed), 'сид из пула уровня 10: ' + saved.seed);
+  assert.ok(doc.querySelector('#overlay').classList.contains('hidden'), 'оверлей закрыт');
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: посреди забега смена уровня требует подтверждения', async () => {
+  const s = E.createGame(2026);
+  s.turn = 4;
+  const { dom, win, doc, errors } = boot(s);
+  await pause(25);
+  tap(doc, doc.querySelector('#diffBtn'));
+  tap(doc, doc.querySelector('[data-diff="2"]'));
+  const ov = doc.querySelector('#overlay');
+  assert.match(ov.textContent, /УРОВЕНЬ 2/);
+  assert.match(ov.textContent, /Текущий забег будет сброшен/);
+  assert.equal(win.localStorage.getItem(DIFF_KEY), null, 'пока не применено');
+  tap(doc, ov.querySelector('[data-act="close"]'));
+  assert.equal(doc.querySelector('#diffNum').textContent.trim(), String(DIFFICULTY_DATA.levels.length / 2));
+  tap(doc, doc.querySelector('#diffBtn'));
+  tap(doc, doc.querySelector('[data-diff="2"]'));
+  tap(doc, doc.querySelector('[data-act="diff-apply"]'));
+  await pause(30);
+  assert.equal(win.localStorage.getItem(DIFF_KEY), '2');
+  const saved = JSON.parse(win.localStorage.getItem(SAVE_KEY));
+  assert.ok(poolOf(2).includes(saved.seed), 'сид из пула уровня 2');
+  assert.equal(saved.turn, 1, 'новый забег');
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: уровень и счётчик забегов восстанавливаются при перезагрузке', async () => {
+  const { dom, win, doc, errors } = boot(undefined, {
+    extraStorage: { [DIFF_KEY]: '7', [RUN_KEY]: '3' }
+  });
+  await pause(25);
+  assert.equal(doc.querySelector('#diffNum').textContent.trim(), '7');
+  assert.match(doc.querySelector('#diffBtn').title, /УВЕРЕННО|Сложность 7/);
+  tap(doc, doc.querySelector('#restartBtn'));
+  tap(doc, doc.querySelector('[data-act="new"]'));
+  await pause(30);
+  assert.equal(win.localStorage.getItem(DIFF_KEY), '7', 'уровень не сбросился');
+  assert.equal(win.localStorage.getItem(RUN_KEY), '4', 'счётчик забегов вырос');
+  const saved = JSON.parse(win.localStorage.getItem(SAVE_KEY));
+  assert.ok(poolOf(7).includes(saved.seed), 'сид из пула уровня 7');
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: сложность доступна из справки и с клавиатуры', async () => {
+  const { dom, doc, errors } = boot();
+  await pause(25);
+  tap(doc, doc.querySelector('#helpBtn'));
+  const help = doc.querySelector('[data-act="difficulty"]');
+  assert.ok(help, 'кнопка сложности в справке');
+  tap(doc, help);
+  assert.match(doc.querySelector('#overlay').textContent, /СЛОЖНОСТЬ · 10 УРОВНЕЙ/);
+  tap(doc, doc.querySelector('[data-act="close"]'));
+  key(dom.window, 'c');
+  assert.match(doc.querySelector('#overlay').textContent, /СЛОЖНОСТЬ · 10 УРОВНЕЙ/);
+  key(dom.window, 'Escape');
+  assert.ok(doc.querySelector('#overlay').classList.contains('hidden'));
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+  dom.window.close();
+});
+
+test('UI: смена сложности доступна с экрана финала', async () => {
+  for (const phase of ['WIN', 'DEAD']) {
+    const s = E.createGame(2026);
+    s.phase = phase;
+    const { dom, win, doc, errors } = boot(s);
+    await pause(25);
+    assert.match(doc.querySelector('#overlay').textContent,
+      phase === 'WIN' ? /КРАЙ ДОСТИГНУТ/ : /ВЫ ПОГИБЛИ/);
+    tap(doc, doc.querySelector('#overlay [data-act="difficulty"]'));
+    assert.match(doc.querySelector('#overlay').textContent, /СЛОЖНОСТЬ · 10 УРОВНЕЙ/);
+    tap(doc, doc.querySelector('[data-diff="3"]'));
+    await pause(30);
+    assert.equal(win.localStorage.getItem(DIFF_KEY), '3', 'применено без подтверждения: ' + phase);
+    const saved = JSON.parse(win.localStorage.getItem(SAVE_KEY));
+    assert.ok(poolOf(3).includes(saved.seed));
+    assert.equal(saved.phase, 'PLAYER');
+    assert.deepEqual(errors, [], 'нет ошибок в консоли: ' + phase);
+    dom.window.close();
+  }
 });

@@ -55,7 +55,7 @@ body{
 }
 #top{height:55%;flex:none;display:flex;flex-direction:column;min-height:0}
 #hud{flex:none;padding:calc(var(--u)*.75) calc(var(--u)*1.15) calc(var(--u)*.2)}
-.hud-row{display:flex;align-items:center;gap:calc(var(--u)*.85);min-height:calc(var(--u)*2.85)}
+.hud-row{display:flex;align-items:center;gap:calc(var(--u)*.65);min-height:calc(var(--u)*2.85)}
 .hud-row.sub{margin-top:calc(var(--u)*.45);min-height:calc(var(--u)*2.25)}
 .brand{font-weight:900;letter-spacing:.16em;font-size:calc(var(--u)*1.15);color:var(--cyan);text-shadow:0 0 12px rgba(0,229,255,.45)}
 .floor-pill{
@@ -64,7 +64,7 @@ body{
   padding:calc(var(--u)*.38) calc(var(--u)*.8);border-radius:999px;white-space:nowrap;
 }
 .floor-pill b{color:var(--ink);font-size:calc(var(--u)*1.2)}
-.hearts{display:flex;gap:calc(var(--u)*.28);font-size:calc(var(--u)*1.8);line-height:1;flex:1;min-width:0;text-shadow:0 0 10px rgba(0,229,255,.4)}
+.hearts{display:flex;gap:calc(var(--u)*.28);font-size:calc(var(--u)*1.62);line-height:1;flex:1;min-width:0;text-shadow:0 0 10px rgba(0,229,255,.4)}
 .hearts .full{color:var(--ally)}
 .hearts .empty{color:#394154}
 .shield-pill{
@@ -81,6 +81,28 @@ body{
   display:grid;place-items:center;cursor:pointer;
 }
 .icon-btn:active{transform:scale(.93)}
+.diff-btn{width:calc(var(--u)*2.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:1}
+.diff-btn span{font-size:calc(var(--u)*.62);letter-spacing:.1em;color:var(--neutral);font-weight:800}
+.diff-btn b{font-size:calc(var(--u)*1.32);color:var(--ink);font-weight:900;line-height:1.05}
+/* 10 уровней сложности: прокручиваемый оверлей с закреплённой нижней строкой */
+#overlay.difficulty-mode{justify-content:flex-start;overflow:auto;touch-action:pan-y;gap:calc(var(--u)*.65);padding-top:calc(var(--u)*1.1)}
+#overlay.difficulty-mode .ov-row{
+  position:sticky;bottom:0;z-index:1;width:100%;max-width:420px;
+  padding:calc(var(--u)*.5) 0 calc(var(--u)*.2);background:rgba(6,8,14,.97);
+}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*.5);width:100%;max-width:420px}
+.diff-item{
+  display:flex;flex-direction:column;align-items:flex-start;gap:calc(var(--u)*.12);
+  min-height:44px;padding:calc(var(--u)*.5) calc(var(--u)*.7);
+  border:1px solid var(--line);border-radius:calc(var(--u)*.8);
+  background:rgba(255,255,255,.045);color:var(--ink);text-align:left;cursor:pointer;
+}
+.diff-item b{font-size:calc(var(--u)*1.5);color:var(--neutral);line-height:1}
+.diff-item span{font-size:calc(var(--u)*.88);font-weight:800;letter-spacing:.06em}
+.diff-item small{font-size:calc(var(--u)*.76);color:var(--muted);line-height:1.2}
+.diff-item.active{border-color:var(--ally);background:rgba(0,229,255,.1);box-shadow:inset 0 0 0 1px rgba(0,229,255,.25)}
+.diff-item.active b{color:var(--ally)}
+.diff-item:active{transform:scale(.97)}
 .perk-icons{display:flex;gap:calc(var(--u)*.35);flex:1;flex-wrap:wrap;min-height:calc(var(--u)*2.05)}
 .perk-chip{
   font-size:calc(var(--u)*1.2);line-height:1;display:grid;place-items:center;
@@ -535,6 +557,14 @@ body{
   #stage{gap:calc(var(--u)*.2)}
 }
 @media (max-width:350px){.floor-pill .fp-word{display:none}}
+/* Четвёртая кнопка шапки: освобождаем место для 5 сердец на типичных телефонах. */
+@media (max-width:420px){.floor-pill .fp-word{display:none}}
+@media (max-width:360px){.hearts{font-size:calc(var(--u)*1.4)}}
+@media (max-height:520px){
+  .diff-item{min-height:44px;padding:calc(var(--u)*.3) calc(var(--u)*.55)}
+  .diff-item small{display:none}
+  #overlay.difficulty-mode{gap:calc(var(--u)*.35);padding:calc(var(--u)*.55) calc(var(--u)*.95)}
+}
 </style>
 </head>
 <body>
@@ -549,6 +579,9 @@ body{
         <button class="icon-btn" id="legendBtn" aria-label="Легенда"><span class="ico" data-icon="legend"></span></button>
         <button class="icon-btn" id="helpBtn" aria-label="Правила">?</button>
         <button class="icon-btn" id="restartBtn" aria-label="Заново">↺</button>
+        <button class="icon-btn diff-btn" id="diffBtn" aria-label="Сложность" title="Сложность">
+          <span>СЛ</span><b id="diffNum">5</b>
+        </button>
       </div>
       <div class="hud-row sub">
         <div class="perk-icons" id="perkIcons"></div>
@@ -782,7 +815,7 @@ function fallbackLayout(s, enemyCount) {
  * для каждого сида: повторные забеги и инструмент ИИ не пересчитывают её.
  */
 const _layoutCache = new Map();
-const _guardStats = { checked: 0, rejected: 0, maxAttempts: 0, cacheHits: 0, fallbacks: 0 };
+const _guardStats = { checked: 0, rejected: 0, maxAttempts: 0, cacheHits: 0, fallbacks: 0, states: 0 };
 const GUARD_STATE_CAP = 1600;
 const GUARD_DEPTH_CAP = 30;
 const GUARD_ATTEMPTS = 40;
@@ -835,7 +868,10 @@ function floorIsPassable(start) {
     for (const s of level) {
       for (const a of guardActions(s)) {
         const ns = guardStep(s, a);
-        if (ns.phase === 'PERKS' || ns.phase === 'WIN') return true;
+        if (ns.phase === 'PERKS' || ns.phase === 'WIN') {
+          _guardStats.states += seen.size;
+          return true;
+        }
         if (ns.phase === 'DEAD') continue;
         const k = guardKey(ns);
         if (seen.has(k)) continue;
@@ -845,6 +881,7 @@ function floorIsPassable(start) {
     }
     level = next;
   }
+  _guardStats.states += seen.size;
   return false;
 }
 
@@ -1517,6 +1554,55 @@ root.EdgeEngine = {
 'use strict';
 const E = globalThis.EdgeEngine;
 const SAVE_KEY = 'edge-push:v1';
+/* ===== DIFFICULTY SEEDS START ===== */
+/* Сгенерировано из ai/difficulty.json скриптом ai/inject-seeds.mjs.
+   НЕ редактировать вручную: 10 пулов сидов по измеренной сложности. */
+const DIFFICULTY = {
+  count: 10,
+  defaultLevel: 5,
+  levels: [
+    { n:1, name:"ПРОГУЛКА", hint:"без поиска 7/7 · балл 0.00–0.05", seeds:[20111,20334,20446,20581,20545,20573,20135,20363,20514,20207,20459,20236] },
+    { n:2, name:"РАЗМИНКА", hint:"без поиска 7/7 · балл 0.05–0.10", seeds:[20506,20091,20323,20516,20338,20160,20579,20476,20227,20008,20336,20464] },
+    { n:3, name:"УВЕРЕННО", hint:"без поиска 6/7 · балл 0.11–0.18", seeds:[20391,20213,20149,20317,20414,20524,20137,20310,20325,20518,20504,20043] },
+    { n:4, name:"СЕРЬЁЗНО", hint:"без поиска 5/7 · балл 0.18–0.22", seeds:[20280,20512,20544,20139,20012,20484,20200,20494,20009,20192,20007,20574] },
+    { n:5, name:"НОРМА", hint:"без поиска 3/7 · балл 0.23–0.27", seeds:[20191,20356,20027,20086,20063,20305,20097,20214,20588,20402,20106,20240] },
+    { n:6, name:"ОСТРО", hint:"без поиска 2/7 · балл 0.27–0.30", seeds:[20456,20379,20592,20095,20279,20373,20259,20128,20589,20070,20257,20383] },
+    { n:7, name:"ЖЁСТКО", hint:"без поиска 2/7 · балл 0.30–0.34", seeds:[20554,20206,20587,20328,20068,20292,20497,20015,20197,20559,20148,20183] },
+    { n:8, name:"БЕЗЖАЛОСТНО", hint:"без поиска 1/7 · балл 0.34–0.37", seeds:[20125,20485,20185,20442,20594,20123,20302,20171,20143,20090,20161,20344] },
+    { n:9, name:"ПРЕДЕЛ", hint:"без поиска 1/7 · балл 0.37–0.41", seeds:[20048,20087,20355,20419,20138,20071,20168,20461,20489,20098,20102,20080] },
+    { n:10, name:"КРАЙ", hint:"без поиска 0/7 · балл 0.41–0.70", seeds:[20261,20283,20520,20486,20066,20529,20546,20163,20089,20364,20025,20267] }
+  ]
+};
+/* ===== DIFFICULTY SEEDS END ===== */
+
+/* ---------- сложность: 10 уровней, механика не меняется, меняется пул сидов ---------- */
+const DIFF_KEY = 'edge-push:difficulty:v1';
+const RUN_KEY = 'edge-push:run:v1';
+let difficulty = DIFFICULTY.defaultLevel;
+let runIndex = 0;
+let pendingDifficulty = null;
+try {
+  const saved = Number(localStorage.getItem(DIFF_KEY));
+  if (Number.isInteger(saved) && saved >= 1 && saved <= DIFFICULTY.levels.length) difficulty = saved;
+  runIndex = (Number(localStorage.getItem(RUN_KEY)) || 0) >>> 0;
+} catch (e) {}
+function levelData(n) { return DIFFICULTY.levels[(n || difficulty) - 1] || DIFFICULTY.levels[0]; }
+function persistDifficulty() { try { localStorage.setItem(DIFF_KEY, String(difficulty)); } catch (e) {} }
+function pickSeed() {
+  const lv = levelData();
+  const pool = (lv && lv.seeds && lv.seeds.length) ? lv.seeds : [1001];
+  const seed = pool[runIndex % pool.length];
+  runIndex = (runIndex + 1) >>> 0;
+  try { localStorage.setItem(RUN_KEY, String(runIndex)); } catch (e) {}
+  return seed;
+}
+function applyDifficulty(n) {
+  difficulty = n; pendingDifficulty = null;
+  persistDifficulty();
+  newRun();
+  toast('СЛОЖНОСТЬ ' + difficulty + '/' + DIFFICULTY.count + ' · ' + levelData().name);
+}
+
 const $ = q => document.querySelector(q);
 
 /* COLOR CONTRACT в JS — значения синхронизированы с :root в <style>.
@@ -1605,7 +1691,7 @@ function showBlocked(x, y) {
 }
 
 const restored = load();
-state = restored || E.createGame((Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0);
+state = restored || E.createGame(pickSeed());
 
 /* ---------- обучение при первом запуске ---------- */
 const TUT_KEY = 'edge-push:tutorial:v1';
@@ -1637,7 +1723,7 @@ const TUTORIAL = [
   },
   {
     title:'Забег начался',
-    text:'После каждого этажа бери <b>1 из 3 перков</b>. Партия сохраняется после каждого действия — телефон можно убрать в карман.',
+    text:'После каждого этажа бери <b>1 из 3 перков</b>. Партия сохраняется после каждого действия — телефон можно убрать в карман. Сложность: <b>10 уровней</b>, кнопка «СЛ» вверху или клавиша C.',
     spot:null, hint:'Удачи на краю!'
   }
 ];
@@ -1927,6 +2013,10 @@ function renderHud(s) {
   $('#tip').innerHTML = tips[s.mode] || tips.BASIC;
   $('#modeLabel').textContent = MODE_LABEL[s.mode] || MODE_LABEL.BASIC;
   $('#turnLabel').textContent = 'ХОД ' + s.turn;
+  const lv = levelData();
+  $('#diffNum').textContent = String(difficulty);
+  $('#diffBtn').title = 'Сложность ' + difficulty + '/' + DIFFICULTY.count + ' · ' + lv.name;
+  $('#diffBtn').setAttribute('aria-label', 'Сложность ' + difficulty + ' из ' + DIFFICULTY.count + ' · ' + lv.name);
 }
 function renderControls(s, pv) {
   const playable = s.phase === 'PLAYER' && !busy && !modal;
@@ -2009,9 +2099,34 @@ function legendPalette() {
 function renderOverlay(s) {
   renderTutorial(s);
   overlay.classList.toggle('legend-mode', modal === 'legend');
+  overlay.classList.toggle('difficulty-mode', modal === 'difficulty');
+  if (modal === 'difficulty') {
+    overlay.innerHTML = '<div class="ov-title">СЛОЖНОСТЬ · 10 УРОВНЕЙ</div>' +
+      '<div class="ov-sub">Механика на всех уровнях одинаковая: меняется только набор сидов. ' +
+      'Уровни собраны по замеру ИИ — как глубоко заходит политика без поиска и сколько ' +
+      'планирования нужно для победы. Все сиды проходимы.</div>' +
+      '<div class="diff-grid">' +
+      DIFFICULTY.levels.map(l =>
+        '<button class="diff-item' + (l.n === difficulty ? ' active' : '') + '" data-diff="' + l.n + '" type="button">' +
+        '<b>' + l.n + '</b><span>' + l.name + '</span><small>' + l.hint + '</small></button>'
+      ).join('') +
+      '</div>' +
+      '<div class="ov-sub" style="font-size:calc(var(--u)*.9)">Смена уровня начнёт новый забег.</div>' +
+      '<div class="ov-row"><button class="ov-btn ghost" data-act="close" type="button">ОТМЕНА</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (modal === 'difficulty-confirm') {
+    const dl = levelData(pendingDifficulty);
+    overlay.innerHTML = '<div class="ov-title">УРОВЕНЬ ' + dl.n + ' · ' + dl.name + '</div>' +
+      '<div class="ov-sub">Текущий забег будет сброшен: начнётся партия на сиде этого уровня.</div>' +
+      '<div class="ov-row"><button class="ov-btn" data-act="diff-apply" type="button">НОВЫЙ ЗАБЕГ</button>' +
+      '<button class="ov-btn ghost" data-act="close" type="button">ОТМЕНА</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
   if (modal === 'restart') {
     overlay.innerHTML = '<div class="ov-title">НАЧАТЬ ЗАНОВО?</div>' +
-      '<div class="ov-sub">Текущий забег будет сброшен. Прогресс сохраняется только для последней партии.</div>' +
+      '<div class="ov-sub">Текущий забег будет сброшен. Уровень сложности ' + difficulty + '/' +
+      DIFFICULTY.count + ' · ' + levelData().name + '.</div>' +
       '<div class="ov-row"><button class="ov-btn" data-act="new" type="button">НОВЫЙ ЗАБЕГ</button>' +
       '<button class="ov-btn ghost" data-act="close" type="button">ОТМЕНА</button></div>';
     overlay.classList.remove('hidden'); return;
@@ -2045,6 +2160,7 @@ function renderOverlay(s) {
       'После каждого этажа — 1 из 3 перков. Партия сохраняется после каждого действия.' +
       '</div><div class="ov-row">' +
       '<button class="ov-btn small" data-act="legend" type="button">ЛЕГЕНДА ПОЛЯ</button>' +
+      '<button class="ov-btn small" data-act="difficulty" type="button">СЛОЖНОСТЬ</button>' +
       '<button class="ov-btn ghost small" data-act="tutorial" type="button">ОБУЧЕНИЕ</button>' +
       '<button class="ov-btn ghost small" data-act="close" type="button">ПОНЯТНО</button></div>';
     overlay.classList.remove('hidden'); return;
@@ -2064,8 +2180,10 @@ function renderOverlay(s) {
       '<div class="ov-sub">' + (win ? 'Все 7 этажей зачищены. Остров держится на ваших толчках.' :
         'Герой сорвался или был добит. Остров ждёт следующую попытку.') + '</div>' +
       '<div class="ov-stats">Этаж: ' + s.floor + '/' + E.MAX_FLOOR + '<br>Побед: ' + s.kills +
-      '<br>В бездну: ' + s.falls + '<br>Перков: ' + s.perks.length + '</div>' +
-      '<div class="ov-row"><button class="ov-btn" data-act="new" type="button">НОВЫЙ ЗАБЕГ</button></div>';
+      '<br>В бездну: ' + s.falls + '<br>Перков: ' + s.perks.length +
+      '<br>Сложность: ' + difficulty + '/' + DIFFICULTY.count + '</div>' +
+      '<div class="ov-row"><button class="ov-btn" data-act="new" type="button">НОВЫЙ ЗАБЕГ</button>' +
+      '<button class="ov-btn ghost" data-act="difficulty" type="button">СЛОЖНОСТЬ</button></div>';
     overlay.classList.remove('hidden'); return;
   }
   overlay.classList.add('hidden');
@@ -2089,7 +2207,7 @@ function render(s, events, showPreview) {
 
 /* ---------- ввод ---------- */
 function newRun() {
-  state = E.createGame((Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0);
+  state = E.createGame(pickSeed());
   for (const [, n] of Array.from(unitNodes)) n.remove();
   unitNodes.clear();
   fxSvg.innerHTML = ''; fxEl.innerHTML = '';
@@ -2135,9 +2253,19 @@ $('#waitBtn').addEventListener('click', () => { if (suppressClick) return; doAct
 $('#restartBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'restart'; renderOverlay(state); });
 $('#legendBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'legend'; renderOverlay(state); });
 $('#helpBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'help'; renderOverlay(state); });
+$('#diffBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'difficulty'; renderOverlay(state); });
 
 overlay.addEventListener('click', e => {
   if (suppressClick) return;
+  const dl = e.target.closest('[data-diff]');
+  if (dl) {
+    const n = Number(dl.dataset.diff);
+    if (n === difficulty) { modal = null; renderOverlay(state); toast('УРОВЕНЬ ' + n + ' УЖЕ ВЫБРАН'); return; }
+    pendingDifficulty = n;
+    if (state.phase === 'PLAYER' && state.turn > 1) { modal = 'difficulty-confirm'; renderOverlay(state); }
+    else applyDifficulty(n);
+    return;
+  }
   const perk = e.target.closest('[data-perk]');
   if (perk) {
     state = E.choosePerk(state, perk.dataset.perk);
@@ -2148,6 +2276,8 @@ overlay.addEventListener('click', e => {
   const act = e.target.closest('[data-act]');
   if (!act) return;
   if (act.dataset.act === 'new') newRun();
+  else if (act.dataset.act === 'difficulty') { modal = 'difficulty'; renderOverlay(state); }
+  else if (act.dataset.act === 'diff-apply') applyDifficulty(pendingDifficulty);
   else if (act.dataset.act === 'legend') { modal = 'legend'; renderOverlay(state); }
   else if (act.dataset.act === 'tutorial') {
     try { localStorage.removeItem(TUT_KEY); } catch (e) {}
@@ -2200,6 +2330,7 @@ document.addEventListener('keydown', e => {
   else if (k === 'r') { modal = 'restart'; renderOverlay(state); }
   else if (k === 'l' || k === 'д') { modal = 'legend'; renderOverlay(state); }
   else if (k === '?' || k === 'h') { modal = 'help'; renderOverlay(state); }
+  else if (k === 'c' || k === 'с') { modal = 'difficulty'; renderOverlay(state); }
   else return;
   e.preventDefault();
 });
