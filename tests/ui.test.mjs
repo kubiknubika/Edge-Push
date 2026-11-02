@@ -409,3 +409,68 @@ test('UI: кнопка ПОНЯТНО кликабельна — мини-кле
   assert.deepEqual(errors, [], 'нет ошибок в консоли');
   dom.window.close();
 });
+
+test('МАСШТАБ: геометрия на --u, поле вписано в 55%, без фиксированных px-полов', () => {
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+  assert.match(css, /--u:clamp\(9px, min\(2\.7vw, 1\.4dvh\), 14px\)/);
+  assert.match(css, /--chrome:clamp\(82px, 12\.2dvh, 108px\)/);
+  assert.match(css, /--board:min\(92vw, 46dvh, calc\(55dvh - var\(--chrome\)\), 440px\)/);
+  assert.match(css, /#board\{[\s\S]*?width:var\(--board\)/);
+  assert.match(css, /--btn:clamp\(56px, min\(17\.5vw, 8\.2dvh\), 84px\)/);
+  // старые жёсткие минимумы, ломавшие маленькие телефоны, удалены
+  assert.ok(!css.includes('max(180px,min(92vw'), 'нет жёсткого минимума поля');
+  assert.ok(!css.includes('max(160px,min(88vw'), 'нет устаревшего медиа-минимума');
+  assert.ok(!css.includes('min-height:66px'), 'кнопки приёмов масштабируются');
+  assert.ok(!css.includes('width:34px;height:34px'), 'кнопки HUD масштабируются');
+  // слово «ЭТАЖ» можно убрать на очень узком экране, не ломая HUD
+  assert.match(html, /class="fp-word"/);
+  assert.match(css, /@media \(max-width:350px\)\{\.floor-pill \.fp-word\{display:none\}\}/);
+  assert.match(css, /@media \(max-height:520px\)\{[\s\S]*?--u:clamp\(7px,1\.4dvh,9px\)/,
+    'режим экстремально низкого экрана');
+  assert.match(css, /@media \(max-height:520px\)\{[\s\S]*?\.hint\{display:none\}/);
+});
+
+test('ОГОНЬ: пламя рисуется CSS-формами, без символа ♨ из шрифта', () => {
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+  assert.ok(!css.includes('♨'), 'странный глиф пара удалён');
+  assert.ok(!css.includes('@keyframes lava'), 'старая анимация яркости удалена');
+  assert.match(css, /\.t-LAVA::before\{[\s\S]*?clip-path:polygon\(/);
+  assert.match(css, /\.t-LAVA::after\{[\s\S]*?clip-path:polygon\(/);
+  assert.match(css, /@keyframes flame\{/);
+  assert.match(css, /repeating-linear-gradient\(135deg,#4a1a08/);
+  // легенда показывает то же самое пламя, а не отдельную картинку
+  assert.match(css, /\.lg-tile\.t-LAVA::before,\.lg-tile\.t-LAVA::after/);
+});
+
+test('UI: НЕТ ПУТИ заметно — баннер, крест, тост, вспышка, ход не потрачен', async () => {
+  const s = E.createGame(2026);
+  s.grid = Array.from({ length:5 }, () => Array(5).fill('FLOOR'));
+  const p = s.entities.find(e => e.kind === 'PLAYER');
+  const d = E.DIRS.find(q => {
+    const x = p.x + q.dx, y = p.y + q.dy;
+    return x >= 0 && x < 5 && y >= 0 && y < 5 &&
+           !s.entities.some(e => e.alive && e.x === x && e.y === y);
+  });
+  s.grid[p.y + d.dy][p.x + d.dx] = 'LAVA';   // базовый шаг в лаву запрещён
+  const before = s.turn;
+
+  const { dom, win, doc, errors } = boot(s);
+  await pause(25);
+  key(win, KEYS[d.key]);
+  await pause(30);
+
+  assert.equal(doc.querySelectorAll('.fx-deny').length, 1, 'баннер на всё поле');
+  assert.match(doc.querySelector('.fx-deny').textContent, /НЕТ ПУТИ/);
+  assert.match(doc.querySelector('.fx-deny').textContent, /ХОД НЕ ПОТРАЧЕН/);
+  assert.equal(doc.querySelectorAll('.fx-block').length, 1, 'красный крест на клетке');
+  assert.ok(doc.querySelector('#toast').classList.contains('danger'), 'тост в опасном стиле');
+  assert.match(doc.querySelector('#toast').textContent, /НЕТ ПУТИ/);
+  assert.ok(doc.querySelectorAll('.dir.denied').length > 0, 'недоступные направления мигнули');
+  assert.equal(JSON.parse(win.localStorage.getItem(SAVE_KEY)).turn, before, 'ход не потрачен');
+  assert.deepEqual(errors, [], 'нет ошибок в консоли');
+
+  await pause(1000);
+  assert.equal(doc.querySelectorAll('.fx-deny').length, 0, 'баннер сам исчезает');
+  assert.equal(doc.querySelectorAll('.fx-block').length, 0, 'крест сам исчезает');
+  dom.window.close();
+});
