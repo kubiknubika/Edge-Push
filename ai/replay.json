@@ -1,0 +1,4931 @@
+{
+  "seed": 1023,
+  "source": "детерминированный чемпион",
+  "turns": 43,
+  "floors": 7,
+  "kills": 28,
+  "hp": 2,
+  "trace": [
+    {
+      "state": {
+        "floor": 1,
+        "turn": 1,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 0,
+        "falls": 0,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          3,
+          4
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "SPIKES",
+            "PILLAR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "LAVA",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 1
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 2,
+            "y": 0,
+            "hp": 1,
+            "id": 2
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 1,
+            "hp": 2,
+            "id": 3
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 0,
+            "hp": 2,
+            "id": 4
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 1,
+            "hp": 2,
+            "id": 5
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 2.504
+    },
+    {
+      "state": {
+        "floor": 1,
+        "turn": 2,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 0,
+        "falls": 0,
+        "hookCd": 2,
+        "throwCd": 0,
+        "activeIds": [
+          3,
+          4
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "SPIKES",
+            "PILLAR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "LAVA",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 1
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 2,
+            "y": 1,
+            "hp": 1,
+            "id": 2
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 3,
+            "y": 1,
+            "hp": 2,
+            "id": 3
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 0,
+            "hp": 2,
+            "id": 4
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 1,
+            "hp": 2,
+            "id": 5
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 3.058
+    },
+    {
+      "state": {
+        "floor": 1,
+        "turn": 3,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 0,
+        "falls": 0,
+        "hookCd": 1,
+        "throwCd": 0,
+        "activeIds": [
+          3,
+          4
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "SPIKES",
+            "PILLAR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "LAVA",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 1
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 3,
+            "y": 2,
+            "hp": 2,
+            "id": 3
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 0,
+            "hp": 2,
+            "id": 4
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 1,
+            "hp": 2,
+            "id": 5
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "RIGHT",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 3.752
+    },
+    {
+      "state": {
+        "floor": 1,
+        "turn": 4,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 1,
+        "falls": 1,
+        "hookCd": 0,
+        "throwCd": 2,
+        "activeIds": [
+          4,
+          5
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "SPIKES",
+            "PILLAR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "LAVA",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 1
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 1,
+            "hp": 2,
+            "id": 4
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 1,
+            "hp": 2,
+            "id": 5
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 3.316
+    },
+    {
+      "state": {
+        "floor": 1,
+        "turn": 5,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 2,
+        "falls": 2,
+        "hookCd": 0,
+        "throwCd": 1,
+        "activeIds": [
+          5
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "SPIKES",
+            "PILLAR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "LAVA",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 1
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 2,
+            "hp": 2,
+            "id": 5
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 2.69
+    },
+    {
+      "state": {
+        "floor": 1,
+        "turn": 6,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 2,
+        "falls": 2,
+        "hookCd": 2,
+        "throwCd": 0,
+        "activeIds": [
+          5
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "SPIKES",
+            "PILLAR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "LAVA",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 1
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 2,
+            "hp": 2,
+            "id": 5
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 4.844
+    },
+    {
+      "state": {
+        "floor": 1,
+        "turn": 7,
+        "phase": "PERKS",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 3,
+        "falls": 3,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "SPIKES",
+            "PILLAR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "LAVA",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 1
+          }
+        ]
+      },
+      "action": {
+        "type": "PERK",
+        "id": "SHOCK_LANDING"
+      },
+      "label": "ПЕРК: SHOCK_LANDING"
+    },
+    {
+      "state": {
+        "floor": 2,
+        "turn": 7,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 3,
+        "falls": 3,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          8,
+          9
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "SPIKES",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 6
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 3,
+            "hp": 1,
+            "id": 7
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 1,
+            "hp": 2,
+            "id": 8
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 2,
+            "hp": 2,
+            "id": 9
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 10
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "BASIC",
+        "kind": "STEP",
+        "label": "·"
+      },
+      "score": 1.901
+    },
+    {
+      "state": {
+        "floor": 2,
+        "turn": 8,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 3,
+        "falls": 3,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          8,
+          9
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "SPIKES",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 3,
+            "hp": 3,
+            "id": 6
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 3,
+            "hp": 1,
+            "id": 7
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 2,
+            "hp": 1,
+            "id": 8
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 2,
+            "y": 2,
+            "hp": 1,
+            "id": 9
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 10
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 3.332
+    },
+    {
+      "state": {
+        "floor": 2,
+        "turn": 9,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 4,
+        "falls": 4,
+        "hookCd": 0,
+        "throwCd": 2,
+        "activeIds": [
+          8,
+          10
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "SPIKES",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 3,
+            "hp": 3,
+            "id": 6
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 3,
+            "hp": 1,
+            "id": 7
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 2,
+            "hp": 1,
+            "id": 8
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 10
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "RIGHT",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 2.715
+    },
+    {
+      "state": {
+        "floor": 2,
+        "turn": 10,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 4,
+        "falls": 4,
+        "hookCd": 2,
+        "throwCd": 1,
+        "activeIds": [
+          8,
+          10
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "SPIKES",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 3,
+            "hp": 3,
+            "id": 6
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 3,
+            "hp": 1,
+            "id": 7
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 2,
+            "hp": 1,
+            "id": 8
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 2,
+            "id": 10
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "RIGHT",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 2.38
+    },
+    {
+      "state": {
+        "floor": 2,
+        "turn": 11,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 5,
+        "falls": 5,
+        "hookCd": 1,
+        "throwCd": 0,
+        "activeIds": [
+          8
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "SPIKES",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 4,
+            "hp": 2,
+            "id": 6
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 3,
+            "hp": 1,
+            "id": 7
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 2,
+            "hp": 1,
+            "id": 8
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "BASIC",
+        "kind": "STEP",
+        "label": "·"
+      },
+      "score": 1.177
+    },
+    {
+      "state": {
+        "floor": 2,
+        "turn": 12,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 5,
+        "falls": 5,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          8
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "SPIKES",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 3,
+            "hp": 2,
+            "id": 6
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 3,
+            "hp": 1,
+            "id": 7
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 2,
+            "hp": 1,
+            "id": 8
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 3.731
+    },
+    {
+      "state": {
+        "floor": 2,
+        "turn": 13,
+        "phase": "PERKS",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 6,
+        "falls": 5,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "SPIKES",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 3,
+            "hp": 2,
+            "id": 6
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 3,
+            "y": 3,
+            "hp": 1,
+            "id": 7
+          }
+        ]
+      },
+      "action": {
+        "type": "PERK",
+        "id": "SPIKED_WALLS"
+      },
+      "label": "ПЕРК: SPIKED_WALLS"
+    },
+    {
+      "state": {
+        "floor": 3,
+        "turn": 13,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 6,
+        "falls": 5,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          13,
+          14
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "LAVA",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 2,
+            "id": 11
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 1,
+            "hp": 1,
+            "id": 12
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 13
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 0,
+            "y": 2,
+            "hp": 1,
+            "id": 14
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 1,
+            "hp": 2,
+            "id": 15
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 2,
+            "hp": 2,
+            "id": 16
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 1.818
+    },
+    {
+      "state": {
+        "floor": 3,
+        "turn": 14,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 6,
+        "falls": 5,
+        "hookCd": 2,
+        "throwCd": 0,
+        "activeIds": [
+          13,
+          14
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "LAVA",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 2,
+            "id": 11
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 1,
+            "hp": 1,
+            "id": 12
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 13
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 1,
+            "y": 2,
+            "hp": 1,
+            "id": 14
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 1,
+            "hp": 2,
+            "id": 15
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 2,
+            "hp": 2,
+            "id": 16
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 2.985
+    },
+    {
+      "state": {
+        "floor": 3,
+        "turn": 15,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 7,
+        "falls": 6,
+        "hookCd": 1,
+        "throwCd": 0,
+        "activeIds": [
+          13,
+          15
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "LAVA",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 2,
+            "id": 11
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 13
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 1,
+            "hp": 2,
+            "id": 15
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 2,
+            "hp": 2,
+            "id": 16
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "BASIC",
+        "kind": "STEP",
+        "label": "·"
+      },
+      "score": 1.146
+    },
+    {
+      "state": {
+        "floor": 3,
+        "turn": 16,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 7,
+        "falls": 6,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          13,
+          15
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "LAVA",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 1,
+            "hp": 2,
+            "id": 11
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 13
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 1,
+            "hp": 2,
+            "id": 15
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 2,
+            "hp": 2,
+            "id": 16
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "RIGHT",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 4.549
+    },
+    {
+      "state": {
+        "floor": 3,
+        "turn": 17,
+        "phase": "PERKS",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 10,
+        "falls": 6,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [],
+        "grid": [
+          [
+            "CHASM",
+            "LAVA",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 1,
+            "hp": 2,
+            "id": 11
+          }
+        ]
+      },
+      "action": {
+        "type": "PERK",
+        "id": "LONG_CHAINS"
+      },
+      "label": "ПЕРК: LONG_CHAINS"
+    },
+    {
+      "state": {
+        "floor": 4,
+        "turn": 17,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 10,
+        "falls": 6,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          19,
+          20
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 2,
+            "id": 17
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 18
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 2,
+            "hp": 2,
+            "id": 19
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 3,
+            "hp": 2,
+            "id": 20
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 21
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 22
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 1.742
+    },
+    {
+      "state": {
+        "floor": 4,
+        "turn": 18,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 10,
+        "falls": 6,
+        "hookCd": 1,
+        "throwCd": 0,
+        "activeIds": [
+          19,
+          20
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 2,
+            "id": 17
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 18
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 2,
+            "hp": 2,
+            "id": 19
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 3,
+            "hp": 2,
+            "id": 20
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 21
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 22
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 2.698
+    },
+    {
+      "state": {
+        "floor": 4,
+        "turn": 19,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 11,
+        "falls": 7,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          20,
+          21
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 2,
+            "id": 17
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 18
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 3,
+            "hp": 2,
+            "id": 20
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 21
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 22
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "BASIC",
+        "kind": "STEP",
+        "label": "·"
+      },
+      "score": 1.011
+    },
+    {
+      "state": {
+        "floor": 4,
+        "turn": 20,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 11,
+        "falls": 7,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          20,
+          21
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 1,
+            "y": 2,
+            "hp": 2,
+            "id": 17
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 18
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 3,
+            "hp": 2,
+            "id": 20
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 2,
+            "y": 1,
+            "hp": 1,
+            "id": 21
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 22
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "БАМ"
+      },
+      "score": 2.42
+    },
+    {
+      "state": {
+        "floor": 4,
+        "turn": 21,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 12,
+        "falls": 7,
+        "hookCd": 1,
+        "throwCd": 0,
+        "activeIds": [
+          21,
+          22
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 1,
+            "y": 2,
+            "hp": 2,
+            "id": 17
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 2,
+            "y": 2,
+            "hp": 1,
+            "id": 21
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 4,
+            "y": 1,
+            "hp": 1,
+            "id": 22
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "RIGHT",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 4.391
+    },
+    {
+      "state": {
+        "floor": 4,
+        "turn": 22,
+        "phase": "PERKS",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 3,
+        "shield": 0,
+        "kills": 14,
+        "falls": 8,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 1,
+            "y": 2,
+            "hp": 2,
+            "id": 17
+          }
+        ]
+      },
+      "action": {
+        "type": "PERK",
+        "id": "SECOND_BREATH"
+      },
+      "label": "ПЕРК: SECOND_BREATH"
+    },
+    {
+      "state": {
+        "floor": 5,
+        "turn": 22,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 4,
+        "maxHp": 4,
+        "shield": 0,
+        "kills": 14,
+        "falls": 8,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          26,
+          27
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "SPIKES",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 4,
+            "id": 23
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 3,
+            "hp": 1,
+            "id": 24
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 2,
+            "y": 4,
+            "hp": 1,
+            "id": 25
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 26
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 3,
+            "y": 4,
+            "hp": 2,
+            "id": 27
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 1,
+            "y": 0,
+            "hp": 1,
+            "id": 28
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 2,
+            "id": 29
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 2.614
+    },
+    {
+      "state": {
+        "floor": 5,
+        "turn": 23,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 4,
+        "maxHp": 4,
+        "shield": 0,
+        "kills": 14,
+        "falls": 8,
+        "hookCd": 1,
+        "throwCd": 0,
+        "activeIds": [
+          26,
+          27
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "SPIKES",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 4,
+            "id": 23
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 3,
+            "hp": 1,
+            "id": 24
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 2,
+            "y": 3,
+            "hp": 1,
+            "id": 25
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 26
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 3,
+            "y": 4,
+            "hp": 2,
+            "id": 27
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 1,
+            "y": 0,
+            "hp": 1,
+            "id": 28
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 2,
+            "id": 29
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 3.847
+    },
+    {
+      "state": {
+        "floor": 5,
+        "turn": 24,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 4,
+        "maxHp": 4,
+        "shield": 0,
+        "kills": 15,
+        "falls": 9,
+        "hookCd": 0,
+        "throwCd": 1,
+        "activeIds": [
+          27,
+          28
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "SPIKES",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 4,
+            "id": 23
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 3,
+            "hp": 1,
+            "id": 24
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 2,
+            "y": 1,
+            "hp": 1,
+            "id": 25
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 2,
+            "y": 4,
+            "hp": 2,
+            "id": 27
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 1,
+            "y": 0,
+            "hp": 1,
+            "id": 28
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 1,
+            "id": 29
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 1.907
+    },
+    {
+      "state": {
+        "floor": 5,
+        "turn": 25,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 4,
+        "shield": 0,
+        "kills": 15,
+        "falls": 9,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          27,
+          28
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "SPIKES",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 1,
+            "hp": 3,
+            "id": 23
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 3,
+            "hp": 1,
+            "id": 24
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 2,
+            "y": 3,
+            "hp": 1,
+            "id": 27
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 1,
+            "y": 1,
+            "hp": 1,
+            "id": 28
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 1,
+            "id": 29
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "THROW",
+        "kind": "SWAP",
+        "label": "↔"
+      },
+      "score": 1.996
+    },
+    {
+      "state": {
+        "floor": 5,
+        "turn": 26,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 4,
+        "shield": 0,
+        "kills": 17,
+        "falls": 9,
+        "hookCd": 0,
+        "throwCd": 1,
+        "activeIds": [
+          29
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "SPIKES",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 1,
+            "y": 1,
+            "hp": 3,
+            "id": 23
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 3,
+            "hp": 1,
+            "id": 24
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 1,
+            "id": 29
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "RIGHT",
+        "mode": "BASIC",
+        "kind": "STEP",
+        "label": "·"
+      },
+      "score": 1.154
+    },
+    {
+      "state": {
+        "floor": 5,
+        "turn": 27,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 4,
+        "shield": 0,
+        "kills": 17,
+        "falls": 9,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          29
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "SPIKES",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 1,
+            "hp": 3,
+            "id": 23
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 3,
+            "hp": 1,
+            "id": 24
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 3,
+            "hp": 1,
+            "id": 29
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 2.24
+    },
+    {
+      "state": {
+        "floor": 5,
+        "turn": 28,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 4,
+        "shield": 0,
+        "kills": 17,
+        "falls": 9,
+        "hookCd": 1,
+        "throwCd": 0,
+        "activeIds": [
+          29
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "SPIKES",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 1,
+            "hp": 3,
+            "id": 23
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 3,
+            "hp": 1,
+            "id": 24
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 2,
+            "hp": 1,
+            "id": 29
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "THROW",
+        "kind": "FALL",
+        "label": "!"
+      },
+      "score": 4.748
+    },
+    {
+      "state": {
+        "floor": 5,
+        "turn": 29,
+        "phase": "PERKS",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 4,
+        "shield": 0,
+        "kills": 18,
+        "falls": 10,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "SPIKES",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 1,
+            "hp": 3,
+            "id": 23
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 0,
+            "y": 3,
+            "hp": 1,
+            "id": 24
+          }
+        ]
+      },
+      "action": {
+        "type": "PERK",
+        "id": "SECOND_BREATH"
+      },
+      "label": "ПЕРК: SECOND_BREATH"
+    },
+    {
+      "state": {
+        "floor": 6,
+        "turn": 29,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 5,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 18,
+        "falls": 10,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          32,
+          33
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "LAVA",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 5,
+            "id": 30
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 2,
+            "y": 0,
+            "hp": 1,
+            "id": 31
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 3,
+            "y": 3,
+            "hp": 2,
+            "id": 32
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 4,
+            "hp": 2,
+            "id": 33
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 3,
+            "hp": 2,
+            "id": 34
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 35
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 1,
+            "y": 1,
+            "hp": 2,
+            "id": 36
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 2.627
+    },
+    {
+      "state": {
+        "floor": 6,
+        "turn": 30,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 5,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 18,
+        "falls": 10,
+        "hookCd": 1,
+        "throwCd": 0,
+        "activeIds": [
+          32,
+          33
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "LAVA",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 5,
+            "id": 30
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 2,
+            "y": 1,
+            "hp": 1,
+            "id": 31
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 3,
+            "y": 2,
+            "hp": 2,
+            "id": 32
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 4,
+            "hp": 2,
+            "id": 33
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 3,
+            "hp": 2,
+            "id": 34
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 35
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 1,
+            "y": 1,
+            "hp": 2,
+            "id": 36
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "RIGHT",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 4.455
+    },
+    {
+      "state": {
+        "floor": 6,
+        "turn": 31,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 5,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 20,
+        "falls": 12,
+        "hookCd": 0,
+        "throwCd": 1,
+        "activeIds": [
+          33,
+          35
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "LAVA",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 5,
+            "id": 30
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 2,
+            "y": 1,
+            "hp": 1,
+            "id": 31
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 4,
+            "hp": 2,
+            "id": 33
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 35
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 0,
+            "y": 1,
+            "hp": 2,
+            "id": 36
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "BASIC",
+        "kind": "PUSH",
+        "label": ">"
+      },
+      "score": 2.639
+    },
+    {
+      "state": {
+        "floor": 6,
+        "turn": 32,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 5,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 20,
+        "falls": 12,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          33,
+          35
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "LAVA",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 5,
+            "id": 30
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 3,
+            "hp": 2,
+            "id": 33
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 4,
+            "y": 2,
+            "hp": 2,
+            "id": 35
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 0,
+            "y": 1,
+            "hp": 2,
+            "id": 36
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "BASIC",
+        "kind": "STEP",
+        "label": "·"
+      },
+      "score": 2.014
+    },
+    {
+      "state": {
+        "floor": 6,
+        "turn": 33,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 5,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 20,
+        "falls": 12,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          33,
+          35
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "LAVA",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 1,
+            "hp": 5,
+            "id": 30
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 0,
+            "y": 2,
+            "hp": 1,
+            "id": 33
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 2,
+            "y": 2,
+            "hp": 1,
+            "id": 35
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 0,
+            "y": 1,
+            "hp": 2,
+            "id": 36
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 3.602
+    },
+    {
+      "state": {
+        "floor": 6,
+        "turn": 34,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 5,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 21,
+        "falls": 13,
+        "hookCd": 0,
+        "throwCd": 1,
+        "activeIds": [
+          33,
+          36
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "LAVA",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 1,
+            "hp": 5,
+            "id": 30
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 2,
+            "hp": 1,
+            "id": 33
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 0,
+            "y": 1,
+            "hp": 2,
+            "id": 36
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "BASIC",
+        "kind": "STEP",
+        "label": "·"
+      },
+      "score": 2.195
+    },
+    {
+      "state": {
+        "floor": 6,
+        "turn": 35,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 5,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 21,
+        "falls": 13,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          33,
+          36
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "LAVA",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 5,
+            "id": 30
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 1,
+            "y": 2,
+            "hp": 1,
+            "id": 33
+          },
+          {
+            "kind": "ENEMY",
+            "type": "CHARGER",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 36
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 4.301
+    },
+    {
+      "state": {
+        "floor": 6,
+        "turn": 36,
+        "phase": "PERKS",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 23,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [],
+        "grid": [
+          [
+            "CHASM",
+            "CHASM",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "PILLAR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "LAVA",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 30
+          }
+        ]
+      },
+      "action": {
+        "type": "PERK",
+        "id": "LONG_CHAINS"
+      },
+      "label": "ПЕРК: LONG_CHAINS"
+    },
+    {
+      "state": {
+        "floor": 7,
+        "turn": 36,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 23,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          40,
+          41
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 37
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 38
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 39
+          },
+          {
+            "kind": "ENEMY",
+            "type": "JUGGERNAUT",
+            "x": 3,
+            "y": 4,
+            "hp": 4,
+            "id": 40
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 2,
+            "y": 0,
+            "hp": 1,
+            "id": 41
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 1,
+            "y": 1,
+            "hp": 1,
+            "id": 42
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 0,
+            "y": 1,
+            "hp": 1,
+            "id": 43
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 2,
+            "id": 44
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 1.341
+    },
+    {
+      "state": {
+        "floor": 7,
+        "turn": 37,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 23,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          40,
+          41
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 37
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 38
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 39
+          },
+          {
+            "kind": "ENEMY",
+            "type": "JUGGERNAUT",
+            "x": 2,
+            "y": 4,
+            "hp": 4,
+            "id": 40
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 2,
+            "y": 1,
+            "hp": 1,
+            "id": 41
+          },
+          {
+            "kind": "ENEMY",
+            "type": "SNIPER",
+            "x": 1,
+            "y": 1,
+            "hp": 1,
+            "id": 42
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 0,
+            "y": 1,
+            "hp": 1,
+            "id": 43
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 2,
+            "id": 44
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 2.978
+    },
+    {
+      "state": {
+        "floor": 7,
+        "turn": 38,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 25,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          40,
+          41
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 37
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 38
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 39
+          },
+          {
+            "kind": "ENEMY",
+            "type": "JUGGERNAUT",
+            "x": 2,
+            "y": 4,
+            "hp": 4,
+            "id": 40
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 2,
+            "y": 0,
+            "hp": 1,
+            "id": 41
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 44
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "+"
+      },
+      "score": 1.571
+    },
+    {
+      "state": {
+        "floor": 7,
+        "turn": 39,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 25,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          40,
+          41
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 2,
+            "hp": 3,
+            "id": 37
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 38
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 39
+          },
+          {
+            "kind": "ENEMY",
+            "type": "JUGGERNAUT",
+            "x": 2,
+            "y": 3,
+            "hp": 4,
+            "id": 40
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 2,
+            "y": 1,
+            "hp": 1,
+            "id": 41
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 44
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "DOWN",
+        "mode": "THROW",
+        "kind": "SWAP",
+        "label": "↔"
+      },
+      "score": 1.303
+    },
+    {
+      "state": {
+        "floor": 7,
+        "turn": 40,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 3,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 25,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          40,
+          41
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 3,
+            "hp": 3,
+            "id": 37
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 3,
+            "y": 1,
+            "hp": 1,
+            "id": 38
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 39
+          },
+          {
+            "kind": "ENEMY",
+            "type": "JUGGERNAUT",
+            "x": 2,
+            "y": 2,
+            "hp": 4,
+            "id": 40
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BOMBER",
+            "x": 2,
+            "y": 0,
+            "hp": 1,
+            "id": 41
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 44
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "HOOK",
+        "kind": "PULL",
+        "label": "БАМ"
+      },
+      "score": 1.356
+    },
+    {
+      "state": {
+        "floor": 7,
+        "turn": 41,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 27,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          44
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 4,
+            "hp": 2,
+            "id": 37
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 39
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 4,
+            "y": 3,
+            "hp": 2,
+            "id": 44
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "LEFT",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 0.889
+    },
+    {
+      "state": {
+        "floor": 7,
+        "turn": 42,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 27,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          44
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 4,
+            "hp": 2,
+            "id": 37
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 3,
+            "y": 4,
+            "hp": 1,
+            "id": 39
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 3,
+            "y": 3,
+            "hp": 2,
+            "id": 44
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "RIGHT",
+        "mode": "THROW",
+        "kind": "LAND",
+        "label": "+"
+      },
+      "score": 1.158
+    },
+    {
+      "state": {
+        "floor": 7,
+        "turn": 43,
+        "phase": "PLAYER",
+        "mode": "BASIC",
+        "hp": 2,
+        "maxHp": 5,
+        "shield": 0,
+        "kills": 27,
+        "falls": 14,
+        "hookCd": 0,
+        "throwCd": 0,
+        "activeIds": [
+          44
+        ],
+        "grid": [
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "CHASM",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "SPIKES"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "PILLAR",
+            "CHASM"
+          ],
+          [
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR"
+          ],
+          [
+            "CHASM",
+            "FLOOR",
+            "FLOOR",
+            "FLOOR",
+            "CHASM"
+          ]
+        ],
+        "entities": [
+          {
+            "kind": "PLAYER",
+            "type": "",
+            "x": 2,
+            "y": 4,
+            "hp": 2,
+            "id": 37
+          },
+          {
+            "kind": "BARREL",
+            "type": "BARREL",
+            "x": 1,
+            "y": 4,
+            "hp": 1,
+            "id": 39
+          },
+          {
+            "kind": "ENEMY",
+            "type": "BRUTE",
+            "x": 2,
+            "y": 3,
+            "hp": 2,
+            "id": 44
+          }
+        ]
+      },
+      "action": {
+        "type": "DIR",
+        "dir": "UP",
+        "mode": "THROW",
+        "kind": "VOID",
+        "label": "!"
+      },
+      "score": 4.392
+    }
+  ],
+  "final": {
+    "floor": 7,
+    "turn": 44,
+    "phase": "WIN",
+    "mode": "BASIC",
+    "hp": 2,
+    "maxHp": 5,
+    "shield": 0,
+    "kills": 28,
+    "falls": 15,
+    "hookCd": 0,
+    "throwCd": 0,
+    "activeIds": [],
+    "grid": [
+      [
+        "CHASM",
+        "FLOOR",
+        "FLOOR",
+        "CHASM",
+        "CHASM"
+      ],
+      [
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "SPIKES"
+      ],
+      [
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "PILLAR",
+        "CHASM"
+      ],
+      [
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR"
+      ],
+      [
+        "CHASM",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "CHASM"
+      ]
+    ],
+    "entities": [
+      {
+        "kind": "PLAYER",
+        "type": "",
+        "x": 2,
+        "y": 4,
+        "hp": 2,
+        "id": 37
+      },
+      {
+        "kind": "BARREL",
+        "type": "BARREL",
+        "x": 1,
+        "y": 4,
+        "hp": 1,
+        "id": 39
+      }
+    ]
+  }
+}
