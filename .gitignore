@@ -1,0 +1,16 @@
+node_modules/
+.tmp_*
+.DS_Store
+*.log
+
+# Сборки и секреты Android-релиза (в Git не попадают)
+dist/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/keystore.properties
+*.jks
+*.keystore
+*.aab
+*.apk

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="КРАЙ">
+  <defs><radialGradient id="bg" cx="50%" cy="42%" r="72%">
+    <stop offset="0" stop-color="#141c2e"/><stop offset="1" stop-color="#070910"/>
+  </radialGradient></defs>
+  <rect width="64" height="64" rx="12" fill="url(#bg)"/>
+  <g stroke="#3a4359" stroke-width=".7" opacity=".65">
+    <path d="M11 11H53M11 21.4H53M11 31.8H53M11 42.2H53M11 52.6H53M11 53H53"/>
+    <path d="M11 11V53M21.4 11V53M31.8 11V53M42.2 11V53M52.6 11V53"/>
+  </g>
+  <rect x="12" y="12" width="40" height="40" rx="7" fill="none" stroke="#00e5ff" stroke-width="1.2" opacity=".4"/>
+  <rect x="17" y="25" width="13" height="13" rx="3" fill="#00e5ff"/>
+  <rect x="21" y="29" width="5" height="5" rx="1.5" fill="#e8edf7"/>
+  <path d="M31 31.5H36M34 29L36.5 31.5 34 34" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 24.5L49 31.5 42 38.5 35 31.5Z" fill="#ff4757"/>
+  <path d="M42 29L44.8 31.5 42 34 39.2 31.5Z" fill="#e8edf7" opacity=".85"/>
+  <path d="M49 26L55 31.5 49 37Z" fill="#ff7a1a"/>
+  <path d="M50.5 31.5H53.5" stroke="#ffb037" stroke-width="1.6" stroke-linecap="round"/>
+</svg>

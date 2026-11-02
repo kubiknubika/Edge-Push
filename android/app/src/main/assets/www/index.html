@@ -1,0 +1,2372 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f111a">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="КРАЙ (Edge Push) — пошаговая микро-тактика непрямого боя для одной руки">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="КРАЙ">
+<meta name="application-name" content="КРАЙ">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>КРАЙ · Edge Push</title>
+<style>
+:root{
+  /* ===== COLOR CONTRACT / ПАЛИТРА =====
+     ОДИН ЦВЕТ = ОДНА РОЛЬ. Защищённые оттенки нельзя использовать как декор.
+     Рецепт: NATO APP-6 (синий=свой, красный=чужой) + игровая color language
+     (красный=опасность, жёлтый=объект, зелёный=безопасный ход) + WCAG 1.4.1
+     (цвет всегда дублируется формой/паттерном/подписью). Красный и зелёный
+     разведены в reddish и bluish-green, чтобы их различали при дейтеранопии.
+       СВОЙ              --ally    #00e5ff  герой, щит, HP, кнопки игрока
+       ЧУЖОЙ             --hostile #ff4757  ВСЕ враги, урон, намерения
+       ОБЪЕКТ/ВНИМАНИЕ  --neutral #ffb037  бочки, откаты, ⚡, подсказки
+       ОПАСНАЯ МЕСТНОСТЬ--hazard  #ff7a1a  лава и шипы (+ штриховка)
+       БЕЗОПАСНЫЙ ХОД   --safe    #5cffb0  превью шага/крюка/броска
+       ИНЕРТНОЕ          --tile/--void      пол, колонна, пропасть, фон */
+  --bg:#0f111a; --void:#090b12; --tile:#252a3a; --tile-edge:#171b28;
+  --ally:#00e5ff; --hostile:#ff4757; --neutral:#ffb037;
+  --hazard:#ff7a1a; --safe:#5cffb0;
+  --ink:#e8edf7; --muted:#8b96ad; --line:rgba(160,180,215,.14);
+  /* алиасы: весь старый UI автоматически следует контракту */
+  --cyan:var(--ally); --cyan-dim:#0a7c8c; --red:var(--hostile); --amber:var(--neutral);
+
+  /* ===== МАСШТАБ =====
+     --u — базовая величина всего интерфейса: растёт с диагональю/высотой телефона,
+     но имеет пол и потолок, чтобы на 320×568 не было обрезки, а на 430×932 — мыла.
+     --chrome — сколько места в верхних 55% занимают HUD, подсказка и зазоры.
+     Поле всегда вписано: min(92vw, 46dvh, свободная высота). Никаких фиксированных px
+     в геометрии: один коэффициент на все телефоны, 100dvh без скролла. */
+  --u:clamp(9px, min(2.7vw, 1.4dvh), 14px);
+  --chrome:clamp(82px, 12.2dvh, 108px);
+  --board:min(92vw, 46dvh, calc(55dvh - var(--chrome)), 440px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden}
+html{background:#070910}
+body{
+  background:radial-gradient(120% 80% at 50% 10%,#1a2030 0%,#070910 70%);
+  color:var(--ink);
+  font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  touch-action:none;user-select:none;-webkit-user-select:none;
+  display:flex;justify-content:center;align-items:stretch;
+}
+#app{
+  position:relative;width:100%;max-width:480px;height:100vh;height:100dvh;
+  padding-top:env(safe-area-inset-top); /* вырезы/статус-бар в standalone и на Android */
+  display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(180deg,#121623 0%,#0b0d15 100%);
+  box-shadow:0 0 70px rgba(0,0,0,.7);
+}
+#top{height:55%;flex:none;display:flex;flex-direction:column;min-height:0}
+#hud{flex:none;padding:calc(var(--u)*.75) calc(var(--u)*1.15) calc(var(--u)*.2)}
+.hud-row{display:flex;align-items:center;gap:calc(var(--u)*.65);min-height:calc(var(--u)*2.85)}
+.hud-row.sub{margin-top:calc(var(--u)*.45);min-height:calc(var(--u)*2.25)}
+.brand{font-weight:900;letter-spacing:.16em;font-size:calc(var(--u)*1.15);color:var(--cyan);text-shadow:0 0 12px rgba(0,229,255,.45)}
+.floor-pill{
+  font-size:calc(var(--u)*1.1);letter-spacing:.08em;color:var(--muted);
+  background:rgba(255,255,255,.045);border:1px solid var(--line);
+  padding:calc(var(--u)*.38) calc(var(--u)*.8);border-radius:999px;white-space:nowrap;
+}
+.floor-pill b{color:var(--ink);font-size:calc(var(--u)*1.2)}
+.hearts{display:flex;gap:calc(var(--u)*.28);font-size:calc(var(--u)*1.62);line-height:1;flex:1;min-width:0;text-shadow:0 0 10px rgba(0,229,255,.4)}
+.hearts .full{color:var(--ally)}
+.hearts .empty{color:#394154}
+.shield-pill{
+  font-size:calc(var(--u)*1.05);color:var(--cyan);border:1px solid rgba(0,229,255,.45);
+  background:rgba(0,229,255,.08);border-radius:999px;
+  padding:calc(var(--u)*.28) calc(var(--u)*.7);white-space:nowrap;
+}
+.shield-pill.off{display:none}
+.icon-btn{
+  width:calc(var(--u)*3.1);height:calc(var(--u)*3.1);flex:none;
+  border-radius:calc(var(--u)*1.05);border:1px solid var(--line);
+  background:rgba(255,255,255,.05);color:var(--ink);
+  font-size:calc(var(--u)*1.55);font-weight:700;
+  display:grid;place-items:center;cursor:pointer;
+}
+.icon-btn:active{transform:scale(.93)}
+.diff-btn{width:calc(var(--u)*2.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:1}
+.diff-btn span{font-size:calc(var(--u)*.62);letter-spacing:.1em;color:var(--neutral);font-weight:800}
+.diff-btn b{font-size:calc(var(--u)*1.32);color:var(--ink);font-weight:900;line-height:1.05}
+/* 10 уровней сложности: прокручиваемый оверлей с закреплённой нижней строкой */
+#overlay.difficulty-mode{justify-content:flex-start;overflow:auto;touch-action:pan-y;gap:calc(var(--u)*.65);padding-top:calc(var(--u)*1.1)}
+#overlay.difficulty-mode .ov-row{
+  position:sticky;bottom:0;z-index:1;width:100%;max-width:420px;
+  padding:calc(var(--u)*.5) 0 calc(var(--u)*.2);background:rgba(6,8,14,.97);
+}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*.5);width:100%;max-width:420px}
+.diff-item{
+  display:flex;flex-direction:column;align-items:flex-start;gap:calc(var(--u)*.12);
+  min-height:44px;padding:calc(var(--u)*.5) calc(var(--u)*.7);
+  border:1px solid var(--line);border-radius:calc(var(--u)*.8);
+  background:rgba(255,255,255,.045);color:var(--ink);text-align:left;cursor:pointer;
+}
+.diff-item b{font-size:calc(var(--u)*1.5);color:var(--neutral);line-height:1}
+.diff-item span{font-size:calc(var(--u)*.88);font-weight:800;letter-spacing:.06em}
+.diff-item small{font-size:calc(var(--u)*.76);color:var(--muted);line-height:1.2}
+.diff-item.active{border-color:var(--ally);background:rgba(0,229,255,.1);box-shadow:inset 0 0 0 1px rgba(0,229,255,.25)}
+.diff-item.active b{color:var(--ally)}
+.diff-item:active{transform:scale(.97)}
+.perk-icons{display:flex;gap:calc(var(--u)*.35);flex:1;flex-wrap:wrap;min-height:calc(var(--u)*2.05)}
+.perk-chip{
+  font-size:calc(var(--u)*1.2);line-height:1;display:grid;place-items:center;
+  width:calc(var(--u)*2.2);height:calc(var(--u)*2.05);border-radius:calc(var(--u)*.65);
+  background:rgba(0,229,255,.09);border:1px solid rgba(0,229,255,.28);
+}
+.perk-chip svg{width:calc(var(--u)*1.3);height:calc(var(--u)*1.3);color:var(--cyan)}
+.status{font-size:calc(var(--u)*1.05);color:var(--muted);white-space:nowrap;letter-spacing:.03em;transition:opacity .2s}
+.toasting .status{opacity:0}
+#stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*.55);padding:calc(var(--u)*.2) 0}
+#boardWrap{display:grid;place-items:center;max-width:100%;max-height:100%}
+#board{
+  position:relative;
+  width:var(--board);
+  aspect-ratio:1/1;border-radius:calc(var(--u)*1.7);overflow:hidden;
+  background:
+    radial-gradient(80% 60% at 50% 10%,rgba(30,38,58,.55),transparent 70%),
+    var(--void);
+  box-shadow:inset 0 0 0 1px rgba(120,150,200,.14),inset 0 0 40px rgba(0,0,0,.8),0 16px 36px rgba(0,0,0,.55);
+}
+#tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr)}
+.tile{margin:calc(var(--u)*.24);border-radius:calc(var(--u)*.75);position:relative;overflow:hidden}
+.t-FLOOR{
+  background:linear-gradient(180deg,#2c3244 0%,#252a3a 72%,#1d2231 100%);
+  border-top:1px solid rgba(255,255,255,.075);
+  box-shadow:inset 0 -5px 0 rgba(9,12,20,.55),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.t-CHASM{
+  background:radial-gradient(70% 70% at 50% 50%,rgba(0,0,0,.6),rgba(4,6,12,.15));
+  border:1px dashed rgba(150,175,215,.22);
+  box-shadow:inset 0 0 16px rgba(0,0,0,.85);
+}
+.t-PILLAR{
+  background:linear-gradient(160deg,#4b546b,#2a3042 70%,#1b2030);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.16),inset 0 -5px 0 rgba(0,0,0,.4),0 4px 0 rgba(0,0,0,.5);
+}
+.t-PILLAR::after{
+  content:"";position:absolute;inset:22%;border-radius:4px;
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.055) 0 4px,transparent 4px 8px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+}
+.t-SPIKES{
+  background:repeating-linear-gradient(45deg,#7a3c12 0 6px,#48230b 6px 12px);
+  box-shadow:inset 0 0 0 1px rgba(255,122,26,.5),inset 0 -4px 8px rgba(0,0,0,.5);
+}
+.t-SPIKES::after{content:"▲ ▲";position:absolute;inset:0;display:grid;place-items:center;font-size:9px;color:rgba(255,176,90,.9);letter-spacing:1px}
+/* Лава = потрескавшийся остывающий шлак + два языка пламени.
+   Никаких символов из шрифта: форма рисуется clip-path, поэтому одинакова на всех телефонах. */
+.t-LAVA{
+  background:
+    radial-gradient(ellipse 85% 42% at 50% 104%,rgba(255,170,60,.9),rgba(255,90,10,.32) 55%,transparent 78%),
+    repeating-linear-gradient(135deg,#4a1a08 0 7px,#341105 7px 14px);
+  box-shadow:inset 0 0 0 1px rgba(255,122,26,.6),inset 0 -6px 12px rgba(255,80,10,.35),
+             0 0 12px rgba(255,122,26,.22);
+  overflow:hidden;
+}
+.t-LAVA::before{
+  content:"";position:absolute;left:14%;right:14%;bottom:4%;height:76%;
+  background:linear-gradient(180deg,#ffe6a0 0%,#ffb037 30%,#ff7a1a 62%,#c43a06 100%);
+  clip-path:polygon(50% 0%,66% 20%,60% 38%,80% 52%,72% 78%,82% 100%,
+                    18% 100%,28% 78%,20% 52%,40% 38%,34% 20%);
+  filter:drop-shadow(0 0 5px rgba(255,122,26,.85));
+  transform-origin:50% 100%;animation:flame 1.05s ease-in-out infinite alternate;
+}
+.t-LAVA::after{
+  content:"";position:absolute;left:31%;right:31%;bottom:4%;height:52%;
+  background:linear-gradient(180deg,#fff7d6,#ffd166 42%,#ff9f1a 100%);
+  clip-path:polygon(50% 0%,72% 26%,62% 50%,78% 74%,50% 100%,22% 74%,38% 50%,28% 26%);
+  transform-origin:50% 100%;animation:flame .72s ease-in-out infinite alternate-reverse;
+}
+@keyframes flame{
+  0%{transform:scaleY(.9) scaleX(.96) skewX(-3deg);filter:brightness(.92)}
+  100%{transform:scaleY(1.08) scaleX(1.04) skewX(4deg);filter:brightness(1.12)}
+}
+#telegraph,#fxSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+#entities,#fx,#preview{position:absolute;inset:0;pointer-events:none}
+.unit{
+  position:absolute;left:0;top:0;width:20%;height:20%;
+  transition:transform 145ms cubic-bezier(.2,.85,.25,1),opacity 180ms linear;
+  display:grid;place-items:center;
+}
+.unit .body{width:74%;height:74%;position:relative;display:grid;place-items:center;font-size:13px;font-weight:900}
+.unit.spawn{animation:spawn .22s ease-out}
+@keyframes spawn{from{opacity:0;transform:scale(.4)}}
+.unit.inactive{opacity:.72;filter:saturate(.7)}
+.unit.stunned{opacity:.6;filter:grayscale(.45)}
+.u-PLAYER .body{
+  border-radius:28%;border:2px solid #c9fbff;
+  background:linear-gradient(145deg,#a6fbff,#00c8e6 55%,#0088a8);
+  box-shadow:0 0 16px rgba(0,229,255,.65),inset 0 2px 0 rgba(255,255,255,.65);
+  color:#04333d;
+}
+.u-PLAYER .body::after{content:"";width:34%;height:34%;border-radius:22%;background:rgba(4,45,55,.42);transform:rotate(45deg)}
+.unit.shielded .body{box-shadow:0 0 0 3px rgba(0,229,255,.75),0 0 22px rgba(0,229,255,.8),inset 0 2px 0 rgba(255,255,255,.65)}
+/* ЧУЖОЙ: пять форм — один красный. Форма, а не оттенок, говорит кто это. */
+.u-BRUTE .body,.u-JUGGERNAUT .body{
+  border-radius:16%;background:linear-gradient(150deg,#ff7a83,var(--hostile) 62%,#8c1225);
+  border:2px solid #ffb3ba;box-shadow:0 5px 0 rgba(0,0,0,.45),0 0 12px rgba(255,71,87,.35);
+}
+.u-JUGGERNAUT .body{background:linear-gradient(150deg,#a8334a,#5b0c22 70%);border-color:#ffb3ba;box-shadow:0 0 0 2px rgba(255,71,87,.85),inset 0 0 0 3px #3a0e18,0 5px 0 rgba(0,0,0,.5)}
+.u-JUGGERNAUT .body::after{content:"";width:36%;height:36%;border:2px solid #ffb3ba;border-radius:50%}
+.u-CHARGER .body{
+  border-radius:12%;transform:rotate(45deg);
+  background:linear-gradient(150deg,#ff9aa3,var(--hostile) 60%,#8c1225);
+  border:2px solid #ffb3ba;box-shadow:0 0 12px rgba(255,71,87,.45);
+}
+.u-CHARGER .body::after{content:"";position:absolute;inset:22%;border-radius:50%;background:rgba(70,0,12,.4)}
+.u-SNIPER .body{
+  clip-path:polygon(50% 3%,97% 94%,3% 94%);
+  background:linear-gradient(180deg,#ff9aa3,#f0334b 60%,#8c1225);
+  filter:drop-shadow(0 3px 0 rgba(0,0,0,.5));
+}
+.u-BOMBER .body{
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffc0c6,var(--hostile) 55%,#8c1225);
+  border:2px solid #ffb3ba;box-shadow:0 0 14px rgba(255,71,87,.55);
+}
+.u-BOMBER .body::before{content:"";position:absolute;top:-22%;left:52%;width:3px;height:22%;background:#ffb3ba;border-radius:2px;transform:rotate(22deg)}
+.u-BOMBER .body::after{content:"";width:100%;height:100%;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(90,0,18,.25)}
+.u-BARREL .body{
+  border-radius:22%;background:linear-gradient(180deg,#ffd98a,var(--neutral) 55%,#8a5410);
+  border:2px solid #ffe0a0;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25),0 4px 0 rgba(0,0,0,.45);
+  color:#3a2300;font-size:15px;
+}
+.u-BARREL .body::after{content:"!"}
+.pips{position:absolute;bottom:6%;left:0;right:0;display:flex;justify-content:center;gap:2px}
+.pip{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.8)}
+.pip.off{background:#fff;opacity:.22}
+.badge{position:absolute;top:-1%;right:2%;font-size:11px;line-height:1;color:var(--neutral);filter:drop-shadow(0 1px 2px #000)}
+.unit.stunned .badge{color:var(--muted)}
+.unit.active .badge{animation:zap 1s ease-in-out infinite}
+@keyframes zap{50%{transform:scale(1.35);filter:drop-shadow(0 0 5px #ffd23f)}}
+.tg-attack{fill:rgba(255,71,87,.08);stroke:#ff4757;stroke-width:1.4;animation:pulse 1s ease-in-out infinite}
+.tg-cell{fill:rgba(255,71,87,.14)}
+.tg-line{stroke:#ff4757;stroke-width:1.1;stroke-linecap:round;stroke-dasharray:3 2;animation:pulse 1s ease-in-out infinite}
+.tg-thin{stroke:#ff5c7a;stroke-width:.55;stroke-linecap:round;animation:pulse 1s ease-in-out infinite}
+.tg-move{fill:rgba(255,71,87,.10);stroke:rgba(255,71,87,.8);stroke-width:1;stroke-dasharray:2 2}
+@keyframes pulse{50%{opacity:.4}}
+.pv-ray{stroke:rgba(92,255,176,.55);stroke-width:.9;stroke-dasharray:2.5 2}
+.pv-mark{fill:rgba(92,255,176,.12);stroke:var(--safe);stroke-width:1.2;animation:pulse 1.2s ease-in-out infinite}
+.pv-dot{fill:rgba(92,255,176,.5)}
+.pv-label{fill:#c6ffe4;font-size:9px;font-weight:800;text-anchor:middle;dominant-baseline:central;font-family:inherit}
+.tip{
+  font-size:calc(var(--u)*1.1);color:var(--muted);text-align:center;
+  min-height:calc(var(--u)*1.5);padding:0 calc(var(--u)*1.3);letter-spacing:.02em;
+}
+.tip b{color:var(--cyan);font-weight:700}
+#controls{
+  height:45%;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;
+  padding:calc(var(--u)*.55) calc(var(--u)*.95) calc(var(--u)*.55 + env(safe-area-inset-bottom));
+  gap:calc(var(--u)*.35);
+  border-top:1px solid rgba(160,180,215,.09);
+  background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(0,0,0,.18));
+}
+.ability-row{display:flex;gap:calc(var(--u)*.75);width:100%;max-width:min(100%,440px)}
+.ability{
+  position:relative;flex:1;min-height:min(calc(var(--u)*6.2),9dvh);
+  border-radius:calc(var(--u)*1.5);cursor:pointer;
+  border:1px solid var(--line);background:linear-gradient(180deg,#242b3c,#171c29);
+  color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 0 rgba(0,0,0,.35);
+  transition:transform .09s ease,border-color .15s,box-shadow .15s,opacity .15s;
+  padding:calc(var(--u)*.55) calc(var(--u)*.4);
+}
+.ability:active{transform:translateY(2px) scale(.98);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.ability .ico{line-height:0;color:#bff7ff}
+.ability .ico svg{width:calc(var(--u)*2.3);height:calc(var(--u)*2.3)}
+.ability .name{font-size:calc(var(--u)*1.05);font-weight:800;letter-spacing:.07em}
+.ability .sub{font-size:calc(var(--u)*.85);color:var(--muted)}
+.ability.on{
+  border-color:var(--cyan);
+  box-shadow:0 0 0 2px rgba(0,229,255,.3),0 0 20px rgba(0,229,255,.28),inset 0 1px 0 rgba(255,255,255,.1);
+  background:linear-gradient(180deg,#123a46,#0d2732);
+}
+.ability.cooling{opacity:.46}
+.ability .cd{
+  position:absolute;top:calc(var(--u)*-.65);right:calc(var(--u)*-.45);
+  min-width:calc(var(--u)*2.1);height:calc(var(--u)*2.1);padding:0 calc(var(--u)*.35);
+  border-radius:999px;background:#0d111c;border:1px solid rgba(255,176,55,.6);
+  color:var(--amber);font-size:calc(var(--u)*1.15);font-weight:900;display:grid;place-items:center;
+}
+.ability .cd.ready{display:none}
+.dpad{
+  --btn:clamp(56px, min(17.5vw, 8.2dvh), 84px);
+  display:grid;grid-template-columns:repeat(3,var(--btn));grid-template-rows:repeat(3,var(--btn));
+  gap:calc(var(--u)*.45);place-content:center;
+}
+.dir{
+  border-radius:calc(var(--u)*1.7);border:1px solid var(--line);cursor:pointer;
+  background:linear-gradient(180deg,#2b3346,#1a2030);
+  color:var(--ink);font-size:calc(var(--u)*2.5);font-weight:900;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 0 rgba(0,0,0,.42);
+  transition:transform .08s ease,border-color .15s,opacity .15s,box-shadow .15s;
+  display:grid;place-items:center;
+}
+.dir:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 0 rgba(0,0,0,.42)}
+.dir.ok{border-color:rgba(92,255,176,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 5px 0 rgba(0,0,0,.42),0 0 14px rgba(92,255,176,.16)}
+.dir.bad{opacity:.36}
+.dir[data-dir="UP"]{grid-area:1/2}
+.dir[data-dir="LEFT"]{grid-area:2/1}
+.dir[data-dir="RIGHT"]{grid-area:2/3}
+.dir[data-dir="DOWN"]{grid-area:3/2}
+.dpad-mid{
+  grid-area:2/2;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:calc(var(--u)*.28);border-radius:calc(var(--u)*1.7);background:rgba(255,255,255,.03);border:1px dashed var(--line);text-align:center;
+}
+.dpad-mid .mode{font-size:calc(var(--u)*.95);font-weight:900;letter-spacing:.06em;color:var(--cyan)}
+.dpad-mid .turn{font-size:calc(var(--u)*.85);color:var(--muted)}
+.hint{font-size:calc(var(--u)*.9);color:#657087;text-align:center;letter-spacing:.03em;min-height:calc(var(--u)*1.2)}
+#overlay{
+  position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:calc(var(--u)*1.1);padding:calc(var(--u)*1.6);
+  background:rgba(6,8,14,.93);backdrop-filter:blur(6px);
+}
+#overlay.hidden{display:none}
+#overlay:not(.hidden) ~ #toast{opacity:0;transition:none}
+#overlay.legend-mode{justify-content:flex-start;overflow:auto;touch-action:pan-y;gap:calc(var(--u)*.7);padding-top:calc(var(--u)*1.3)}
+/* «Понятно» всегда в пределах экрана, даже если легенда прокручивается */
+#overlay.legend-mode .ov-row{
+  position:sticky;bottom:0;z-index:1;width:100%;max-width:420px;
+  padding:calc(var(--u)*.55) 0 calc(var(--u)*.2);
+  background:rgba(6,8,14,.97);
+}
+.legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*.45) calc(var(--u)*.7);width:100%;max-width:420px}
+.lg-pal{width:100%;max-width:420px;display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*.45) calc(var(--u)*.7)}
+.lg-pal-item{
+  display:flex;align-items:center;gap:calc(var(--u)*.55);
+  min-height:calc(var(--u)*2.8);padding:calc(var(--u)*.28) calc(var(--u)*.55);
+  border-radius:calc(var(--u)*.85);
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+}
+.lg-pal-chip{width:calc(var(--u)*1.5);height:calc(var(--u)*1.5);flex:none;border-radius:5px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.lg-pal-item b{display:block;font-size:calc(var(--u)*.9);line-height:1.15;letter-spacing:.04em;color:var(--ink)}
+.lg-pal-item small{display:block;font-size:calc(var(--u)*.8);line-height:1.15;color:var(--muted)}
+.lg-group{width:100%;max-width:420px;font-size:calc(var(--u)*.9);font-weight:900;letter-spacing:.12em;color:var(--cyan);margin-top:2px}
+.lg-item{
+  display:flex;align-items:center;gap:calc(var(--u)*.55);
+  min-height:calc(var(--u)*3.4);padding:calc(var(--u)*.38) calc(var(--u)*.55);
+  border-radius:calc(var(--u)*.95);
+  background:rgba(255,255,255,.035);border:1px solid var(--line);
+}
+.lg-item b{display:block;font-size:calc(var(--u)*1);line-height:1.2;color:var(--ink)}
+.lg-item small{display:block;font-size:calc(var(--u)*.9);line-height:1.2;color:var(--muted)}
+.lg-ico,.lg-tile,.lg-sym{width:calc(var(--u)*2.65);height:calc(var(--u)*2.65);flex:none;pointer-events:none}
+.lg-ico{display:grid;place-items:center}
+.lg-ico .body{width:74%;height:74%;position:relative;display:grid;place-items:center}
+.lg-tile{position:relative;overflow:hidden;display:block;border-radius:6px;margin:0}
+.lg-tile.t-LAVA::before,.lg-tile.t-LAVA::after{animation-duration:1.6s}
+.lg-tile.t-SPIKES::after{font-size:7px}
+.lg-sym{
+  display:grid;place-items:center;border-radius:calc(var(--u)*.75);font-size:calc(var(--u)*1.3);font-weight:900;line-height:1;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);
+}
+.ov-btn.small{min-width:0;padding:calc(var(--u)*.7) calc(var(--u)*.9);font-size:calc(var(--u)*.95);min-height:calc(var(--u)*3.8)}
+.icon-btn .ico{line-height:0}
+.icon-btn svg{width:calc(var(--u)*1.5);height:calc(var(--u)*1.5)}
+.tut-links{display:flex;gap:calc(var(--u)*.55)}
+@media (max-height:700px){
+  #overlay.legend-mode{gap:calc(var(--u)*.3);padding:calc(var(--u)*.55) calc(var(--u)*.95)}
+  #overlay.legend-mode .ov-row{padding:calc(var(--u)*.35) 0 calc(var(--u)*.1)}
+  .ov-title{font-size:calc(var(--u)*1.55)}
+  .ov-sub{font-size:calc(var(--u)*.92);line-height:1.25;max-width:none}
+  .ov-btn{min-height:calc(var(--u)*3.4)}
+  .ov-btn.small{min-height:calc(var(--u)*2.9);padding:calc(var(--u)*.35) calc(var(--u)*.65);font-size:calc(var(--u)*.85)}
+  .legend-grid,.lg-pal{gap:calc(var(--u)*.3) calc(var(--u)*.55)}
+  .lg-pal{grid-template-columns:repeat(3,1fr)}
+  .lg-item,.lg-pal-item{min-height:calc(var(--u)*2.5);padding:calc(var(--u)*.2) calc(var(--u)*.35)}
+  .lg-pal-chip{width:calc(var(--u)*1.15);height:calc(var(--u)*1.15)}
+  .lg-pal-item b{font-size:calc(var(--u)*.82)}
+  .lg-pal-item small{font-size:calc(var(--u)*.74)}
+  .lg-ico,.lg-tile,.lg-sym{width:calc(var(--u)*2.05);height:calc(var(--u)*2.05)}
+  .lg-item b{font-size:calc(var(--u)*.92)}
+  .lg-item small{font-size:calc(var(--u)*.78);line-height:1.15}
+  .lg-group{margin-top:0;font-size:calc(var(--u)*.82)}
+}
+.ov-title{font-size:calc(var(--u)*2.05);font-weight:900;letter-spacing:.1em;text-align:center;color:var(--cyan);text-shadow:0 0 18px rgba(0,229,255,.4)}
+.ov-sub{font-size:calc(var(--u)*1.1);color:var(--muted);text-align:center;max-width:min(92vw,340px);line-height:1.5}
+.ov-stats{font-size:calc(var(--u)*1.1);color:var(--ink);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:9px 14px;text-align:center;line-height:1.7}
+.perk-card{
+  width:100%;max-width:380px;min-height:calc(var(--u)*7);
+  display:flex;align-items:center;gap:calc(var(--u)*1.1);text-align:left;
+  border-radius:calc(var(--u)*1.5);padding:calc(var(--u)*.95) calc(var(--u)*1.3);cursor:pointer;
+  border:1px solid rgba(0,229,255,.3);background:linear-gradient(135deg,rgba(0,229,255,.1),rgba(255,255,255,.03));
+  color:var(--ink);
+}
+.perk-card:active{transform:scale(.98)}
+.perk-card .pc-ico{width:calc(var(--u)*3.6);text-align:center;flex:none;line-height:0;color:var(--cyan)}
+.perk-card .pc-ico svg{width:calc(var(--u)*2.6);height:calc(var(--u)*2.6)}
+.perk-card .pc-name{font-size:calc(var(--u)*1.3);font-weight:900;letter-spacing:.04em}
+.perk-card .pc-desc{font-size:calc(var(--u)*1.05);color:var(--muted);line-height:1.35;margin-top:2px}
+.perk-card .pc-lvl{font-size:calc(var(--u)*.85);color:var(--cyan);letter-spacing:.08em}
+.ov-btn{
+  min-width:min(38vw,150px);min-height:calc(var(--u)*4.5);
+  padding:calc(var(--u)*.9) calc(var(--u)*1.7);border-radius:calc(var(--u)*1.3);
+  cursor:pointer;font-size:calc(var(--u)*1.2);font-weight:900;letter-spacing:.06em;
+  border:1px solid var(--cyan);background:rgba(0,229,255,.12);color:var(--ink);
+}
+.ov-btn.ghost{border-color:var(--line);background:rgba(255,255,255,.04);color:var(--muted)}
+.ov-btn:active{transform:scale(.97)}
+.ov-row{display:flex;gap:calc(var(--u)*.9);flex-wrap:wrap;justify-content:center}
+.rules{font-size:calc(var(--u)*1.05);color:#c3cddd;line-height:1.65;max-width:min(92vw,360px);touch-action:pan-y;max-height:52dvh;overflow:auto;padding:0 4px}
+.rules b{color:var(--cyan)}
+#tutorial{
+  position:absolute;left:50%;bottom:calc(45% + var(--u)*1.1);transform:translateX(-50%);
+  width:min(92vw,440px);z-index:18;
+  padding:calc(var(--u)*.75) calc(var(--u)*1.05) calc(var(--u)*.85);
+  border-radius:calc(var(--u)*1.5);
+  background:linear-gradient(180deg,rgba(12,20,34,.95),rgba(9,13,23,.97));
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  border:1px solid rgba(0,229,255,.55);
+  box-shadow:0 12px 34px rgba(0,0,0,.65),0 0 26px rgba(0,229,255,.16);
+  display:flex;flex-direction:column;gap:calc(var(--u)*.38);
+}
+#tutorial.hidden{display:none}
+.tut-head{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--u)*.7)}
+.tut-step{font-size:calc(var(--u)*.95);font-weight:900;letter-spacing:.1em;color:var(--cyan)}
+.tut-skip{border:0;background:none;color:var(--muted);font-size:calc(var(--u)*.95);letter-spacing:.05em;cursor:pointer;padding:calc(var(--u)*.35)}
+.tut-skip:active{color:var(--ink)}
+.tut-title{font-size:calc(var(--u)*1.2);font-weight:900;color:var(--ink);letter-spacing:.02em}
+.tut-text{font-size:calc(var(--u)*1.05);line-height:1.34;color:#c8d3e6}
+.tut-text b{color:var(--cyan)}
+.tut-row{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--u)*.7)}
+.tut-hint{font-size:calc(var(--u)*.95);color:var(--amber);letter-spacing:.03em}
+.tut-next{
+  min-height:calc(var(--u)*3.1);padding:calc(var(--u)*.55) calc(var(--u)*1.4);
+  border-radius:calc(var(--u)*1.05);cursor:pointer;
+  border:1px solid var(--cyan);background:rgba(0,229,255,.14);color:var(--ink);
+  font-size:calc(var(--u)*1.05);font-weight:900;letter-spacing:.06em;white-space:nowrap;
+}
+.tut-next:active{transform:scale(.97)}
+.tutorial-on #tip{opacity:0}
+.tut-glow{animation:tutpulse 1.15s ease-in-out infinite}
+@keyframes tutpulse{50%{box-shadow:0 0 0 2px rgba(0,229,255,.55),0 0 22px rgba(0,229,255,.45)}}
+#toast{
+  position:absolute;left:50%;top:calc(var(--u)*4.3);transform:translateX(-50%) translateY(-8px);
+  z-index:30;padding:calc(var(--u)*.75) calc(var(--u)*1.3);
+  border-radius:999px;font-size:calc(var(--u)*1.05);white-space:nowrap;
+  background:rgba(10,14,24,.94);border:1px solid rgba(0,229,255,.35);color:var(--ink);
+  opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.danger{
+  border-color:var(--hostile);background:rgba(38,9,16,.97);color:#ffe6ea;
+  font-weight:900;font-size:calc(var(--u)*1.2);letter-spacing:.04em;
+  box-shadow:0 0 0 1px rgba(255,71,87,.4),0 0 26px rgba(255,71,87,.5);
+  animation:denyPop .3s ease-out;
+}
+@keyframes denyPop{
+  0%{transform:translateX(-50%) translateY(-8px) scale(.86);opacity:0}
+  60%{transform:translateX(-50%) translateY(0) scale(1.06)}
+  100%{transform:translateX(-50%) translateY(0) scale(1);opacity:1}
+}
+.fx-deny{
+  position:absolute;inset:0;z-index:6;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:calc(var(--u)*.4);
+  background:radial-gradient(62% 46% at 50% 50%,rgba(36,7,14,.62),rgba(8,8,14,.14) 82%);
+  animation:denyFade .9s ease-out forwards;
+}
+.fx-deny b{
+  font-size:clamp(20px,6.2vw,30px);font-weight:900;letter-spacing:.12em;color:#fff;
+  text-shadow:0 2px 0 #000,0 0 18px var(--hostile),0 0 40px rgba(255,71,87,.75);
+}
+.fx-deny small{
+  font-size:clamp(10px,2.9vw,14px);font-weight:900;letter-spacing:.1em;
+  color:#ffd0d8;text-shadow:0 2px 4px #000;
+}
+@keyframes denyFade{
+  0%{opacity:0;transform:scale(.94)}12%{opacity:1;transform:scale(1)}
+  72%{opacity:1}100%{opacity:0;transform:scale(1.02)}
+}
+.fx-block{
+  position:absolute;width:20%;height:20%;display:grid;place-items:center;
+  pointer-events:none;animation:blockPop .85s ease-out forwards;
+}
+.fx-block i{
+  position:relative;width:70%;height:70%;border-radius:22%;
+  border:3px solid var(--hostile);background:rgba(255,71,87,.3);
+  box-shadow:0 0 18px rgba(255,71,87,.8),inset 0 0 12px rgba(255,71,87,.4);
+}
+.fx-block i::before,.fx-block i::after{
+  content:"";position:absolute;left:12%;right:12%;top:48%;height:4px;
+  border-radius:2px;background:#fff;box-shadow:0 0 6px #fff;
+}
+.fx-block i::before{transform:rotate(45deg)}
+.fx-block i::after{transform:rotate(-45deg)}
+@keyframes blockPop{
+  0%{opacity:0;transform:scale(.6)}20%{opacity:1;transform:scale(1.15)}
+  40%{transform:scale(1)}100%{opacity:0;transform:scale(1.05)}
+}
+.dir.denied{animation:denyBtn .45s ease-out}
+@keyframes denyBtn{
+  30%{border-color:var(--hostile);background:linear-gradient(180deg,#5a1c28,#2a1018);
+      box-shadow:0 0 18px rgba(255,71,87,.6)}
+}
+.fx-text{
+  position:absolute;width:20%;height:20%;display:grid;place-items:center;
+  font-size:clamp(10px,calc(var(--u)*1.15),15px);font-weight:900;letter-spacing:.03em;white-space:nowrap;
+  color:#fff;text-shadow:0 2px 4px #000,0 0 8px rgba(0,0,0,.9);
+  animation:floatup .95s ease-out forwards;
+}
+@keyframes floatup{
+  0%{opacity:0;transform:translateY(6px) scale(.75)}
+  15%{opacity:1;transform:translateY(0) scale(1.06)}
+  100%{opacity:0;transform:translateY(-42px) scale(1)}
+}
+.fx-ghost{position:absolute;left:0;top:0;width:20%;height:20%;display:grid;place-items:center;animation:ghostfall .55s ease-in forwards}
+.fx-ghost i{display:block;width:74%;height:74%;border-radius:30%;background:var(--gc,var(--hostile));box-shadow:0 0 14px var(--gc,var(--hostile))}
+@keyframes ghostfall{
+  0%{opacity:.95;transform:translate(calc(var(--fx)*100%),calc(var(--fy)*100%)) scale(1)}
+  100%{opacity:0;transform:translate(calc(var(--tx)*100%),calc(var(--ty)*100%)) scale(.05) rotate(35deg)}
+}
+.fx-boom{
+  position:absolute;width:20%;height:20%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,220,.95) 0%,rgba(255,170,50,.8) 35%,rgba(255,60,30,.35) 65%,transparent 72%);
+  animation:boom .5s ease-out forwards;
+}
+@keyframes boom{0%{opacity:1;transform:scale(.35)}100%{opacity:0;transform:scale(3.4)}}
+#boardWrap.shake{animation:shake .13s linear}
+@keyframes shake{
+  0%,100%{transform:translate(0,0)}
+  20%{transform:translate(-5px,2px)}
+  40%{transform:translate(5px,-3px)}
+  60%{transform:translate(-4px,-2px)}
+  80%{transform:translate(4px,3px)}
+}
+#rotate-hint{
+  display:none;position:absolute;z-index:15;top:calc(var(--u)*.55);left:50%;
+  transform:translateX(-50%);padding:calc(var(--u)*.45) calc(var(--u)*1.1);
+  border-radius:999px;font-size:calc(var(--u)*.95);letter-spacing:.05em;
+  background:rgba(10,14,24,.9);border:1px solid rgba(0,229,255,.35);color:var(--cyan);
+  pointer-events:none;white-space:nowrap;
+}
+@media (orientation:landscape) and (max-height:520px){
+  #rotate-hint{display:block;top:calc(var(--u)*.4);font-size:calc(var(--u)*1.15);
+    padding:calc(var(--u)*.5) calc(var(--u)*1.2)}
+}
+@media (max-height:620px){
+  /* Короткие телефоны: ещё чуть плотнее, но всё через --u — без обрезки. */
+  .hud-row{min-height:calc(var(--u)*2.5)}
+  .ability{min-height:min(calc(var(--u)*5.6),8.5dvh)}
+  #tutorial{bottom:calc(45% + var(--u)*.6)}
+}
+/* Экстремально низкие экраны (старые телефоны, альбом): прячем второстепенные
+   подписи и доводим масштаб до минимума, чтобы 100dvh всё ещё был без скролла. */
+@media (max-height:520px){
+  :root{--u:clamp(7px,1.4dvh,9px);--chrome:clamp(64px,14dvh,80px)}
+  .dpad{--btn:clamp(34px,8.6dvh,48px)}
+  .ability{min-height:min(calc(var(--u)*4.6),8dvh)}
+  .ability .ico svg{width:calc(var(--u)*1.8);height:calc(var(--u)*1.8)}
+  .ability .sub{display:none}
+  .hint{display:none}
+  #stage{gap:calc(var(--u)*.2)}
+}
+@media (max-width:350px){.floor-pill .fp-word{display:none}}
+/* Четвёртая кнопка шапки: освобождаем место для 5 сердец на типичных телефонах. */
+@media (max-width:420px){.floor-pill .fp-word{display:none}}
+@media (max-width:360px){.hearts{font-size:calc(var(--u)*1.4)}}
+@media (max-height:520px){
+  .diff-item{min-height:44px;padding:calc(var(--u)*.3) calc(var(--u)*.55)}
+  .diff-item small{display:none}
+  #overlay.difficulty-mode{gap:calc(var(--u)*.35);padding:calc(var(--u)*.55) calc(var(--u)*.95)}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="top">
+    <header id="hud">
+      <div class="hud-row">
+        <span class="brand">КРАЙ</span>
+        <span class="floor-pill"><span class="fp-word">ЭТАЖ </span><b id="floorNum">1/7</b></span>
+        <div class="hearts" id="hearts"></div>
+        <span class="shield-pill off" id="shieldPill"></span>
+        <button class="icon-btn" id="legendBtn" aria-label="Легенда"><span class="ico" data-icon="legend"></span></button>
+        <button class="icon-btn" id="helpBtn" aria-label="Правила">?</button>
+        <button class="icon-btn" id="restartBtn" aria-label="Заново">↺</button>
+        <button class="icon-btn diff-btn" id="diffBtn" aria-label="Сложность" title="Сложность">
+          <span>СЛ</span><b id="diffNum">5</b>
+        </button>
+      </div>
+      <div class="hud-row sub">
+        <div class="perk-icons" id="perkIcons"></div>
+        <div class="status" id="statusLine"></div>
+      </div>
+    </header>
+    <main id="stage">
+      <div id="boardWrap">
+        <div id="board">
+          <div id="tiles"></div>
+          <svg id="telegraph" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+          <div id="entities"></div>
+          <svg id="fxSvg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+          <div id="fx"></div>
+        </div>
+      </div>
+      <div class="tip" id="tip"></div>
+    </main>
+  </div>
+
+  <section id="controls">
+    <div class="ability-row">
+      <button class="ability" id="hookBtn" type="button">
+        <span class="ico" data-icon="hook"></span><span class="name">КРЮК</span><span class="sub">тяни на себя</span>
+        <span class="cd ready" id="hookCd"></span>
+      </button>
+      <button class="ability" id="throwBtn" type="button">
+        <span class="ico" data-icon="throw"></span><span class="name">БРОСОК</span><span class="sub">через плечо</span>
+        <span class="cd ready" id="throwCd"></span>
+      </button>
+      <button class="ability" id="waitBtn" type="button">
+        <span class="ico" data-icon="shield"></span><span class="name">ЖДАТЬ</span><span class="sub">+1 щит</span>
+      </button>
+    </div>
+    <div class="dpad">
+      <button class="dir" type="button" data-dir="UP" aria-label="Вверх">▲</button>
+      <button class="dir" type="button" data-dir="LEFT" aria-label="Влево">◄</button>
+      <div class="dpad-mid"><span class="mode" id="modeLabel">ШАГ / ТОЛЧОК</span><span class="turn" id="turnLabel">ХОД 1</span></div>
+      <button class="dir" type="button" data-dir="RIGHT" aria-label="Вправо">►</button>
+      <button class="dir" type="button" data-dir="DOWN" aria-label="Вниз">▼</button>
+    </div>
+    <div class="hint">Свайп в любом месте экрана · клавиши ←↑→↓ / 1 / 2 / 3</div>
+  </section>
+
+  <div id="tutorial" class="hidden"></div>
+  <div id="rotate-hint">↻ Для удобства поверните телефон вертикально</div>
+  <div id="overlay" class="hidden"></div>
+  <div id="toast"></div>
+</div>
+
+<script id="engine-script">
+/* ===== ENGINE START ===== */
+(function (root) {
+'use strict';
+
+/* ---------------------------------------------------------------------------
+ * «КРАЙ» / Edge Push — чистый детерминированный конечный автомат.
+ * Никакого DOM, таймеров, физики или поиска пути: только целые числа 0..4.
+ * ------------------------------------------------------------------------- */
+
+const SIZE = 5;
+const MAX_FLOOR = 7;
+const TILE = { FLOOR:'FLOOR', CHASM:'CHASM', PILLAR:'PILLAR', SPIKES:'SPIKES', LAVA:'LAVA' };
+const DIRS = [
+  { key:'UP',    dx: 0, dy:-1, glyph:'▲' },
+  { key:'RIGHT', dx: 1, dy: 0, glyph:'►' },
+  { key:'DOWN',  dx: 0, dy: 1, glyph:'▼' },
+  { key:'LEFT',  dx:-1, dy: 0, glyph:'◄' }
+];
+const DIR = Object.fromEntries(DIRS.map(d => [d.key, d]));
+
+const PERKS = [
+  { id:'HEAVY_RAM',      icon:'Т', title:'Тяжёлый таран' },
+  { id:'SPIKED_WALLS',   icon:'Ш', title:'Шипованные стены' },
+  { id:'LUCKY_HARPOON',  icon:'Г', title:'Азартный гарпун' },
+  { id:'SHOCK_LANDING',  icon:'У', title:'Ударное приземление' },
+  { id:'LONG_CHAINS',    icon:'Ц', title:'Длинные цепи' },
+  { id:'SECOND_BREATH',  icon:'Д', title:'Второе дыхание' }
+];
+const ENEMY_HP = { BRUTE:2, CHARGER:2, SNIPER:1, BOMBER:1, JUGGERNAUT:4 };
+
+const clone = x => JSON.parse(JSON.stringify(x));
+
+/* --- RNG: линейный конгруэнтный, состояние лежит в state и сохраняется --- */
+function rnd(s) {
+  s.rng = (Math.imul(s.rng, 1664525) + 1013904223) >>> 0;
+  return s.rng / 4294967296;
+}
+function ri(s, n) { return Math.floor(rnd(s) * n); }
+function pick(s, arr) { return arr[ri(s, arr.length)]; }
+function shuffle(s, arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = ri(s, i + 1); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+
+/* --- Геометрия --- */
+const inBounds = (x, y) => x >= 0 && x < SIZE && y >= 0 && y < SIZE;
+const gTile = (g, x, y) => inBounds(x, y) ? g[y][x] : 'VOID';
+const tileAt = (s, x, y) => gTile(s.grid, x, y);
+const isHazard = t => t === 'SPIKES' || t === 'LAVA';
+const isBlockedStep = t => t === 'VOID' || t === 'PILLAR' || t === 'CHASM' || isHazard(t);
+const unitAt = (s, x, y) => s.entities.find(e => e.alive && e.x === x && e.y === y) || null;
+const byId = (s, id) => s.entities.find(e => e.id === id);
+const playerOf = s => s.entities.find(e => e.kind === 'PLAYER') || null;
+const enemiesOf = s => s.entities.filter(e => e.alive && e.kind === 'ENEMY').sort((a, b) => a.spawn - b.spawn);
+const manhattan = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+const perkLevel = (s, id) => s.perks.reduce((n, p) => n + (p === id ? 1 : 0), 0);
+const clampCell = n => Math.max(0, Math.min(SIZE - 1, n));
+const sign = n => n > 0 ? 1 : (n < 0 ? -1 : 0);
+
+function addEntity(s, o) {
+  const e = Object.assign({ id:s.nextId++, alive:true, spawn:-1, hp:1, maxHp:1, type:undefined }, o);
+  s.entities.push(e);
+  return e;
+}
+function ev(ctx, t, data) { ctx.events.push(Object.assign({ t }, data)); }
+function takeEvents(ctx) { const e = ctx.events; ctx.events = []; return e; }
+
+/* ===========================================================================
+ * 1. Генерация арены (без тупиков и изолированных островков)
+ * ========================================================================= */
+function components(grid) {
+  const seen = new Set(), comps = [];
+  for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
+    const t = grid[y][x];
+    if (t === 'CHASM' || t === 'PILLAR' || seen.has(y * SIZE + x)) continue;
+    const q = [{ x, y }], comp = [];
+    seen.add(y * SIZE + x);
+    while (q.length) {
+      const c = q.shift(); comp.push(c);
+      for (const d of DIRS) {
+        const nx = c.x + d.dx, ny = c.y + d.dy;
+        if (!inBounds(nx, ny)) continue;
+        const nt = grid[ny][nx];
+        if (nt === 'CHASM' || nt === 'PILLAR') continue;
+        const k = ny * SIZE + nx;
+        if (seen.has(k)) continue;
+        seen.add(k); q.push({ x:nx, y:ny });
+      }
+    }
+    comps.push(comp);
+  }
+  return comps;
+}
+
+function enemyRoster(floor) {
+  if (floor === 1) return ['BRUTE','BRUTE','CHARGER','BOMBER'];
+  if (floor === 2) return ['BRUTE','CHARGER','SNIPER','BOMBER'];
+  return ['BRUTE','CHARGER','SNIPER','BOMBER','BRUTE'];
+}
+
+function tryLayout(s, enemyCount) {
+  const g = Array.from({ length:SIZE }, () => Array(SIZE).fill(TILE.FLOOR));
+  const ring = [];
+  for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++)
+    if (x === 0 || x === SIZE - 1 || y === 0 || y === SIZE - 1) ring.push({ x, y });
+
+  // 6–10 пропастей на внешнем кольце. Углы всегда пропасть: это гарантирует,
+  // что у оставшихся угловых клеток не бывает «висячих» островков.
+  const chasmCount = 6 + ri(s, 5);
+  for (const c of ring) if ((c.x === 0 || c.x === 4) && (c.y === 0 || c.y === 4)) g[c.y][c.x] = TILE.CHASM;
+  const rest = shuffle(s, ring.filter(c => g[c.y][c.x] === TILE.FLOOR));
+  for (let i = 0; i < chasmCount - 4; i++) g[rest[i].y][rest[i].x] = TILE.CHASM;
+
+  // 1–2 колонны в центральном 3×3, но не в точке спавна (2,2).
+  const center = [];
+  for (let y = 1; y <= 3; y++) for (let x = 1; x <= 3; x++) if (!(x === 2 && y === 2)) center.push({ x, y });
+  const pillarCount = 1 + ri(s, 2);
+  for (const c of shuffle(s, center).slice(0, pillarCount)) g[c.y][c.x] = TILE.PILLAR;
+
+  // 1–2 ловушки: не в центре и не вплотную к нему.
+  const hazCandidates = [];
+  for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++)
+    if (g[y][x] === TILE.FLOOR && manhattan({x,y}, {x:2,y:2}) >= 2) hazCandidates.push({ x, y });
+  const hazardCount = 1 + ri(s, 2);
+  for (const c of shuffle(s, hazCandidates).slice(0, hazardCount)) g[c.y][c.x] = rnd(s) < .5 ? TILE.SPIKES : TILE.LAVA;
+
+  const comps = components(g);
+  if (comps.length !== 1) return null;                 // нет недостижимых клеток
+  let spawn = { x:2, y:2 };
+  if (g[2][2] !== TILE.FLOOR) {
+    const near = DIRS.map(d => ({ x:2 + d.dx, y:2 + d.dy })).find(c => gTile(g, c.x, c.y) === TILE.FLOOR);
+    if (!near) return null;
+    spawn = near;
+  }
+  const main = comps[0];
+  const floorCells = main.filter(c => g[c.y][c.x] === TILE.FLOOR);
+  const adj = DIRS.filter(d => gTile(g, spawn.x + d.dx, spawn.y + d.dy) === TILE.FLOOR);
+  if (adj.length < 2) return null;                    // герой не в тупике
+  const gates = floorCells.filter(c => DIRS.some(d => {
+    const t = gTile(g, c.x + d.dx, c.y + d.dy);
+    return t === TILE.CHASM || t === 'VOID';
+  }));
+  if (gates.length < 2) return null;                  // есть куда сбрасывать врагов
+  const far = shuffle(s, floorCells.filter(c => manhattan(c, spawn) >= 2));
+  const barrelCount = 1 + ri(s, 2);
+  if (far.length < enemyCount + barrelCount + 1) return null;
+  return {
+    grid:g, spawn,
+    barrels:far.slice(0, barrelCount),
+    enemies:far.slice(barrelCount, barrelCount + enemyCount)
+  };
+}
+
+function fallbackLayout(s, enemyCount) {
+  // Заведомо связная арена на случай, если 300 случайных попыток не прошли валидацию.
+  const g = Array.from({ length:SIZE }, () => Array(SIZE).fill(TILE.FLOOR));
+  for (const c of [{x:0,y:0},{x:2,y:0},{x:4,y:0},{x:4,y:2},{x:4,y:4},{x:2,y:4},{x:0,y:4},{x:0,y:2}]) g[c.y][c.x] = TILE.CHASM;
+  g[1][1] = TILE.PILLAR; g[3][3] = TILE.PILLAR;
+  g[1][0] = TILE.SPIKES; g[3][4] = TILE.LAVA;
+  const spawn = { x:2, y:2 };
+  const floorCells = components(g)[0].filter(c => g[c.y][c.x] === TILE.FLOOR);
+  const far = shuffle(s, floorCells.filter(c => manhattan(c, spawn) >= 2));
+  const barrelCount = 1 + ri(s, 2);
+  return { grid:g, spawn, barrels:far.slice(0, barrelCount), enemies:far.slice(barrelCount, barrelCount + enemyCount) };
+}
+
+/* ===========================================================================
+ * 1a. ГАРАНТИЯ ПРОХОДИМОСТИ ЭТАЖА
+ * ===========================================================================
+ * Случайный расклад иногда собирал этаж, который невозможно пройти: герой с
+ * 3 HP не успевал справиться с двумя активными угрозами, и все ветви вели к
+ * гибели (например сид 4095: 577 состояний первого этажа, ни одного выхода
+ * в «этаж зачищен»). Такие сиды делали 100% побед математически недостижимым.
+ *
+ * Теперь каждый расклад проверяется полным перебором состояний своего этажа:
+ * если существует путь до PERKS / WIN — расклад принимается, иначе он
+ * перегенерируется. Счётчик ходов в логике не участвует, поэтому исключаем
+ * его из ключа — граф конечен. Кэш по (rng, этаж) делает проверку одноразовой
+ * для каждого сида: повторные забеги и инструмент ИИ не пересчитывают её.
+ */
+const _layoutCache = new Map();
+const _guardStats = { checked: 0, rejected: 0, maxAttempts: 0, cacheHits: 0, fallbacks: 0, states: 0 };
+const GUARD_STATE_CAP = 1600;
+const GUARD_DEPTH_CAP = 30;
+const GUARD_ATTEMPTS = 40;
+
+function guardKey(s) {
+  const p = playerOf(s);
+  return JSON.stringify([
+    s.floor, s.rng, s.grid,
+    s.entities.filter(e => e.alive).map(e => [e.id, e.x, e.y, e.hp, e.type]),
+    p ? p.hp : 0, s.shield, s.hookCd, s.throwCd, s.mode, s.perks,
+    s.activeIds, s.intents.map(i => [i.id, i.kind, i.cells])
+  ]);
+}
+
+function guardActions(s) {
+  const out = [];
+  const modes = ['BASIC'];
+  if (s.hookCd === 0) modes.push('HOOK');
+  if (s.throwCd === 0) modes.push('THROW');
+  for (const mode of modes) {
+    let t = s;
+    if (t.mode !== 'BASIC') t = setMode(t, t.mode);
+    if (mode !== 'BASIC') t = setMode(t, mode);
+    const pv = preview(t);
+    for (const d of DIRS) {
+      if (pv.dirs[d.key] && pv.dirs[d.key].valid) out.push({ mode, type:'DIR', dir:d.key });
+    }
+  }
+  out.push({ mode:'BASIC', type:'WAIT' });
+  return out;
+}
+
+function guardStep(s0, a) {
+  let t = s0;
+  if (t.mode !== 'BASIC') t = setMode(t, t.mode);
+  if (a.mode !== 'BASIC') t = setMode(t, a.mode);
+  return performTurn(t, { type:a.type, dir:a.dir }).state;
+}
+
+/** Существует ли на этом этаже ХОТЯ БЫ ОДНА выигрышная линия. */
+function floorIsPassable(start) {
+  const s0 = clone(start);
+  s0.phase = 'PLAYER';
+  s0.perkChoices = [];
+  startPlayerTurn(s0);
+  const seen = new Set([guardKey(s0)]);
+  let level = [s0];
+  for (let depth = 0; depth < GUARD_DEPTH_CAP && level.length && seen.size < GUARD_STATE_CAP; depth++) {
+    const next = [];
+    for (const s of level) {
+      for (const a of guardActions(s)) {
+        const ns = guardStep(s, a);
+        if (ns.phase === 'PERKS' || ns.phase === 'WIN') {
+          _guardStats.states += seen.size;
+          return true;
+        }
+        if (ns.phase === 'DEAD') continue;
+        const k = guardKey(ns);
+        if (seen.has(k)) continue;
+        seen.add(k);
+        next.push(ns);
+      }
+    }
+    level = next;
+  }
+  _guardStats.states += seen.size;
+  return false;
+}
+
+function cacheLayout(key, s) {
+  // Ограничиваем рост кэша в длинной браузерной сессии.
+  if (_layoutCache.size > 600) _layoutCache.delete(_layoutCache.keys().next().value);
+  _layoutCache.set(key, {
+    grid: s.grid.map(row => row.slice()),
+    entities: s.entities.map(e => Object.assign({}, e)),
+    rng: s.rng, nextId: s.nextId
+  });
+}
+
+function restoreLayout(s, cached, carry) {
+  s.grid = cached.grid.map(row => row.slice());
+  s.entities = cached.entities.map(e => Object.assign({}, e));
+  s.rng = cached.rng;
+  s.nextId = cached.nextId;
+  const p = playerOf(s);
+  if (p) { p.hp = carry ? carry.hp : 3; p.maxHp = carry ? carry.maxHp : 3; }
+}
+
+function buildFloorEntities(s, layout, floor, carry) {
+  s.grid = layout.grid;
+  s.entities = [];
+  s.nextId = 1;
+  addEntity(s, {
+    kind:'PLAYER', x:layout.spawn.x, y:layout.spawn.y,
+    hp:carry ? carry.hp : 3, maxHp:carry ? carry.maxHp : 3
+  });
+  for (const c of layout.barrels)
+    addEntity(s, { kind:'BARREL', type:'BARREL', x:c.x, y:c.y, hp:1, maxHp:1 });
+  const roster = enemyRoster(floor);
+  layout.enemies.forEach((c, i) => {
+    const type = (floor === MAX_FLOOR && i === 0) ? 'JUGGERNAUT' : pick(s, roster);
+    const hp = ENEMY_HP[type];
+    addEntity(s, { kind:'ENEMY', type, x:c.x, y:c.y, hp, maxHp:hp, spawn:i });
+  });
+}
+
+function nextGuardRng(r) {
+  r = (Math.imul(r, 1664525) + 1013904223) >>> 0;
+  return r || 1;
+}
+
+function generateFloor(s, floor, carry) {
+  // Расклад зависит только от ГПСЧ и номера этажа: HP/перки относятся к герою
+  // и восстанавливаются в restoreLayout. Такое ключевание делает проверку
+  // одноразовой для сида даже при тысячах узлов поиска.
+  const cacheKey = floor + ':' + s.rng;
+  const cached = _layoutCache.get(cacheKey);
+  if (cached) { _guardStats.cacheHits++; restoreLayout(s, cached, carry); return; }
+
+  const enemyCount = floor <= 2 ? 3 : (floor <= 5 ? 4 : 5);
+  for (let guard = 0; guard < GUARD_ATTEMPTS; guard++) {
+    let layout = null;
+    for (let attempt = 0; attempt < 300 && !layout; attempt++) layout = tryLayout(s, enemyCount);
+    if (!layout) layout = fallbackLayout(s, enemyCount);
+    buildFloorEntities(s, layout, floor, carry);
+    _guardStats.checked++;
+    if (floorIsPassable(s)) {
+      _guardStats.maxAttempts = Math.max(_guardStats.maxAttempts, guard + 1);
+      cacheLayout(cacheKey, s);
+      return;
+    }
+    _guardStats.rejected++;
+    s.rng = nextGuardRng(s.rng);
+  }
+  // Резерв: простая связная арена, тоже проверяется тем же перебором.
+  // При наблюдаемой доле тупиков ~1% вероятность исчерпать 240 попыток ничтожна.
+  for (let extra = 0; extra < 200; extra++) {
+    buildFloorEntities(s, fallbackLayout(s, enemyCount), floor, carry);
+    _guardStats.checked++;
+    if (floorIsPassable(s)) {
+      _guardStats.fallbacks++;
+      cacheLayout(cacheKey, s);
+      return;
+    }
+    _guardStats.rejected++;
+    s.rng = nextGuardRng(s.rng);
+  }
+  _guardStats.failed = (_guardStats.failed || 0) + 1;
+  cacheLayout(cacheKey, s);
+}
+
+/* ===========================================================================
+ * 2. Урон, смерть, взрывы
+ * ========================================================================= */
+function queueBoom(s, u, ctx) {
+  if (ctx.boomSet.has(u.id)) return;
+  ctx.boomSet.add(u.id);
+  ctx.boomQueue.push({ id:u.id, x:u.x, y:u.y });
+}
+
+function killUnit(s, u, reason, ctx) {
+  if (!u.alive) return;
+  u.alive = false; u.hp = 0;
+  if (u.type === 'BOMBER') queueBoom(s, u, ctx);   // живая бомба взрывается при любой смерти
+  if (u.kind === 'ENEMY') {
+    s.kills++; ctx.kills++;
+    if (reason === 'CHASM' || reason === 'VOID') s.falls++;
+  }
+  ev(ctx, 'death', { id:u.id, x:u.x, y:u.y, reason, kind:u.kind, type:u.type });
+}
+
+function damage(s, u, amount, cause, ctx, opts) {
+  opts = opts || {};
+  if (!u || !u.alive) return;
+  if (u.kind === 'PLAYER' && !opts.ignoreShield && s.shield > 0) {
+    s.shield--;
+    ev(ctx, 'shield', { x:u.x, y:u.y, text:'ЩИТ!' });
+    return;
+  }
+  u.hp -= amount;
+  ev(ctx, 'damage', { id:u.id, x:u.x, y:u.y, amount, cause });
+  if (cause === 'WALL' || cause === 'CRUSH') ev(ctx, 'shake', { strength:1 });
+  // Бочка и живая бомба детонируют от ЛЮБОГО урона, даже если выжили.
+  if (u.type === 'BARREL' || u.type === 'BOMBER') queueBoom(s, u, ctx);
+  if (u.hp <= 0) killUnit(s, u, cause, ctx);
+}
+
+function moveUnit(s, u, x, y, ctx) {
+  const from = { x:u.x, y:u.y };
+  u.x = x; u.y = y;
+  ev(ctx, 'move', { id:u.id, from, to:{ x, y } });
+}
+
+function fallUnit(s, u, to, ctx, reason) {
+  ev(ctx, 'fall', { id:u.id, from:{ x:u.x, y:u.y }, to:{ x:to.x, y:to.y }, kind:u.kind, type:u.type });
+  ev(ctx, 'text', { x:clampCell(to.x), y:clampCell(to.y), text:'ПРОПАСТЬ!' });
+  killUnit(s, u, reason, ctx);
+}
+
+/* resolvePush: ядро удовольствия. Пошаговый импульс + рекурсивное домино. */
+function resolvePush(s, A, dx, dy, distance, ctx, depth) {
+  depth = depth || 0;
+  if (!A || !A.alive || depth > 8) return;
+  // Мини-босса сдвигает только на 1 клетку, но пропасть для него всё так же смертельна.
+  let dist = (A.type === 'JUGGERNAUT' && distance > 1) ? 1 : distance;
+  for (let step = 1; step <= dist && A.alive; step++) {
+    // Щит гасит один входящий толчок целиком (не только урон).
+    if (A.kind === 'PLAYER' && ctx.incoming && s.shield > 0) {
+      s.shield--;
+      ev(ctx, 'shield', { x:A.x, y:A.y, text:'ЩИТ!' });
+      return;
+    }
+    const nx = A.x + dx, ny = A.y + dy;
+    const t = tileAt(s, nx, ny);
+    if (!inBounds(nx, ny) || t === TILE.CHASM) { fallUnit(s, A, { x:nx, y:ny }, ctx, 'CHASM'); return; }
+    if (t === TILE.PILLAR) {
+      const dmg = (A.kind === 'ENEMY') ? 1 + perkLevel(s, 'SPIKED_WALLS') : 1;
+      ev(ctx, 'text', { x:A.x, y:A.y, text:'БАМ! -' + dmg });
+      damage(s, A, dmg, 'WALL', ctx);
+      return;
+    }
+    const B = unitAt(s, nx, ny);
+    if (B) {
+      ev(ctx, 'text', { x:nx, y:ny, text:'БАМ! -1' });
+      damage(s, A, 1, 'CRUSH', ctx);
+      damage(s, B, 1, 'CRUSH', ctx);
+      ev(ctx, 'shake', { strength:1 });
+      if (B.alive) resolvePush(s, B, dx, dy, 1, ctx, depth + 1);
+      return;
+    }
+    moveUnit(s, A, nx, ny, ctx);
+    if (isHazard(t)) { damage(s, A, 1, 'HAZARD', ctx); return; }
+  }
+}
+
+/* Очередь взрывов: 2 урона в квадрате 3×3 + разлет соседей на 1 клетку. */
+function flushBooms(s, ctx) {
+  const prev = ctx.incoming;
+  ctx.incoming = true;                 // щит защищает и от разлета
+  let guard = 0;
+  while (ctx.boomQueue.length && guard++ < 64) {
+    const b = ctx.boomQueue.shift();
+    if (ctx.exploded.has(b.id) || !inBounds(b.x, b.y)) continue;
+    ctx.exploded.add(b.id);
+    ev(ctx, 'explosion', { x:b.x, y:b.y });
+    ev(ctx, 'shake', { strength:2 });
+    const victims = s.entities.filter(e =>
+      e.alive && Math.abs(e.x - b.x) <= 1 && Math.abs(e.y - b.y) <= 1
+    );
+    const p = victims.find(v => v.kind === 'PLAYER');
+    let protectedPlayer = false;
+    if (p && s.shield > 0) {
+      s.shield--; protectedPlayer = true;
+      ev(ctx, 'shield', { x:p.x, y:p.y, text:'ЩИТ!' });
+    }
+    for (const v of victims) {
+      if (v === p && protectedPlayer) continue;
+      damage(s, v, 2, 'BOOM', ctx, { ignoreShield:true });
+    }
+    const survivors = victims.filter(v => v.alive && !(v === p && protectedPlayer))
+      .sort((a, c) => (a.spawn - c.spawn) || (a.id - c.id));
+    for (const v of survivors) {
+      const ddx = v.x - b.x, ddy = v.y - b.y;
+      if (ddx === 0 && ddy === 0) continue;
+      let kx = 0, ky = 0;
+      if (Math.abs(ddx) >= Math.abs(ddy)) kx = sign(ddx); else ky = sign(ddy);
+      resolvePush(s, v, kx, ky, 1, ctx);
+    }
+  }
+  ctx.incoming = prev;
+}
+
+function cleanupDead(s) { s.entities = s.entities.filter(e => e.alive); }
+const floorClear = s => enemiesOf(s).length === 0;
+const playerAlive = s => { const p = playerOf(s); return !!(p && p.alive); };
+
+function hitPlayer(s, amount, dx, dy, cause, ctx) {
+  const p = playerOf(s);
+  if (!p || !p.alive) return;
+  if (s.shield > 0) {                 // один удар ИЛИ один толчок = одна зарядка щита
+    s.shield--;
+    ev(ctx, 'shield', { x:p.x, y:p.y, text:'ЩИТ!' });
+    return;
+  }
+  damage(s, p, amount, cause, ctx, { ignoreShield:true });
+  if (p.alive && (dx || dy)) resolvePush(s, p, dx, dy, 1, ctx);
+}
+
+/* ===========================================================================
+ * 3. Намерения врагов (не более 2 активных угрозы за ход)
+ * ========================================================================= */
+const passableVoluntary = (s, x, y) => {
+  const t = tileAt(s, x, y);
+  return inBounds(x, y) && t === TILE.FLOOR && !unitAt(s, x, y);
+};
+
+function chooseStep(s, e, p, align) {
+  const dx = p.x - e.x, dy = p.y - e.y;
+  const hor = { x:sign(dx), y:0 }, ver = { x:0, y:sign(dy) };
+  const opts = align
+    ? (Math.abs(dx) <= Math.abs(dy) ? [hor, ver] : [ver, hor])
+    : (Math.abs(dx) >= Math.abs(dy) ? [hor, ver] : [ver, hor]);
+  for (const o of opts) {
+    if ((o.x || o.y) && passableVoluntary(s, e.x + o.x, e.y + o.y))
+      return { x:e.x + o.x, y:e.y + o.y };
+  }
+  for (const d of DIRS) if (passableVoluntary(s, e.x + d.dx, e.y + d.dy))
+    return { x:e.x + d.dx, y:e.y + d.dy };
+  return null;
+}
+
+function lineCells(s, e, dx, dy, stopAtUnit) {
+  const cells = [];
+  for (let i = 1; i <= 4; i++) {
+    const x = e.x + dx * i, y = e.y + dy * i;
+    if (!inBounds(x, y)) break;
+    const t = s.grid[y][x];
+    if (t === TILE.PILLAR) break;
+    cells.push({ x, y });
+    if (stopAtUnit && unitAt(s, x, y)) break;
+  }
+  return cells;
+}
+
+function computeIntent(s, e) {
+  const p = playerOf(s);
+  const base = { id:e.id, kind:'WAIT', dx:0, dy:0, cells:[], target:null, type:e.type };
+  if (!p || !p.alive) return base;
+  const dx = p.x - e.x, dy = p.y - e.y;
+  const aligned = (dx === 0) !== (dy === 0);   // ровно одна координата совпадает
+  switch (e.type) {
+    case 'BRUTE':
+    case 'JUGGERNAUT': {
+      if (manhattan(e, p) === 1) {
+        return Object.assign(base, {
+          kind:'ATTACK', dx:sign(dx), dy:sign(dy),
+          cells:[{ x:p.x, y:p.y }], target:{ x:p.x, y:p.y }
+        });
+      }
+      const step = chooseStep(s, e, p, false);
+      return Object.assign(base, { kind:step ? 'MOVE' : 'WAIT', target:step, cells:step ? [step] : [] });
+    }
+    case 'CHARGER': {
+      if (aligned) {
+        const cx = dx === 0 ? 0 : sign(dx), cy = dy === 0 ? 0 : sign(dy);
+        return Object.assign(base, { kind:'CHARGE', dx:cx, dy:cy, cells:lineCells(s, e, cx, cy, false) });
+      }
+      const step = chooseStep(s, e, p, true);
+      return Object.assign(base, { kind:step ? 'MOVE' : 'WAIT', target:step, cells:step ? [step] : [] });
+    }
+    case 'SNIPER': {
+      if (aligned) {
+        const cx = dx === 0 ? 0 : sign(dx), cy = dy === 0 ? 0 : sign(dy);
+        const cells = lineCells(s, e, cx, cy, true);
+        const target = cells.length ? cells[cells.length - 1] : null;
+        return Object.assign(base, { kind:'SHOOT', dx:cx, dy:cy, cells, target });
+      }
+      const step = chooseStep(s, e, p, true);
+      return Object.assign(base, { kind:step ? 'MOVE' : 'WAIT', target:step, cells:step ? [step] : [] });
+    }
+    case 'BOMBER': {
+      const step = chooseStep(s, e, p, false);
+      return Object.assign(base, { kind:step ? 'MOVE' : 'WAIT', target:step, cells:step ? [step] : [] });
+    }
+    default: return base;
+  }
+}
+
+function startPlayerTurn(s) {
+  s.mode = 'BASIC';
+  s.stunned = [];
+  s.shield = 0;                        // щит от «Ждать» живёт только до начала следующего хода
+  s.activeIds = [];
+  s.intents = [];
+  if (s.phase !== 'PLAYER') return;
+  const active = enemiesOf(s).slice(0, 2);       // строго по очереди спавна, без внезапных активаций
+  s.activeIds = active.map(e => e.id);
+  s.intents = active.map(e => computeIntent(s, e));
+}
+
+function enemyPhase(s, ctx) {
+  for (const it of s.intents) {
+    const e = byId(s, it.id);
+    if (!e || !e.alive) continue;                // убит — ход просто пропускается
+    if (s.stunned.includes(e.id)) {
+      ev(ctx, 'text', { x:e.x, y:e.y, text:'ОГЛУШЁН!' });
+      continue;
+    }
+    switch (it.kind) {
+      case 'ATTACK': {
+        const p = playerOf(s);
+        if (p && p.alive && p.x === it.target.x && p.y === it.target.y)
+          hitPlayer(s, 1, it.dx, it.dy, 'ATTACK', ctx);
+        else ev(ctx, 'text', { x:it.target.x, y:it.target.y, text:'МИМО!' });
+        break;
+      }
+      case 'CHARGE':
+        resolvePush(s, e, it.dx, it.dy, 4, ctx);
+        break;
+      case 'SHOOT': {
+        let hit = null;
+        for (const c of it.cells) {
+          const u = unitAt(s, c.x, c.y);
+          if (u && u.id !== e.id) { hit = u; break; }
+        }
+        ev(ctx, 'shot', { from:{ x:e.x, y:e.y }, cells:it.cells, dx:it.dx, dy:it.dy });
+        if (hit) {
+          if (hit.kind === 'PLAYER') hitPlayer(s, 1, it.dx, it.dy, 'SHOT', ctx);
+          else {
+            damage(s, hit, 1, 'SHOT', ctx);
+            if (hit.alive) resolvePush(s, hit, it.dx, it.dy, 1, ctx);
+          }
+        }
+        break;
+      }
+      case 'MOVE': {
+        const c = it.target;
+        if (c && passableVoluntary(s, c.x, c.y)) moveUnit(s, e, c.x, c.y, ctx);
+        break;
+      }
+      default: break;
+    }
+  }
+}
+
+/* ===========================================================================
+ * 4. Действия игрока (ровно 1 ход = 1 действие)
+ * ========================================================================= */
+const cdLength = s => Math.max(0, 2 - perkLevel(s, 'LONG_CHAINS'));
+const hookCdLength = s => Math.max(0, cdLength(s) - Math.max(0, perkLevel(s, 'LUCKY_HARPOON') - 1));
+
+function doHook(s, p, d, ctx) {
+  if (s.hookCd > 0) return false;
+  const fx = p.x + d.dx, fy = p.y + d.dy;
+  const frontTile = tileAt(s, fx, fy);
+  if (frontTile === TILE.PILLAR || frontTile === 'VOID') { cancel(ctx, fx, fy, 'НЕТ ПУТИ'); return false; }
+  let target = null, dist = 0;
+  for (let i = 2; i <= 4; i++) {                  // вплотную (i=1) крюк не нужен
+    const x = p.x + d.dx * i, y = p.y + d.dy * i;
+    if (!inBounds(x, y)) break;
+    if (s.grid[y][x] === TILE.PILLAR) break;
+    const u = unitAt(s, x, y);
+    if (u) { target = u; dist = i; break; }
+  }
+  if (!target || (target.kind !== 'ENEMY' && target.kind !== 'BARREL')) {
+    cancel(ctx, p.x, p.y, 'НЕТ ЦЕЛИ'); return false;
+  }
+  ev(ctx, 'hook', { from:{ x:p.x, y:p.y }, to:{ x:target.x, y:target.y } });
+  // Тянем по прямой до клетки прямо перед героем.
+  for (let i = dist - 1; i >= 1 && target.alive; i--) {
+    const x = p.x + d.dx * i, y = p.y + d.dy * i;
+    const t = s.grid[y][x];
+    if (t === TILE.CHASM) { fallUnit(s, target, { x, y }, ctx, 'CHASM'); break; }
+    const other = unitAt(s, x, y);
+    if (other) {
+      ev(ctx, 'text', { x, y, text:'БАМ! -1' });
+      damage(s, target, 1, 'CRUSH', ctx);
+      damage(s, other, 1, 'CRUSH', ctx);
+      ev(ctx, 'shake', { strength:1 });
+      break;
+    }
+    moveUnit(s, target, x, y, ctx);
+    if (isHazard(t)) { damage(s, target, 1, 'HAZARD', ctx); break; }
+  }
+  s.hookCd = hookCdLength(s);
+  ctx.used = 'HOOK';
+  if (perkLevel(s, 'LUCKY_HARPOON') > 0 && target.kind === 'ENEMY' && !target.alive) {
+    s.hookCd = 0;
+    ev(ctx, 'text', { x:p.x, y:p.y, text:'ПЕРЕЗАРЯДКА!' });
+  }
+  return true;
+}
+
+function doThrow(s, p, d, ctx) {
+  if (s.throwCd > 0) return false;
+  const fx = p.x + d.dx, fy = p.y + d.dy;
+  const front = unitAt(s, fx, fy);
+  if (!front || front.kind === 'PLAYER') { cancel(ctx, fx, fy, 'НЕКОГО БРОСАТЬ'); return false; }
+  const bx = p.x - d.dx, by = p.y - d.dy;
+  const behindIn = inBounds(bx, by);
+  const behindTile = behindIn ? s.grid[by][bx] : 'VOID';
+  const behindUnit = behindIn ? unitAt(s, bx, by) : null;
+  const canFly = !behindIn || (behindTile !== TILE.PILLAR && !behindUnit);
+  if (canFly) {
+    if (!behindIn) {                              // край карты = бездна
+      fallUnit(s, front, { x:bx, y:by }, ctx, 'VOID');
+    } else {
+      moveUnit(s, front, bx, by, ctx);
+      if (behindTile === TILE.CHASM) fallUnit(s, front, { x:bx, y:by }, ctx, 'CHASM');
+      else if (isHazard(behindTile)) damage(s, front, 1, 'HAZARD', ctx);
+    }
+  } else {                                       // стена или юнит позади => смена мест
+    const ex = front.x, ey = front.y, px = p.x, py = p.y;
+    p.x = ex; p.y = ey; front.x = px; front.y = py;
+    ev(ctx, 'move', { id:p.id, from:{ x:px, y:py }, to:{ x:ex, y:ey } });
+    ev(ctx, 'move', { id:front.id, from:{ x:ex, y:ey }, to:{ x:px, y:py } });
+    ev(ctx, 'text', { x:px, y:py, text:'СМЕНА МЕСТ' });
+    if (front.kind === 'ENEMY') { s.stunned.push(front.id); ev(ctx, 'text', { x:px, y:py, text:'ОГЛУШЁН!' }); }
+  }
+  const lvl = perkLevel(s, 'SHOCK_LANDING');
+  if (lvl > 0) {
+    const near = enemiesOf(s).filter(e => e.id !== front.id &&
+      Math.max(Math.abs(e.x - p.x), Math.abs(e.y - p.y)) === 1);
+    for (const e of near) {
+      const ddx = e.x - p.x, ddy = e.y - p.y;
+      let kx = 0, ky = 0;
+      if (Math.abs(ddx) >= Math.abs(ddy)) kx = sign(ddx); else ky = sign(ddy);
+      resolvePush(s, e, kx, ky, lvl, ctx);
+    }
+  }
+  s.throwCd = cdLength(s);
+  ctx.used = 'THROW';
+  return true;
+}
+
+function cancel(ctx, x, y, text) {
+  ev(ctx, 'shake', { strength:0 });
+  ev(ctx, 'text', { x:clampCell(x), y:clampCell(y), text });
+}
+
+function doDirection(s, key, ctx) {
+  const d = DIR[key];
+  const p = playerOf(s);
+  if (!d || !p || !p.alive) return false;
+  if (s.mode === 'HOOK') return doHook(s, p, d, ctx);
+  if (s.mode === 'THROW') return doThrow(s, p, d, ctx);
+  const nx = p.x + d.dx, ny = p.y + d.dy;
+  const t = tileAt(s, nx, ny);
+  // Защита от случайной смерти: базовый шаг в пропасть / лаву / шипы не тратит ход.
+  if (isBlockedStep(t)) { cancel(ctx, nx, ny, 'НЕТ ПУТИ'); return false; }
+  const u = unitAt(s, nx, ny);
+  if (!u) { moveUnit(s, p, nx, ny, ctx); return true; }
+  if (u.kind === 'PLAYER') return false;
+  resolvePush(s, u, d.dx, d.dy, 2 + perkLevel(s, 'HEAVY_RAM'), ctx);   // тяжёлый таран: 3+
+  return true;
+}
+
+/* ===========================================================================
+ * 5. Ход целиком и структура забега
+ * ========================================================================= */
+function createGame(seed) {
+  const n = (typeof seed === 'number' && Number.isFinite(seed)) ? (seed >>> 0) : 1;
+  const s = {
+    v:1, seed:n, rng:n || 1, floor:1, turn:1,
+    grid:[], entities:[], nextId:1,
+    shield:0, perks:[], hookCd:0, throwCd:0, mode:'BASIC',
+    activeIds:[], intents:[], stunned:[],
+    phase:'PLAYER', perkChoices:[],
+    kills:0, falls:0
+  };
+  generateFloor(s, 1, null);
+  startPlayerTurn(s);
+  return s;
+}
+
+function tickCooldowns(s, used) {
+  if (used !== 'HOOK' && s.hookCd > 0) s.hookCd--;
+  if (used !== 'THROW' && s.throwCd > 0) s.throwCd--;
+}
+
+function choosePerkCards(s) {
+  const fresh = shuffle(s, PERKS.filter(p => perkLevel(s, p.id) === 0));
+  const owned = shuffle(s, PERKS.filter(p => perkLevel(s, p.id) > 0));
+  return fresh.concat(owned).slice(0, 3).map(p => p.id);
+}
+
+function describePerk(id, level) {
+  switch (id) {
+    case 'HEAVY_RAM':      return 'Базовый толчок отбрасывает цель на ' + (2 + level) + ' клетки.';
+    case 'SPIKED_WALLS':   return 'Удар врага о колонну наносит ' + (1 + level) + ' урона.';
+    case 'LUCKY_HARPOON':  return 'Крюк, сразу убивший цель, перезаряжается.' +
+                            (level > 1 ? ' Доп. откат крюка −' + (level - 1) + '.' : '');
+    case 'SHOCK_LANDING':  return 'После броска враги рядом отлетают на ' + level + ' кл. от героя.';
+    case 'LONG_CHAINS':    return 'Откат крюка и броска — ' + Math.max(0, 2 - level) + ' хода.';
+    case 'SECOND_BREATH':  return '+1 к макс. HP и полное лечение.';
+    default: return '';
+  }
+}
+
+function endFloor(s, ctx) {
+  s.hookCd = 0; s.throwCd = 0; s.shield = 0; s.mode = 'BASIC';
+  s.activeIds = []; s.intents = []; s.stunned = [];
+  s.turn += 1;
+  if (s.floor >= MAX_FLOOR) { s.phase = 'WIN'; s.perkChoices = []; ev(ctx, 'text', { x:2, y:2, text:'КРАЙ ДОСТИГНУТ!' }); }
+  else { s.phase = 'PERKS'; s.perkChoices = choosePerkCards(s); }
+}
+
+function choosePerk(state, id) {
+  const s = clone(state);
+  if (s.phase !== 'PERKS' || !s.perkChoices.includes(id)) return s;
+  const p = playerOf(s);
+  s.perks.push(id);
+  if (id === 'SECOND_BREATH' && p) { p.maxHp += 1; p.hp = p.maxHp; }
+  s.floor += 1;
+  s.phase = 'PLAYER'; s.perkChoices = [];
+  s.mode = 'BASIC'; s.hookCd = 0; s.throwCd = 0; s.shield = 0;
+  const carry = p ? { hp:p.hp, maxHp:p.maxHp } : null;
+  generateFloor(s, s.floor, carry);             // HP и перки переносятся между этажами
+  startPlayerTurn(s);
+  return s;
+}
+
+function setMode(state, mode) {
+  const s = clone(state);
+  if (s.phase !== 'PLAYER') return s;
+  if (mode !== 'BASIC') {
+    if (mode === 'HOOK' && s.hookCd > 0) return s;
+    if (mode === 'THROW' && s.throwCd > 0) return s;
+  }
+  s.mode = (s.mode === mode) ? 'BASIC' : mode;
+  return s;
+}
+
+/**
+ * performTurn: полный детерминированный ход. Возвращает кадры для покадровой
+ * анимации: [ действие игрока+взрывы, фаза врагов, начало следующего хода ].
+ */
+function performTurn(state, action) {
+  const s = clone(state);
+  const ctx = {
+    events:[], boomQueue:[], boomSet:new Set(), exploded:new Set(),
+    kills:0, incoming:false, used:null
+  };
+  if (s.phase !== 'PLAYER') return { state, frames:[], spent:false };
+  const startKills = s.kills;
+  let ok = false;
+  if (action.type === 'DIR') ok = doDirection(s, action.dir, ctx);
+  else if (action.type === 'WAIT') {
+    s.shield = Math.min(2, s.shield + 1);
+    ev(ctx, 'text', { x:playerOf(s).x, y:playerOf(s).y, text:'+1 ЩИТ' });
+    ok = true;
+  }
+  if (!ok) {
+    return { state:clone(state), frames:[{ state:clone(state), events:takeEvents(ctx) }], spent:false };
+  }
+
+  flushBooms(s, ctx);
+  cleanupDead(s);
+  const frames = [{ state:clone(s), events:takeEvents(ctx) }];
+
+  if (playerAlive(s) && !floorClear(s)) {
+    ctx.incoming = true;
+    enemyPhase(s, ctx);
+    ctx.incoming = false;
+    flushBooms(s, ctx);
+    cleanupDead(s);
+    frames.push({ state:clone(s), events:takeEvents(ctx) });
+  }
+
+  if (!playerAlive(s)) {
+    s.phase = 'DEAD'; s.mode = 'BASIC'; s.activeIds = []; s.intents = []; s.stunned = [];
+  } else if (floorClear(s)) {
+    endFloor(s, ctx);
+  } else {
+    tickCooldowns(s, ctx.used);
+    s.turn += 1;
+    startPlayerTurn(s);
+  }
+  if (s.kills - startKills >= 2) {
+    ev(ctx, 'text', { x:2, y:1, text:(s.kills - startKills >= 3 ? 'ТРИПЛЕТ!' : 'ДУПЛЕТ!') });
+  }
+  cleanupDead(s);
+  frames.push({ state:clone(s), events:takeEvents(ctx) });
+  return { state:s, frames, spent:true };
+}
+
+/* Подсветка допустимых направлений и превью цели для UI. */
+function preview(s) {
+  const p = playerOf(s);
+  const out = { mode:s.mode, dirs:{} };
+  if (!p) return out;
+  for (const d of DIRS) {
+    const fx = p.x + d.dx, fy = p.y + d.dy;
+    const info = { valid:false, label:'', mark:null, kind:'BLOCK', ray:[] };
+    if (s.mode === 'HOOK') {
+      const ft = tileAt(s, fx, fy);
+      let target = null;
+      if (ft !== TILE.PILLAR && ft !== 'VOID') {
+        for (let i = 2; i <= 4; i++) {
+          const x = p.x + d.dx * i, y = p.y + d.dy * i;
+          if (!inBounds(x, y)) break;
+          info.ray.push({ x, y });
+          if (s.grid[y][x] === TILE.PILLAR) break;
+          if (unitAt(s, x, y)) { target = unitAt(s, x, y); break; }
+        }
+      }
+      if (target) {
+        info.valid = true; info.kind = 'PULL'; info.mark = { x:fx, y:fy };
+        if (ft === TILE.CHASM) info.label = '!';
+        else if (isHazard(ft)) info.label = '-1';
+        else if (unitAt(s, fx, fy)) info.label = 'БАМ';
+        else info.label = '+';
+      } else info.label = '—';
+    } else if (s.mode === 'THROW') {
+      const front = unitAt(s, fx, fy);
+      if (front && front.kind !== 'PLAYER') {
+        const bx = p.x - d.dx, by = p.y - d.dy;
+        const inb = inBounds(bx, by);
+        const t = inb ? s.grid[by][bx] : 'VOID';
+        const u = inb ? unitAt(s, bx, by) : null;
+        info.valid = true; info.mark = inb ? { x:bx, y:by } : { x:bx, y:by };
+        if (!inb) { info.kind = 'VOID'; info.label = '!'; }
+        else if (t === TILE.CHASM) { info.kind = 'FALL'; info.label = '!'; }
+        else if (isHazard(t)) { info.kind = 'HAZARD'; info.label = '-1'; }
+        else if (t === TILE.PILLAR || u) { info.kind = 'SWAP'; info.mark = { x:fx, y:fy }; info.label = '↔'; }
+        else { info.kind = 'LAND'; info.label = '+'; }
+      } else info.label = '—';
+    } else {
+      const t = tileAt(s, fx, fy);
+      if (isBlockedStep(t)) info.label = '✕';
+      else {
+        const u = unitAt(s, fx, fy);
+        info.valid = true; info.mark = { x:fx, y:fy };
+        info.kind = u ? 'PUSH' : 'STEP';
+        info.label = u ? '>' : '·';
+      }
+    }
+    out.dirs[d.key] = info;
+  }
+  return out;
+}
+
+root.EdgeEngine = {
+  SIZE, MAX_FLOOR, TILE, DIRS, DIR, PERKS, ENEMY_HP,
+  createGame, performTurn, setMode, choosePerk, choosePerkCards, describePerk,
+  preview, clone, inBounds, tileAt, unitAt, byId, playerOf, enemiesOf, perkLevel,
+  generateFloor, startPlayerTurn, computeIntent, resolvePush, flushBooms,
+  floorIsPassable, guardStats: _guardStats
+};
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+/* ===== ENGINE END ===== */
+</script>
+
+<script id="ui-script">
+(function () {
+'use strict';
+const E = globalThis.EdgeEngine;
+const SAVE_KEY = 'edge-push:v1';
+/* ===== DIFFICULTY SEEDS START ===== */
+/* Сгенерировано из ai/difficulty.json скриптом ai/inject-seeds.mjs.
+   НЕ редактировать вручную: 10 пулов сидов по измеренной сложности. */
+const DIFFICULTY = {
+  count: 10,
+  defaultLevel: 5,
+  levels: [
+    { n:1, name:"ПРОГУЛКА", hint:"без поиска 7/7 · балл 0.00–0.05", seeds:[20111,20334,20446,20581,20545,20573,20135,20363,20514,20207,20459,20236] },
+    { n:2, name:"РАЗМИНКА", hint:"без поиска 7/7 · балл 0.05–0.10", seeds:[20506,20091,20323,20516,20338,20160,20579,20476,20227,20008,20336,20464] },
+    { n:3, name:"УВЕРЕННО", hint:"без поиска 6/7 · балл 0.11–0.18", seeds:[20391,20213,20149,20317,20414,20524,20137,20310,20325,20518,20504,20043] },
+    { n:4, name:"СЕРЬЁЗНО", hint:"без поиска 5/7 · балл 0.18–0.22", seeds:[20280,20512,20544,20139,20012,20484,20200,20494,20009,20192,20007,20574] },
+    { n:5, name:"НОРМА", hint:"без поиска 3/7 · балл 0.23–0.27", seeds:[20191,20356,20027,20086,20063,20305,20097,20214,20588,20402,20106,20240] },
+    { n:6, name:"ОСТРО", hint:"без поиска 2/7 · балл 0.27–0.30", seeds:[20456,20379,20592,20095,20279,20373,20259,20128,20589,20070,20257,20383] },
+    { n:7, name:"ЖЁСТКО", hint:"без поиска 2/7 · балл 0.30–0.34", seeds:[20554,20206,20587,20328,20068,20292,20497,20015,20197,20559,20148,20183] },
+    { n:8, name:"БЕЗЖАЛОСТНО", hint:"без поиска 1/7 · балл 0.34–0.37", seeds:[20125,20485,20185,20442,20594,20123,20302,20171,20143,20090,20161,20344] },
+    { n:9, name:"ПРЕДЕЛ", hint:"без поиска 1/7 · балл 0.37–0.41", seeds:[20048,20087,20355,20419,20138,20071,20168,20461,20489,20098,20102,20080] },
+    { n:10, name:"КРАЙ", hint:"без поиска 0/7 · балл 0.41–0.70", seeds:[20261,20283,20520,20486,20066,20529,20546,20163,20089,20364,20025,20267] }
+  ]
+};
+/* ===== DIFFICULTY SEEDS END ===== */
+
+/* ---------- сложность: 10 уровней, механика не меняется, меняется пул сидов ---------- */
+const DIFF_KEY = 'edge-push:difficulty:v1';
+const RUN_KEY = 'edge-push:run:v1';
+let difficulty = DIFFICULTY.defaultLevel;
+let runIndex = 0;
+let pendingDifficulty = null;
+try {
+  const saved = Number(localStorage.getItem(DIFF_KEY));
+  if (Number.isInteger(saved) && saved >= 1 && saved <= DIFFICULTY.levels.length) difficulty = saved;
+  runIndex = (Number(localStorage.getItem(RUN_KEY)) || 0) >>> 0;
+} catch (e) {}
+function levelData(n) { return DIFFICULTY.levels[(n || difficulty) - 1] || DIFFICULTY.levels[0]; }
+function persistDifficulty() { try { localStorage.setItem(DIFF_KEY, String(difficulty)); } catch (e) {} }
+function pickSeed() {
+  const lv = levelData();
+  const pool = (lv && lv.seeds && lv.seeds.length) ? lv.seeds : [1001];
+  const seed = pool[runIndex % pool.length];
+  runIndex = (runIndex + 1) >>> 0;
+  try { localStorage.setItem(RUN_KEY, String(runIndex)); } catch (e) {}
+  return seed;
+}
+function applyDifficulty(n) {
+  difficulty = n; pendingDifficulty = null;
+  persistDifficulty();
+  newRun();
+  toast('СЛОЖНОСТЬ ' + difficulty + '/' + DIFFICULTY.count + ' · ' + levelData().name);
+}
+
+const $ = q => document.querySelector(q);
+
+/* COLOR CONTRACT в JS — значения синхронизированы с :root в <style>.
+   Менять ТОЛЬКО вместе: тесты сверяют палитру CSS и этот объект. */
+const PAL = {
+  ally:'#00e5ff', hostile:'#ff4757', neutral:'#ffb037',
+  hazard:'#ff7a1a', safe:'#5cffb0', inert:'#7a8497'
+};
+
+const ICON_PATHS = {
+  hook:'<path d="M12 3v10a4 4 0 1 1-8 0"/><circle cx="12" cy="3" r="1.6"/>',
+  throw:'<path d="M4 9a8 8 0 0 1 13-3M20 3v5h-5"/><path d="M20 15a8 8 0 0 1-13 3M4 21v-5h5"/>',
+  shield:'<path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5l-8-3z"/>',
+  HEAVY_RAM:'<path d="M3 12h13M11 7l5 5-5 5"/>',
+  SPIKED_WALLS:'<path d="M4 4h16v16H4zM4 10h16M4 16h16M10 4v6M16 10v6M8 16v4"/>',
+  LUCKY_HARPOON:'<path d="M12 3v10a4 4 0 1 1-8 0M8 9l4 4"/><circle cx="12" cy="3" r="1.6"/>',
+  SHOCK_LANDING:'<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>',
+  LONG_CHAINS:'<circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/>',
+  SECOND_BREATH:'<path d="M12 20S4 15 4 9.5A4 4 0 0 1 12 8a4 4 0 0 1 8 1.5C20 15 12 20 12 20z"/>',
+  legend:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>' +
+         '<rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'
+};
+function icon(name) {
+  return '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" ' +
+         'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+         (ICON_PATHS[name] || '') + '</svg>';
+}
+for (const el of document.querySelectorAll('[data-icon]')) el.innerHTML = icon(el.dataset.icon);
+
+const tilesEl = $('#tiles'), unitsEl = $('#entities'), fxEl = $('#fx');
+const tgEl = $('#telegraph'), fxSvg = $('#fxSvg'), overlay = $('#overlay');
+const boardWrap = $('#boardWrap'), toastEl = $('#toast');
+const unitNodes = new Map();
+let state = null, busy = false, modal = null, swipeStart = null, suppressClick = false;
+let shakeTimer = null, toastTimer = null;
+
+/* ---------- сохранение ---------- */
+function load() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (s.v !== 1 || !Array.isArray(s.grid) || s.grid.length !== 5 ||
+        !Array.isArray(s.entities) || !s.entities.length || !s.phase) return null;
+    return s;
+  } catch (e) { return null; }
+}
+function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) {} }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function vibrate(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+function toast(msg, danger) {
+  toastEl.textContent = msg;
+  toastEl.classList.toggle('danger', !!danger);
+  toastEl.classList.add('show');
+  document.getElementById('app').classList.add('toasting');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastEl.classList.remove('show', 'danger');
+    document.getElementById('app').classList.remove('toasting');
+  }, 1700);
+}
+
+/* Отказ в ходе должен быть виден сразу: баннер на поле, крест на клетке,
+   вспышка недоступных направлений, тост, тряска и вибрация. */
+function showBlocked(x, y) {
+  const cross = document.createElement('div');
+  cross.className = 'fx-block';
+  cross.style.cssText = posStyle(x, y);
+  cross.innerHTML = '<i></i>';
+  fxEl.appendChild(cross);
+  setTimeout(() => cross.remove(), 900);
+
+  const banner = document.createElement('div');
+  banner.className = 'fx-deny';
+  banner.innerHTML = '<b>НЕТ ПУТИ</b><small>ХОД НЕ ПОТРАЧЕН</small>';
+  fxEl.appendChild(banner);
+  setTimeout(() => banner.remove(), 950);
+
+  for (const n of document.querySelectorAll('.dir.bad')) n.classList.add('denied');
+  setTimeout(() => {
+    for (const n of document.querySelectorAll('.dir.denied')) n.classList.remove('denied');
+  }, 460);
+
+  toast('× НЕТ ПУТИ · ХОД НЕ ПОТРАЧЕН', true);
+  vibrate(15);
+}
+
+const restored = load();
+state = restored || E.createGame(pickSeed());
+
+/* ---------- обучение при первом запуске ---------- */
+const TUT_KEY = 'edge-push:tutorial:v1';
+const TUTORIAL = [
+  {
+    title:'Добро пожаловать в КРАЙ',
+    text:'Прямых ударов нет. <b>Толкай</b> врагов в пропасть, лаву, колонны, бочки и друг в друга. Впереди 7 этажей.',
+    spot:null, hint:'6 коротких шагов · можно пропустить'
+  },
+  {
+    title:'Один палец — один ход',
+    text:'Свайпни <b>в любом месте экрана</b> или нажми ▲ ▼ ◄ ► внизу. Пустая клетка — шаг, в пропасть герой не шагнёт.',
+    spot:'dpad', hint:'Сделай любой ход ↓', waitAction:true
+  },
+  {
+    title:'Толчок щитом',
+    text:'Враг или бочка перед тобой? Нажми в их сторону — цель летит на <b>2 клетки</b>. Край карты и пропасть смертельны.',
+    spot:'dpad', hint:'Попробуй толкнуть ↓', waitAction:true
+  },
+  {
+    title:'Только 2 угрозы',
+    text:'Яркие враги с <b>⚡</b> действуют в этот ход, остальные спят. Красные стрелки показывают намерение: уйди вбок или подставь союзника.',
+    spot:'board', hint:'Читай поле за полсекунды'
+  },
+  {
+    title:'Три приёма',
+    text:'<b>КРЮК</b> тянет цель с луча · <b>БРОСОК</b> кидает врага за спину · <b>ЖДАТЬ</b> даёт щит на один удар. Откат приёмов — 2 хода.',
+    spot:'abilities', hint:'Режим включается тапом по кнопке'
+  },
+  {
+    title:'Забег начался',
+    text:'После каждого этажа бери <b>1 из 3 перков</b>. Партия сохраняется после каждого действия — телефон можно убрать в карман. Сложность: <b>10 уровней</b>, кнопка «СЛ» вверху или клавиша C.',
+    spot:null, hint:'Удачи на краю!'
+  }
+];
+let tutActive = true, tutStep = 0, tutRendered = -2;
+try { tutActive = localStorage.getItem(TUT_KEY) !== 'done'; } catch (e) { tutActive = true; }
+
+function finishTutorial() {
+  tutActive = false;
+  tutStep = TUTORIAL.length;
+  try { localStorage.setItem(TUT_KEY, 'done'); } catch (e) {}
+  renderTutorial();
+}
+function advanceTutorial(fromAction) {
+  if (!tutActive) return;
+  if (fromAction && !TUTORIAL[tutStep].waitAction) return;
+  tutStep += 1;
+  if (tutStep >= TUTORIAL.length) finishTutorial();
+  else renderTutorial();
+}
+function renderTutorial(cur) {
+  const app = document.getElementById('app');
+  const el = $('#tutorial');
+  const st8 = cur || state;
+  const blocked = !!modal || !st8 || st8.phase !== 'PLAYER';
+  el.classList.toggle('hidden', !tutActive || blocked);
+  const key = tutActive ? tutStep : -1;
+  if (key === tutRendered) return;
+  tutRendered = key;
+  app.classList.toggle('tutorial-on', tutActive);
+  for (const n of document.querySelectorAll('.tut-glow')) n.classList.remove('tut-glow');
+  if (!tutActive) { el.innerHTML = ''; return; }
+  const st = TUTORIAL[tutStep];
+  const last = tutStep === TUTORIAL.length - 1;
+  el.innerHTML =
+    '<div class="tut-head"><span class="tut-step">ОБУЧЕНИЕ ' + (tutStep + 1) + '/' + TUTORIAL.length + '</span>' +
+    '<span class="tut-links">' +
+    '<button class="tut-skip" data-tut="legend" type="button">ЛЕГЕНДА</button>' +
+    '<button class="tut-skip" data-tut="skip" type="button">ПРОПУСТИТЬ</button></span></div>' +
+    '<div class="tut-title">' + st.title + '</div>' +
+    '<div class="tut-text">' + st.text + '</div>' +
+    '<div class="tut-row"><span class="tut-hint">' + st.hint + '</span>' +
+    '<button class="tut-next" data-tut="next" type="button">' + (last ? 'ИГРАТЬ' : 'ДАЛЬШЕ') + '</button></div>';
+  const targets = st.spot === 'dpad' ? document.querySelectorAll('.dir') :
+                  st.spot === 'abilities' ? document.querySelectorAll('.ability') :
+                  st.spot === 'board' ? [$('#board')] : [];
+  for (const n of targets) n.classList.add('tut-glow');
+}
+
+/* ---------- плитки ---------- */
+for (let i = 0; i < 25; i++) {
+  const d = document.createElement('div');
+  d.className = 'tile t-FLOOR';
+  tilesEl.appendChild(d);
+}
+
+const cx = x => x * 20 + 10;
+const cy = y => y * 20 + 10;
+const rect = (x, y, cls, inset) =>
+  '<rect class="' + cls + '" x="' + (x * 20 + (inset === undefined ? 2 : inset)) +
+  '" y="' + (y * 20 + (inset === undefined ? 2 : inset)) +
+  '" width="' + (20 - 2 * (inset === undefined ? 2 : inset)) +
+  '" height="' + (20 - 2 * (inset === undefined ? 2 : inset)) + '" rx="3"/>';
+function arrowHead(x, y, dx, dy, color) {
+  const tx = cx(x) + dx * 8, ty = cy(y) + dy * 8;
+  const px = -dy, py = dx;
+  const b1 = (cx(x) - dx + px * 4.5) + ',' + (cy(y) - dy + py * 4.5);
+  const b2 = (cx(x) - dx - px * 4.5) + ',' + (cy(y) - dy - py * 4.5);
+  return '<polygon points="' + tx + ',' + ty + ' ' + b1 + ' ' + b2 + '" fill="' + color + '"/>';
+}
+
+/* ---------- SVG: намерения + превью ---------- */
+function buildTelegraph(s, pv, showPreview) {
+  let h = '';
+  for (const it of (s.intents || [])) {
+    const e = E.byId(s, it.id);
+    if (!e || !e.alive) continue;
+    const stunned = (s.stunned || []).includes(e.id);
+    const red = stunned ? PAL.inert : PAL.hostile;
+    if (it.kind === 'ATTACK' && it.target) {
+      h += '<rect class="tg-attack" x="' + (it.target.x * 20 + 2) + '" y="' + (it.target.y * 20 + 2) +
+           '" width="16" height="16" rx="3" stroke="' + red + '"/>';
+      h += '<text x="' + cx(it.target.x) + '" y="' + cy(it.target.y) +
+           '" fill="' + red + '" font-size="9" font-weight="900" text-anchor="middle" dominant-baseline="central">!</text>';
+    } else if ((it.kind === 'CHARGE' || it.kind === 'SHOOT') && it.cells.length) {
+      for (const c of it.cells) h += rect(c.x, c.y, 'tg-cell', 3);
+      const last = it.cells[it.cells.length - 1];
+      h += '<line class="' + (it.kind === 'SHOOT' ? 'tg-thin' : 'tg-line') + '" x1="' + cx(e.x) +
+           '" y1="' + cy(e.y) + '" x2="' + cx(last.x) + '" y2="' + cy(last.y) +
+           '" stroke="' + red + '"/>';
+      h += arrowHead(last.x, last.y, it.dx, it.dy, red);
+    } else if (it.kind === 'MOVE' && it.target) {
+      h += rect(it.target.x, it.target.y, 'tg-move', 5);
+      h += '<line class="tg-move" x1="' + cx(e.x) + '" y1="' + cy(e.y) +
+           '" x2="' + cx(it.target.x) + '" y2="' + cy(it.target.y) + '"/>';
+    }
+  }
+  if (showPreview && s.phase === 'PLAYER') {
+    const p = E.playerOf(s);
+    if (p && pv) {
+      for (const d of E.DIRS) {
+        const info = pv.dirs[d.key];
+        if (!info) continue;
+        if (pv.mode === 'HOOK' && info.ray.length) {
+          let ex = p.x, ey = p.y;
+          for (const c of info.ray) { ex = c.x; ey = c.y; }
+          h += '<line class="pv-ray" x1="' + cx(p.x) + '" y1="' + cy(p.y) +
+               '" x2="' + cx(ex) + '" y2="' + cy(ey) + '"/>';
+        }
+        if (info.valid && info.mark) {
+          const m = info.mark;
+          if (m.x >= 0 && m.x < 5 && m.y >= 0 && m.y < 5) {
+            if (pv.mode === 'BASIC') {
+              h += '<circle class="pv-dot" cx="' + cx(m.x) + '" cy="' + cy(m.y) +
+                   '" r="' + (info.kind === 'PUSH' ? 3.2 : 2.1) + '"/>';
+            } else {
+              h += '<rect class="pv-mark" x="' + (m.x * 20 + 2) + '" y="' + (m.y * 20 + 2) +
+                   '" width="16" height="16" rx="3"/>';
+              if (info.label && info.label !== '·')
+                h += '<text class="pv-label" x="' + cx(m.x) + '" y="' + cy(m.y) + '">' + info.label + '</text>';
+            }
+          } else {
+            h += arrowHead(clampView(m.x), clampView(m.y), -d.dx, -d.dy, PAL.safe);
+            h += '<text class="pv-label" x="' + cx(clampView(m.x)) + '" y="' + cy(clampView(m.y)) + '">!</text>';
+          }
+        }
+      }
+    }
+  }
+  tgEl.innerHTML = h;
+}
+function clampView(n) { return Math.max(0, Math.min(4, n)); }
+
+/* ---------- юниты ---------- */
+function createUnitNode(e) {
+  const d = document.createElement('div');
+  d.className = 'unit spawn u-' + (e.type || e.kind);
+  d.innerHTML = '<div class="body"></div><div class="pips"></div><div class="badge"></div>';
+  setTimeout(() => d.classList.remove('spawn'), 240);
+  unitsEl.appendChild(d);
+  return d;
+}
+function updateUnitNode(n, e, s) {
+  const active = e.kind === 'ENEMY' && (s.activeIds || []).includes(e.id);
+  const stunned = (s.stunned || []).includes(e.id);
+  n.classList.toggle('active', active);
+  n.classList.toggle('inactive', e.kind === 'ENEMY' && !active);
+  n.classList.toggle('stunned', stunned);
+  n.classList.toggle('shielded', e.kind === 'PLAYER' && s.shield > 0);
+  const badge = n.querySelector('.badge');
+  badge.textContent = stunned ? 'Z' : (active ? '⚡' : '');
+  const pips = n.querySelector('.pips');
+  if (e.kind === 'ENEMY') {
+    let h = '';
+    for (let i = 0; i < e.maxHp; i++) h += '<span class="pip' + (i < e.hp ? '' : ' off') + '"></span>';
+    pips.innerHTML = h;
+  } else pips.innerHTML = '';
+}
+function renderUnits(s) {
+  const seen = new Set();
+  for (const e of s.entities) {
+    if (!e.alive) continue;
+    let n = unitNodes.get(e.id);
+    if (!n) { n = createUnitNode(e); unitNodes.set(e.id, n); }
+    seen.add(e.id);
+    n.style.transform = 'translate(' + (e.x * 100) + '%,' + (e.y * 100) + '%)';
+    updateUnitNode(n, e, s);
+  }
+  for (const [id, n] of Array.from(unitNodes)) {
+    if (!seen.has(id)) { n.remove(); unitNodes.delete(id); }
+  }
+}
+
+/* ---------- эффекты ---------- */
+function shake() {
+  boardWrap.classList.remove('shake');
+  void boardWrap.offsetWidth;
+  boardWrap.classList.add('shake');
+  clearTimeout(shakeTimer);
+  shakeTimer = setTimeout(() => boardWrap.classList.remove('shake'), 150);
+}
+function posStyle(x, y) {
+  return 'left:' + (clampView(x) * 20) + '%;top:' + (clampView(y) * 20) + '%';
+}
+function floatText(text, x, y, color) {
+  const d = document.createElement('div');
+  d.className = 'fx-text';
+  d.style.cssText = posStyle(x, y) + (color ? ';color:' + color : '');
+  d.textContent = text;
+  fxEl.appendChild(d);
+  setTimeout(() => d.remove(), 1000);
+}
+function ghost(from, to, type) {
+  const colors = { PLAYER:PAL.ally, BRUTE:PAL.hostile, CHARGER:PAL.hostile,
+                   SNIPER:PAL.hostile, BOMBER:PAL.hostile, JUGGERNAUT:PAL.hostile,
+                   BARREL:PAL.neutral };
+  const d = document.createElement('div');
+  d.className = 'fx-ghost';
+  d.style.setProperty('--gc', colors[type] || PAL.hostile);
+  d.style.setProperty('--fx', from.x);
+  d.style.setProperty('--fy', from.y);
+  d.style.setProperty('--tx', to.x);
+  d.style.setProperty('--ty', to.y);
+  d.innerHTML = '<i></i>';
+  fxEl.appendChild(d);
+  setTimeout(() => d.remove(), 600);
+}
+function boom(x, y) {
+  const d = document.createElement('div');
+  d.className = 'fx-boom';
+  d.style.cssText = posStyle(x, y);
+  fxEl.appendChild(d);
+  setTimeout(() => d.remove(), 560);
+}
+function beam(from, to, color) {
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', from.x * 20 + 10); line.setAttribute('y1', from.y * 20 + 10);
+  line.setAttribute('x2', to.x * 20 + 10); line.setAttribute('y2', to.y * 20 + 10);
+  line.setAttribute('stroke', color); line.setAttribute('stroke-width', '1.6');
+  line.setAttribute('stroke-linecap', 'round');
+  fxSvg.appendChild(line);
+  setTimeout(() => line.remove(), 280);
+}
+const dmgLabel = {
+  WALL:'БАМ!', CRUSH:'БАМ!', HAZARD:'ЖЖЁТ!', BOOM:'ВЗРЫВ', SHOT:'ВЫСТРЕЛ', ATTACK:'УДАР'
+};
+function playFx(events) {
+  for (const e of events) {
+    switch (e.t) {
+      case 'move': break;                            // скольжение делает CSS-transition
+      case 'fall':
+        ghost(e.from, e.to, e.type || e.kind);
+        floatText('ПРОПАСТЬ!', clampView(e.to.x), clampView(e.to.y), PAL.neutral);
+        vibrate([30, 20, 40]);
+        break;
+      case 'death':
+        if (e.reason !== 'CHASM' && e.reason !== 'VOID') floatText('×', e.x, e.y, PAL.hostile);
+        break;
+      case 'damage':
+        floatText((dmgLabel[e.cause] || '') + ' -' + e.amount, e.x, e.y,
+                  e.cause === 'BOOM' ? PAL.hazard : PAL.hostile);
+        break;
+      case 'explosion':
+        boom(e.x, e.y); shake(); vibrate([30, 20, 40]);
+        break;
+      case 'shake': shake(); break;
+      case 'shield': floatText(e.text || 'ЩИТ!', e.x, e.y, PAL.ally); break;
+      case 'text':
+        if (e.text === 'НЕТ ПУТИ') showBlocked(e.x, e.y);
+        else floatText(e.text, e.x, e.y, PAL.neutral);
+        break;
+      case 'hook': beam(e.from, e.to, PAL.safe); break;
+      case 'shot': {
+        const last = e.cells.length ? e.cells[e.cells.length - 1] : e.from;
+        beam(e.from, last, PAL.hostile);
+        break;
+      }
+      default: break;
+    }
+  }
+}
+
+/* ---------- HUD / кнопки ---------- */
+const MODE_LABEL = { BASIC:'ШАГ', HOOK:'КРЮК', THROW:'БРОСОК' };
+function renderHud(s) {
+  const p = E.playerOf(s);
+  $('#floorNum').textContent = s.floor + '/' + E.MAX_FLOOR;
+  let hearts = '';
+  if (p) for (let i = 0; i < p.maxHp; i++)
+    hearts += '<span class="' + (i < p.hp ? 'full' : 'empty') + '">' + (i < p.hp ? '♥' : '♡') + '</span>';
+  $('#hearts').innerHTML = hearts;
+  const sp = $('#shieldPill');
+  sp.classList.toggle('off', s.shield <= 0);
+  sp.textContent = 'ЩИТ ×' + s.shield;
+  $('#perkIcons').innerHTML = s.perks.map(id => {
+    const meta = E.PERKS.find(q => q.id === id);
+    return '<span class="perk-chip" title="' + (meta ? meta.title : id) + '">' + icon(id) + '</span>';
+  }).join('');
+  const threats = (s.intents || []).filter(it => {
+    const u = E.byId(s, it.id); return u && u.alive && !(s.stunned || []).includes(u.id);
+  }).length;
+  $('#statusLine').textContent = 'ХОД ' + s.turn + ' · ⚡' + threats + ' · УБИТО ' + s.kills;
+  const tips = {
+    BASIC:'Шаг или <b>толчок на 2 клетки</b> · цель — край',
+    HOOK:'<b>Крюк:</b> выбери луч с целью',
+    THROW:'<b>Бросок:</b> выбери врага перед собой'
+  };
+  $('#tip').innerHTML = tips[s.mode] || tips.BASIC;
+  $('#modeLabel').textContent = MODE_LABEL[s.mode] || MODE_LABEL.BASIC;
+  $('#turnLabel').textContent = 'ХОД ' + s.turn;
+  const lv = levelData();
+  $('#diffNum').textContent = String(difficulty);
+  $('#diffBtn').title = 'Сложность ' + difficulty + '/' + DIFFICULTY.count + ' · ' + lv.name;
+  $('#diffBtn').setAttribute('aria-label', 'Сложность ' + difficulty + ' из ' + DIFFICULTY.count + ' · ' + lv.name);
+}
+function renderControls(s, pv) {
+  const playable = s.phase === 'PLAYER' && !busy && !modal;
+  const hb = $('#hookBtn'), tb = $('#throwBtn');
+  hb.classList.toggle('on', s.mode === 'HOOK');
+  tb.classList.toggle('on', s.mode === 'THROW');
+  hb.classList.toggle('cooling', s.hookCd > 0);
+  tb.classList.toggle('cooling', s.throwCd > 0);
+  const hc = $('#hookCd'), tc = $('#throwCd');
+  hc.textContent = s.hookCd > 0 ? s.hookCd : '';
+  tc.textContent = s.throwCd > 0 ? s.throwCd : '';
+  hc.classList.toggle('ready', s.hookCd === 0);
+  tc.classList.toggle('ready', s.throwCd === 0);
+  for (const btn of document.querySelectorAll('.dir')) {
+    const info = pv && pv.dirs[btn.dataset.dir];
+    const ok = playable && info && info.valid;
+    btn.classList.toggle('ok', !!ok && s.mode !== 'BASIC');
+    btn.classList.toggle('bad', playable && info && !info.valid);
+  }
+}
+
+/* ---------- оверлеи ---------- */
+function perkCard(id, level) {
+  const meta = E.PERKS.find(p => p.id === id);
+  return '<button class="perk-card" data-perk="' + id + '" type="button">' +
+    '<span class="pc-ico">' + icon(id) + '</span><span><span class="pc-name">' + meta.title + '</span>' +
+    '<span class="pc-lvl"> УР. ' + level + '</span><div class="pc-desc">' + E.describePerk(id, level) + '</div></span></button>';
+}
+/* ---------- легенда: кто есть кто ---------- */
+/* Цвет = чья сторона / какая роль. Форма = кто именно (WCAG 1.4.1). */
+const LEGEND_PALETTE = [
+  ['var(--ally)','СВОЙ','герой, щит, HP, ваши кнопки'],
+  ['var(--hostile)','ЧУЖОЙ','все враги, урон, намерения'],
+  ['var(--neutral)','ОБЪЕКТ / ВНИМАНИЕ','бочки, откаты, ⚡, подсказки'],
+  ['var(--hazard)','ОПАСНАЯ МЕСТНОСТЬ','лава, шипы + штриховка'],
+  ['var(--safe)','БЕЗОПАСНЫЙ ХОД','превью шага, крюка, броска'],
+  ['var(--tile)','ИНЕРТНОЕ','пол, колонна, пропасть']
+];
+const LEGEND_UNITS = [
+  ['PLAYER','Герой','бирюзовый · 3 ♥ · шаг и толчок'],
+  ['BRUTE','Громила','красный квадрат · 2 ♥ · удар вблизи'],
+  ['CHARGER','Бык','красный ромб · 2 ♥ · несётся по линии'],
+  ['SNIPER','Снайпер','красный треугольник · 1 ♥ · выстрел'],
+  ['BOMBER','Бомбер','красный круг · 1 ♥ · взрыв от урона'],
+  ['JUGGERNAUT','Джаггернаут','тёмно-красный · 4 ♥ · толчок 1 кл.'],
+  ['BARREL','Бочка','янтарная · взрыв 3×3 от урона']
+];
+const LEGEND_TILES = [
+  ['FLOOR','Пол','сюда можно шагнуть'],
+  ['CHASM','Пропасть','мгновенная смерть'],
+  ['PILLAR','Колонна','удар = 1 урон'],
+  ['SPIKES','Шипы','1 урон при приземлении'],
+  ['LAVA','Лава','1 урон при приземлении']
+];
+const LEGEND_MARKS = [
+  ['⚡',PAL.neutral,'Активный враг','⚡ не больше 2 за ход'],
+  ['Z',PAL.inert,'Оглушён','пропускает ход'],
+  ['●●','#ffffff','Очки HP','белые точки под врагом'],
+  ['→',PAL.hostile,'Намерение','красная стрелка / рамка'],
+  ['+',PAL.safe,'Превью','зелёная рамка / точка'],
+  ['2',PAL.neutral,'Откат и щит','цифра на кнопке, ЩИТ ×N']
+];
+function lgItem(swatch, name, note) {
+  return '<div class="lg-item">' + swatch +
+         '<span><b>' + name + '</b><small>' + note + '</small></span></div>';
+}
+const lgUnit = a => lgItem('<span class="lg-ico u-' + a[0] + '"><i class="body"></i></span>', a[1], a[2]);
+const lgTile = a => lgItem('<span class="lg-tile t-' + a[0] + '"></span>', a[1], a[2]);
+const lgMark = a => lgItem('<span class="lg-sym" style="color:' + a[1] + '">' + a[0] + '</span>', a[2], a[3]);
+const lgPal = a => '<div class="lg-pal-item"><span class="lg-pal-chip" style="background:' + a[0] +
+  '"></span><span><b>' + a[1] + '</b><small>' + a[2] + '</small></span></div>';
+function legendBlock(title, items) {
+  return '<div class="lg-group">' + title + '</div><div class="legend-grid">' + items.join('') + '</div>';
+}
+function legendPalette() {
+  return '<div class="lg-group">ПАЛИТРА · ЧТО ОЗНАЧАЕТ ЦВЕТ</div>' +
+         '<div class="lg-pal">' + LEGEND_PALETTE.map(lgPal).join('') + '</div>';
+}
+
+function renderOverlay(s) {
+  renderTutorial(s);
+  overlay.classList.toggle('legend-mode', modal === 'legend');
+  overlay.classList.toggle('difficulty-mode', modal === 'difficulty');
+  if (modal === 'difficulty') {
+    overlay.innerHTML = '<div class="ov-title">СЛОЖНОСТЬ · 10 УРОВНЕЙ</div>' +
+      '<div class="ov-sub">Механика на всех уровнях одинаковая: меняется только набор сидов. ' +
+      'Уровни собраны по замеру ИИ — как глубоко заходит политика без поиска и сколько ' +
+      'планирования нужно для победы. Все сиды проходимы.</div>' +
+      '<div class="diff-grid">' +
+      DIFFICULTY.levels.map(l =>
+        '<button class="diff-item' + (l.n === difficulty ? ' active' : '') + '" data-diff="' + l.n + '" type="button">' +
+        '<b>' + l.n + '</b><span>' + l.name + '</span><small>' + l.hint + '</small></button>'
+      ).join('') +
+      '</div>' +
+      '<div class="ov-sub" style="font-size:calc(var(--u)*.9)">Смена уровня начнёт новый забег.</div>' +
+      '<div class="ov-row"><button class="ov-btn ghost" data-act="close" type="button">ОТМЕНА</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (modal === 'difficulty-confirm') {
+    const dl = levelData(pendingDifficulty);
+    overlay.innerHTML = '<div class="ov-title">УРОВЕНЬ ' + dl.n + ' · ' + dl.name + '</div>' +
+      '<div class="ov-sub">Текущий забег будет сброшен: начнётся партия на сиде этого уровня.</div>' +
+      '<div class="ov-row"><button class="ov-btn" data-act="diff-apply" type="button">НОВЫЙ ЗАБЕГ</button>' +
+      '<button class="ov-btn ghost" data-act="close" type="button">ОТМЕНА</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (modal === 'restart') {
+    overlay.innerHTML = '<div class="ov-title">НАЧАТЬ ЗАНОВО?</div>' +
+      '<div class="ov-sub">Текущий забег будет сброшен. Уровень сложности ' + difficulty + '/' +
+      DIFFICULTY.count + ' · ' + levelData().name + '.</div>' +
+      '<div class="ov-row"><button class="ov-btn" data-act="new" type="button">НОВЫЙ ЗАБЕГ</button>' +
+      '<button class="ov-btn ghost" data-act="close" type="button">ОТМЕНА</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (modal === 'legend') {
+    overlay.innerHTML = '<div class="ov-title">КТО ЕСТЬ КТО</div>' +
+      '<div class="ov-sub">Цвет = сторона и роль, форма = тип. Все враги красные, ' +
+      'все безопасные ходы зелёные. Белые точки под врагом — его здоровье.</div>' +
+      legendPalette() +
+      legendBlock('ГЕРОЙ · ВРАГИ · ОБЪЕКТЫ', LEGEND_UNITS.map(lgUnit)) +
+      legendBlock('КЛЕТКИ ПОЛЯ', LEGEND_TILES.map(lgTile)) +
+      legendBlock('МЕТКИ И ПОДСКАЗКИ', LEGEND_MARKS.map(lgMark)) +
+      '<div class="ov-row"><button class="ov-btn" data-act="close" type="button">ПОНЯТНО</button>' +
+      '<button class="ov-btn ghost" data-act="tutorial" type="button">ОБУЧЕНИЕ</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (modal === 'help') {
+    overlay.innerHTML = '<div class="ov-title">КАК ИГРАТЬ</div>' +
+      '<div class="rules">' +
+      '<b>Цель:</b> 7 этажей. Прямых ударов нет — сбрасывайте врагов в пропасть, лаву, бочки, колонны и друг в друга.<br><br>' +
+      '<b>Ход:</b> свайп в любом месте экрана или крестовина. Пустая клетка — шаг, занятая — толчок на 2 клетки. Время идёт только в момент хода. ' +
+      'Шаг в пропасть, лаву, шипы или колонну запрещён: поле покажет «НЕТ ПУТИ», ход не тратится.<br><br>' +
+      '<b>Крюк:</b> тянет первого врага/бочку на луче (дистанция 2–4) вплотную к герою. Луч за колонной не работает.<br><br>' +
+      '<b>Бросок:</b> враг перед вами перелетает за спину; если там стена или юнит — смена мест и оглушение.<br><br>' +
+      '<b>Ждать:</b> пропустить ход, получить щит на один удар или толчок до начала следующего хода.<br><br>' +
+      '<b>Активные угрозы:</b> не больше двух за ход. Остальные враги «спят» и не двигаются. Красные стрелки показывают их намерение: уйдите в сторону или подставьте союзника.<br><br>' +
+      '<b>Бочки и бомберы</b> взрываются от любого урона: 2 урона в квадрате 3×3 и разлёт соседей.<br><br>' +
+      '<b>Цвета:</b> бирюзовый — свой и ваш интерфейс; красный — все враги, урон и намерения; ' +
+      'янтарный — нейтральные объекты, откаты и ⚡; оранжевый со штриховкой — лава и шипы; ' +
+      'зелёный — превью безопасного хода. Формы и подписи дублируют цвет.<br><br>' +
+      'После каждого этажа — 1 из 3 перков. Партия сохраняется после каждого действия.' +
+      '</div><div class="ov-row">' +
+      '<button class="ov-btn small" data-act="legend" type="button">ЛЕГЕНДА ПОЛЯ</button>' +
+      '<button class="ov-btn small" data-act="difficulty" type="button">СЛОЖНОСТЬ</button>' +
+      '<button class="ov-btn ghost small" data-act="tutorial" type="button">ОБУЧЕНИЕ</button>' +
+      '<button class="ov-btn ghost small" data-act="close" type="button">ПОНЯТНО</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (s.phase === 'PERKS') {
+    overlay.innerHTML = '<div class="ov-title">ЭТАЖ ' + s.floor + ' ПРОЙДЕН</div>' +
+      '<div class="ov-sub">Выберите один перк. Откаты сброшены, щит обнуляется.</div>' +
+      s.perkChoices.map(id => perkCard(id, s.perks.filter(p => p === id).length + 1)).join('') +
+      '<div class="ov-sub">HP ' + (E.playerOf(s) ? E.playerOf(s).hp + '/' + E.playerOf(s).maxHp : '') +
+      ' · УБИТО ' + s.kills + '</div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  if (s.phase === 'WIN' || s.phase === 'DEAD') {
+    const win = s.phase === 'WIN';
+    overlay.innerHTML = '<div class="ov-title" style="color:' + (win ? PAL.ally : PAL.hostile) + '">' +
+      (win ? 'КРАЙ ДОСТИГНУТ' : 'ВЫ ПОГИБЛИ') + '</div>' +
+      '<div class="ov-sub">' + (win ? 'Все 7 этажей зачищены. Остров держится на ваших толчках.' :
+        'Герой сорвался или был добит. Остров ждёт следующую попытку.') + '</div>' +
+      '<div class="ov-stats">Этаж: ' + s.floor + '/' + E.MAX_FLOOR + '<br>Побед: ' + s.kills +
+      '<br>В бездну: ' + s.falls + '<br>Перков: ' + s.perks.length +
+      '<br>Сложность: ' + difficulty + '/' + DIFFICULTY.count + '</div>' +
+      '<div class="ov-row"><button class="ov-btn" data-act="new" type="button">НОВЫЙ ЗАБЕГ</button>' +
+      '<button class="ov-btn ghost" data-act="difficulty" type="button">СЛОЖНОСТЬ</button></div>';
+    overlay.classList.remove('hidden'); return;
+  }
+  overlay.classList.add('hidden');
+  overlay.innerHTML = '';
+}
+
+/* ---------- главный рендер ---------- */
+function render(s, events, showPreview) {
+  const tileNodes = tilesEl.children;
+  for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++)
+    tileNodes[y * 5 + x].className = 'tile t-' + s.grid[y][x];
+  renderUnits(s);
+  const pv = E.preview(s);
+  buildTelegraph(s, pv, !!showPreview);
+  renderHud(s);
+  renderControls(s, pv);
+  renderOverlay(s);
+  renderTutorial(s);
+  if (events && events.length) playFx(events);
+}
+
+/* ---------- ввод ---------- */
+function newRun() {
+  state = E.createGame(pickSeed());
+  for (const [, n] of Array.from(unitNodes)) n.remove();
+  unitNodes.clear();
+  fxSvg.innerHTML = ''; fxEl.innerHTML = '';
+  modal = null; busy = false;
+  save(); render(state, [], true);
+}
+function toggleMode(mode) {
+  if (busy || modal || state.phase !== 'PLAYER') return;
+  const ns = E.setMode(state, mode);
+  if (ns.mode === state.mode) {
+    const cd = mode === 'HOOK' ? state.hookCd : state.throwCd;
+    toast(cd > 0 ? 'ОТКАТ: ' + cd + ' ХОДА' : 'РЕЖИМ НЕДОСТУПЕН');
+    shake();
+    return;
+  }
+  state = ns; save(); render(state, [], true);
+  vibrate(15);
+}
+async function doAction(action) {
+  if (busy || modal || state.phase !== 'PLAYER') return;
+  const res = E.performTurn(state, action);
+  if (!res.spent) { render(res.state, res.frames[0].events, true); vibrate(15); return; }
+  busy = true;
+  vibrate(15);
+  for (let i = 0; i < res.frames.length; i++) {
+    const f = res.frames[i];
+    render(f.state, f.events, false);
+    if (i < res.frames.length - 1) await sleep(185);
+  }
+  state = res.state;
+  save();
+  advanceTutorial(true);       // интерактивные шаги обучения завершаются реальным ходом
+  render(state, [], true);
+  busy = false;
+}
+const doDir = key => doAction({ type:'DIR', dir:key });
+
+for (const btn of document.querySelectorAll('.dir'))
+  btn.addEventListener('click', () => { if (suppressClick) return; doDir(btn.dataset.dir); });
+$('#hookBtn').addEventListener('click', () => { if (suppressClick) return; toggleMode('HOOK'); });
+$('#throwBtn').addEventListener('click', () => { if (suppressClick) return; toggleMode('THROW'); });
+$('#waitBtn').addEventListener('click', () => { if (suppressClick) return; doAction({ type:'WAIT' }); });
+$('#restartBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'restart'; renderOverlay(state); });
+$('#legendBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'legend'; renderOverlay(state); });
+$('#helpBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'help'; renderOverlay(state); });
+$('#diffBtn').addEventListener('click', () => { if (suppressClick) return; modal = 'difficulty'; renderOverlay(state); });
+
+overlay.addEventListener('click', e => {
+  if (suppressClick) return;
+  const dl = e.target.closest('[data-diff]');
+  if (dl) {
+    const n = Number(dl.dataset.diff);
+    if (n === difficulty) { modal = null; renderOverlay(state); toast('УРОВЕНЬ ' + n + ' УЖЕ ВЫБРАН'); return; }
+    pendingDifficulty = n;
+    if (state.phase === 'PLAYER' && state.turn > 1) { modal = 'difficulty-confirm'; renderOverlay(state); }
+    else applyDifficulty(n);
+    return;
+  }
+  const perk = e.target.closest('[data-perk]');
+  if (perk) {
+    state = E.choosePerk(state, perk.dataset.perk);
+    save(); render(state, [], true);
+    toast('ЭТАЖ ' + state.floor + ' · ВПЕРЁД');
+    return;
+  }
+  const act = e.target.closest('[data-act]');
+  if (!act) return;
+  if (act.dataset.act === 'new') newRun();
+  else if (act.dataset.act === 'difficulty') { modal = 'difficulty'; renderOverlay(state); }
+  else if (act.dataset.act === 'diff-apply') applyDifficulty(pendingDifficulty);
+  else if (act.dataset.act === 'legend') { modal = 'legend'; renderOverlay(state); }
+  else if (act.dataset.act === 'tutorial') {
+    try { localStorage.removeItem(TUT_KEY); } catch (e) {}
+    tutActive = true; tutStep = 0; tutRendered = -2; modal = null;
+    renderTutorial();
+    render(state, [], true);
+    toast('ОБУЧЕНИЕ ЗАНОВО');
+  }
+  else { modal = null; renderOverlay(state); }
+});
+
+$('#tutorial').addEventListener('click', e => {
+  if (suppressClick) return;
+  if (e.target.closest('[data-tut="legend"]')) { modal = 'legend'; renderOverlay(state); return; }
+  if (e.target.closest('[data-tut="skip"]')) { finishTutorial(); toast('ОБУЧЕНИЕ ПРОПУЩЕНО'); return; }
+  if (e.target.closest('[data-tut="next"]')) advanceTutorial(false);
+});
+
+/* Свайп в ЛЮБОЙ точке экрана, порог 30px. */
+document.addEventListener('pointerdown', e => {
+  swipeStart = { x:e.clientX, y:e.clientY, id:e.pointerId };
+}, { passive:true });
+document.addEventListener('pointerup', e => {
+  if (!swipeStart) return;
+  const dx = e.clientX - swipeStart.x, dy = e.clientY - swipeStart.y;
+  swipeStart = null;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 30) return;
+  suppressClick = true;
+  setTimeout(() => { suppressClick = false; }, 320);
+  const dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
+  doDir(dir);
+}, { passive:true });
+document.addEventListener('pointercancel', () => { swipeStart = null; }, { passive:true });
+
+/* Клавиатура — для десктопа и доступности. */
+document.addEventListener('keydown', e => {
+  if (e.repeat) return;
+  const k = e.key.toLowerCase();
+  if (modal) {
+    if (k === 'escape') { modal = null; renderOverlay(state); }
+    return;
+  }
+  if (k === 'arrowup' || k === 'w') doDir('UP');
+  else if (k === 'arrowdown' || k === 's') doDir('DOWN');
+  else if (k === 'arrowleft' || k === 'a') doDir('LEFT');
+  else if (k === 'arrowright' || k === 'd') doDir('RIGHT');
+  else if (k === '1') toggleMode('HOOK');
+  else if (k === '2') toggleMode('THROW');
+  else if (k === '3' || k === ' ') doAction({ type:'WAIT' });
+  else if (k === 'r') { modal = 'restart'; renderOverlay(state); }
+  else if (k === 'l' || k === 'д') { modal = 'legend'; renderOverlay(state); }
+  else if (k === '?' || k === 'h') { modal = 'help'; renderOverlay(state); }
+  else if (k === 'c' || k === 'с') { modal = 'difficulty'; renderOverlay(state); }
+  else return;
+  e.preventDefault();
+});
+
+save();                                   // мгновенное автосохранение: сразу при старте
+render(state, [], true);
+if (restored) toast('ПАРТИЯ ВОССТАНОВЛЕНА · ЭТАЖ ' + state.floor);
+else toast('СВАЙП ИЛИ КРЕСТОВИНА — ВАШ ХОД');
+})();
+</script>
+
+<!-- PWA: только для HTTPS / localhost. Внутри APK (?native=1) ассеты уже локальны,
+     поэтому service worker не регистрируется и не мешает WebViewAssetLoader. -->
+<script id="pwa-script">
+(function () {
+  if (!navigator.serviceWorker || typeof navigator.serviceWorker.register !== 'function') return;
+  if (new URLSearchParams(location.search).has('native')) return;
+  var proto = location.protocol, host = location.hostname;
+  var local = proto === 'http:' && (host === 'localhost' || host === '127.0.0.1' || host === '[::1]');
+  if (proto !== 'https:' && !local) return;
+  window.addEventListener('load', function () {
+    var script = new URL('sw.js', location.href).href;
+    var scope = new URL('./', location.href).href;
+    navigator.serviceWorker.register(script, { scope: scope }).catch(function () {});
+  });
+})();
+</script>
+</body>
+</html>

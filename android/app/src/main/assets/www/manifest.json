@@ -1,0 +1,48 @@
+{
+  "id": "./",
+  "name": "КРАЙ · Edge Push",
+  "short_name": "КРАЙ",
+  "description": "Пошаговая микро-тактика непрямого боя: толкай врагов в пропасть, лаву, шипы и бочки. Одна рука, семь этажей, десять уровней сложности.",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#070910",
+  "theme_color": "#0f111a",
+  "color_scheme": "dark",
+  "categories": ["games", "puzzle", "strategy"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    {
+      "src": "./store/screenshots/01-board.png",
+      "sizes": "390x780",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Поле, HUD и управление одной рукой"
+    },
+    {
+      "src": "./store/screenshots/02-difficulty.png",
+      "sizes": "390x780",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Десять уровней сложности"
+    },
+    {
+      "src": "./store/screenshots/03-legend.png",
+      "sizes": "390x780",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Легенда: кто есть кто"
+    }
+  ]
+}

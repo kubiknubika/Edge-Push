@@ -1,0 +1,6297 @@
+{
+  "generatedAt": "2026-11-02T22:13:40.071Z",
+  "method": "отбор сидов по измеренной сложности; механика игры не меняется",
+  "config": {
+    "candidateSeeds": [
+      20001,
+      20600
+    ],
+    "candidates": 600,
+    "levels": 10,
+    "perLevel": 12,
+    "workers": 2,
+    "maxTurns": 90,
+    "verifiedBy": "solve() с DEFAULT_PLAN, exhaustive:false",
+    "winnable": 595,
+    "excluded": 5
+  },
+  "metric": {
+    "description": "нормализованный балл 0..1: глубина реактивной политики без поиска, ширина/число попыток решателя, неочевидность линии первого этажа, потеря HP",
+    "weights": {
+      "hardPolicy": 0.35,
+      "hardPlan": 0.15,
+      "width": 0.2,
+      "attempts": 0.1,
+      "obscure": 0.12,
+      "attrition": 0.08
+    },
+    "deciles": "кандидаты отсортированы по баллу и разделены на 10 равных децилей; из каждого равномерно взято по 12 сидов"
+  },
+  "names": [
+    "ПРОГУЛКА",
+    "РАЗМИНКА",
+    "УВЕРЕННО",
+    "СЕРЬЁЗНО",
+    "НОРМА",
+    "ОСТРО",
+    "ЖЁСТКО",
+    "БЕЗЖАЛОСТНО",
+    "ПРЕДЕЛ",
+    "КРАЙ"
+  ],
+  "levels": [
+    {
+      "level": 1,
+      "name": "ПРОГУЛКА",
+      "hint": "без поиска 7/7 · балл 0.00–0.05",
+      "scoreMin": 0,
+      "scoreMax": 0.05,
+      "medianScore": 0.02667,
+      "median": {
+        "policyFloors": 7,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 35
+      },
+      "seeds": [
+        20111,
+        20334,
+        20446,
+        20581,
+        20545,
+        20573,
+        20135,
+        20363,
+        20514,
+        20207,
+        20459,
+        20236
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 2,
+      "name": "РАЗМИНКА",
+      "hint": "без поиска 7/7 · балл 0.05–0.10",
+      "scoreMin": 0.05,
+      "scoreMax": 0.10333,
+      "medianScore": 0.07704,
+      "median": {
+        "policyFloors": 7,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 76
+      },
+      "seeds": [
+        20506,
+        20091,
+        20323,
+        20516,
+        20338,
+        20160,
+        20579,
+        20476,
+        20227,
+        20008,
+        20336,
+        20464
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 3,
+      "name": "УВЕРЕННО",
+      "hint": "без поиска 6/7 · балл 0.11–0.18",
+      "scoreMin": 0.10502,
+      "scoreMax": 0.17667,
+      "medianScore": 0.15296,
+      "median": {
+        "policyFloors": 6,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 101
+      },
+      "seeds": [
+        20391,
+        20213,
+        20149,
+        20317,
+        20414,
+        20524,
+        20137,
+        20310,
+        20325,
+        20518,
+        20504,
+        20043
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 4,
+      "name": "СЕРЬЁЗНО",
+      "hint": "без поиска 5/7 · балл 0.18–0.22",
+      "scoreMin": 0.18074,
+      "scoreMax": 0.22457,
+      "medianScore": 0.2,
+      "median": {
+        "policyFloors": 5,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 148
+      },
+      "seeds": [
+        20280,
+        20512,
+        20544,
+        20139,
+        20012,
+        20484,
+        20200,
+        20494,
+        20009,
+        20192,
+        20007,
+        20574
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 5,
+      "name": "НОРМА",
+      "hint": "без поиска 3/7 · балл 0.23–0.27",
+      "scoreMin": 0.22667,
+      "scoreMax": 0.26509,
+      "medianScore": 0.24828,
+      "median": {
+        "policyFloors": 3,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 75
+      },
+      "seeds": [
+        20191,
+        20356,
+        20027,
+        20086,
+        20063,
+        20305,
+        20097,
+        20214,
+        20588,
+        20402,
+        20106,
+        20240
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 6,
+      "name": "ОСТРО",
+      "hint": "без поиска 2/7 · балл 0.27–0.30",
+      "scoreMin": 0.27035,
+      "scoreMax": 0.3,
+      "medianScore": 0.29467,
+      "median": {
+        "policyFloors": 2,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 173
+      },
+      "seeds": [
+        20456,
+        20379,
+        20592,
+        20095,
+        20279,
+        20373,
+        20259,
+        20128,
+        20589,
+        20070,
+        20257,
+        20383
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 7,
+      "name": "ЖЁСТКО",
+      "hint": "без поиска 2/7 · балл 0.30–0.34",
+      "scoreMin": 0.3,
+      "scoreMax": 0.33772,
+      "medianScore": 0.32181,
+      "median": {
+        "policyFloors": 2,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 162
+      },
+      "seeds": [
+        20554,
+        20206,
+        20587,
+        20328,
+        20068,
+        20292,
+        20497,
+        20015,
+        20197,
+        20559,
+        20148,
+        20183
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 8,
+      "name": "БЕЗЖАЛОСТНО",
+      "hint": "без поиска 1/7 · балл 0.34–0.37",
+      "scoreMin": 0.34288,
+      "scoreMax": 0.36734,
+      "medianScore": 0.35333,
+      "median": {
+        "policyFloors": 1,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 99
+      },
+      "seeds": [
+        20125,
+        20485,
+        20185,
+        20442,
+        20594,
+        20123,
+        20302,
+        20171,
+        20143,
+        20090,
+        20161,
+        20344
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 9,
+      "name": "ПРЕДЕЛ",
+      "hint": "без поиска 1/7 · балл 0.37–0.41",
+      "scoreMin": 0.37035,
+      "scoreMax": 0.40667,
+      "medianScore": 0.38997,
+      "median": {
+        "policyFloors": 1,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 133
+      },
+      "seeds": [
+        20048,
+        20087,
+        20355,
+        20419,
+        20138,
+        20071,
+        20168,
+        20461,
+        20489,
+        20098,
+        20102,
+        20080
+      ],
+      "seedCount": 12,
+      "bucketSize": 59
+    },
+    {
+      "level": 10,
+      "name": "КРАЙ",
+      "hint": "без поиска 0/7 · балл 0.41–0.70",
+      "scoreMin": 0.41116,
+      "scoreMax": 0.70027,
+      "medianScore": 0.45191,
+      "median": {
+        "policyFloors": 0,
+        "solverWidth": 96,
+        "solverAttempts": 1,
+        "guard1": 458
+      },
+      "seeds": [
+        20261,
+        20283,
+        20520,
+        20486,
+        20066,
+        20529,
+        20546,
+        20163,
+        20089,
+        20364,
+        20025,
+        20267
+      ],
+      "seedCount": 12,
+      "bucketSize": 64
+    }
+  ],
+  "perSeed": [
+    {
+      "seed": 20016,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 30,
+      "policyHp": 3
+    },
+    {
+      "seed": 20060,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 41,
+      "policyHp": 4
+    },
+    {
+      "seed": 20111,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 22,
+      "policyHp": 3
+    },
+    {
+      "seed": 20216,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 25,
+      "policyHp": 4
+    },
+    {
+      "seed": 20231,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 39,
+      "policyHp": 3
+    },
+    {
+      "seed": 20239,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 14,
+      "policyHp": 3
+    },
+    {
+      "seed": 20284,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 7,
+      "policyHp": 4
+    },
+    {
+      "seed": 20334,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 35,
+      "policyHp": 3
+    },
+    {
+      "seed": 20351,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 26,
+      "policyHp": 3
+    },
+    {
+      "seed": 20372,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 45,
+      "policyHp": 3
+    },
+    {
+      "seed": 20377,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 59,
+      "policyHp": 4
+    },
+    {
+      "seed": 20403,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 7,
+      "policyHp": 3
+    },
+    {
+      "seed": 20446,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 19,
+      "policyHp": 3
+    },
+    {
+      "seed": 20457,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 58,
+      "policyHp": 3
+    },
+    {
+      "seed": 20478,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 50,
+      "policyHp": 4
+    },
+    {
+      "seed": 20507,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 7,
+      "policyHp": 3
+    },
+    {
+      "seed": 20513,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 45,
+      "policyHp": 3
+    },
+    {
+      "seed": 20581,
+      "score": 0,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 34,
+      "policyHp": 3
+    },
+    {
+      "seed": 20256,
+      "score": 0.00057,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 61,
+      "policyHp": 5
+    },
+    {
+      "seed": 20291,
+      "score": 0.00679,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 73,
+      "policyHp": 4
+    },
+    {
+      "seed": 20238,
+      "score": 0.01039,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 81,
+      "policyHp": 5
+    },
+    {
+      "seed": 20274,
+      "score": 0.01039,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 81,
+      "policyHp": 4
+    },
+    {
+      "seed": 20545,
+      "score": 0.01365,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 89,
+      "policyHp": 3
+    },
+    {
+      "seed": 20454,
+      "score": 0.01517,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 93,
+      "policyHp": 3
+    },
+    {
+      "seed": 20398,
+      "score": 0.01554,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 94,
+      "policyHp": 4
+    },
+    {
+      "seed": 20212,
+      "score": 0.01591,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 95,
+      "policyHp": 5
+    },
+    {
+      "seed": 20382,
+      "score": 0.01734,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 99,
+      "policyHp": 4
+    },
+    {
+      "seed": 20573,
+      "score": 0.01803,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 101,
+      "policyHp": 3
+    },
+    {
+      "seed": 20055,
+      "score": 0.02569,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 126,
+      "policyHp": 3
+    },
+    {
+      "seed": 20094,
+      "score": 0.0265,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 129,
+      "policyHp": 3
+    },
+    {
+      "seed": 20078,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 55,
+      "policyHp": 2
+    },
+    {
+      "seed": 20135,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 25,
+      "policyHp": 2
+    },
+    {
+      "seed": 20153,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 8,
+      "policyHp": 2
+    },
+    {
+      "seed": 20173,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 23,
+      "policyHp": 2
+    },
+    {
+      "seed": 20178,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 10,
+      "policyHp": 2
+    },
+    {
+      "seed": 20225,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 39,
+      "policyHp": 2
+    },
+    {
+      "seed": 20363,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 28,
+      "guard1": 7,
+      "policyHp": 2
+    },
+    {
+      "seed": 20387,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 60,
+      "policyHp": 2
+    },
+    {
+      "seed": 20421,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 22,
+      "policyHp": 2
+    },
+    {
+      "seed": 20471,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 50,
+      "policyHp": 2
+    },
+    {
+      "seed": 20510,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 48,
+      "policyHp": 2
+    },
+    {
+      "seed": 20514,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 53,
+      "policyHp": 2
+    },
+    {
+      "seed": 20533,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 57,
+      "policyHp": 2
+    },
+    {
+      "seed": 20560,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 39,
+      "policyHp": 2
+    },
+    {
+      "seed": 20566,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 44,
+      "policyHp": 2
+    },
+    {
+      "seed": 20577,
+      "score": 0.02667,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 33,
+      "policyHp": 2
+    },
+    {
+      "seed": 20207,
+      "score": 0.02983,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 142,
+      "policyHp": 4
+    },
+    {
+      "seed": 20551,
+      "score": 0.03482,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 164,
+      "policyHp": 3
+    },
+    {
+      "seed": 20058,
+      "score": 0.0353,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 77,
+      "policyHp": 2
+    },
+    {
+      "seed": 20390,
+      "score": 0.03687,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 174,
+      "policyHp": 3
+    },
+    {
+      "seed": 20218,
+      "score": 0.03993,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 88,
+      "policyHp": 2
+    },
+    {
+      "seed": 20459,
+      "score": 0.04354,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 28,
+      "guard1": 211,
+      "policyHp": 4
+    },
+    {
+      "seed": 20361,
+      "score": 0.04401,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 99,
+      "policyHp": 2
+    },
+    {
+      "seed": 20031,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 39,
+      "policyHp": 4
+    },
+    {
+      "seed": 20096,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 28,
+      "guard1": 7,
+      "policyHp": 4
+    },
+    {
+      "seed": 20141,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 22,
+      "policyHp": 4
+    },
+    {
+      "seed": 20236,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 9,
+      "policyHp": 5
+    },
+    {
+      "seed": 20463,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 25,
+      "policyHp": 3
+    },
+    {
+      "seed": 20487,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 36,
+      "policyHp": 3
+    },
+    {
+      "seed": 20491,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 19,
+      "policyHp": 3
+    },
+    {
+      "seed": 20499,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 60,
+      "policyHp": 3
+    },
+    {
+      "seed": 20506,
+      "score": 0.05,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 28,
+      "guard1": 54,
+      "policyHp": 3
+    },
+    {
+      "seed": 20593,
+      "score": 0.05124,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 122,
+      "policyHp": 2
+    },
+    {
+      "seed": 20367,
+      "score": 0.05152,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 123,
+      "policyHp": 2
+    },
+    {
+      "seed": 20077,
+      "score": 0.05208,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 125,
+      "policyHp": 2
+    },
+    {
+      "seed": 20473,
+      "score": 0.05223,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 64,
+      "policyHp": 4
+    },
+    {
+      "seed": 20091,
+      "score": 0.05333,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 39,
+      "policyHp": 1
+    },
+    {
+      "seed": 20119,
+      "score": 0.05333,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 6,
+      "policyHp": 1
+    },
+    {
+      "seed": 20307,
+      "score": 0.05333,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 8,
+      "policyHp": 1
+    },
+    {
+      "seed": 20422,
+      "score": 0.05333,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 13,
+      "policyHp": 1
+    },
+    {
+      "seed": 20585,
+      "score": 0.05333,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 27,
+      "guard1": 45,
+      "policyHp": 1
+    },
+    {
+      "seed": 20323,
+      "score": 0.05423,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 133,
+      "policyHp": 2
+    },
+    {
+      "seed": 20113,
+      "score": 0.05715,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 67,
+      "policyHp": 1
+    },
+    {
+      "seed": 20132,
+      "score": 0.05997,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 157,
+      "policyHp": 2
+    },
+    {
+      "seed": 20263,
+      "score": 0.06012,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 73,
+      "policyHp": 1
+    },
+    {
+      "seed": 20250,
+      "score": 0.06084,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 161,
+      "policyHp": 2
+    },
+    {
+      "seed": 20516,
+      "score": 0.06152,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 76,
+      "policyHp": 1
+    },
+    {
+      "seed": 20565,
+      "score": 0.06372,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 81,
+      "policyHp": 1
+    },
+    {
+      "seed": 20578,
+      "score": 0.06539,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 85,
+      "policyHp": 1
+    },
+    {
+      "seed": 20458,
+      "score": 0.06762,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 423,
+      "policyHp": 3
+    },
+    {
+      "seed": 20228,
+      "score": 0.06924,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 95,
+      "policyHp": 1
+    },
+    {
+      "seed": 20338,
+      "score": 0.07032,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 98,
+      "policyHp": 1
+    },
+    {
+      "seed": 20017,
+      "score": 0.07283,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 116,
+      "policyHp": 4
+    },
+    {
+      "seed": 20067,
+      "score": 0.07289,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 228,
+      "policyHp": 2
+    },
+    {
+      "seed": 20319,
+      "score": 0.07304,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 106,
+      "policyHp": 1
+    },
+    {
+      "seed": 20369,
+      "score": 0.07304,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 106,
+      "policyHp": 1
+    },
+    {
+      "seed": 20160,
+      "score": 0.07667,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 46,
+      "policyHp": 2
+    },
+    {
+      "seed": 20215,
+      "score": 0.07667,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 17,
+      "policyHp": 2
+    },
+    {
+      "seed": 20366,
+      "score": 0.07667,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 44,
+      "policyHp": 2
+    },
+    {
+      "seed": 20145,
+      "score": 0.07678,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 551,
+      "policyHp": 3
+    },
+    {
+      "seed": 20579,
+      "score": 0.07704,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 119,
+      "policyHp": 1
+    },
+    {
+      "seed": 20474,
+      "score": 0.07757,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 261,
+      "policyHp": 2
+    },
+    {
+      "seed": 20423,
+      "score": 0.08141,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 135,
+      "policyHp": 1
+    },
+    {
+      "seed": 20375,
+      "score": 0.08365,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 144,
+      "policyHp": 1
+    },
+    {
+      "seed": 20202,
+      "score": 0.08619,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 79,
+      "policyHp": 2
+    },
+    {
+      "seed": 20476,
+      "score": 0.09029,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 814,
+      "policyHp": 3
+    },
+    {
+      "seed": 20258,
+      "score": 0.09244,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 401,
+      "policyHp": 2
+    },
+    {
+      "seed": 20481,
+      "score": 0.09269,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 187,
+      "policyHp": 1
+    },
+    {
+      "seed": 20127,
+      "score": 0.09653,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 230,
+      "policyHp": 5
+    },
+    {
+      "seed": 20597,
+      "score": 0.09667,
+      "policyFloors": 6,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 53,
+      "policyHp": 2
+    },
+    {
+      "seed": 20227,
+      "score": 0.09671,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 210,
+      "policyHp": 1
+    },
+    {
+      "seed": 20371,
+      "score": 0.09687,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 211,
+      "policyHp": 1
+    },
+    {
+      "seed": 20052,
+      "score": 0.098,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 218,
+      "policyHp": 1
+    },
+    {
+      "seed": 20092,
+      "score": 0.09925,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 226,
+      "policyHp": 1
+    },
+    {
+      "seed": 20311,
+      "score": 0.09938,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 490,
+      "policyHp": 2
+    },
+    {
+      "seed": 20008,
+      "score": 0.1,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 49,
+      "guard1": 41,
+      "policyHp": 4
+    },
+    {
+      "seed": 20026,
+      "score": 0.1,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 10,
+      "policyHp": 5
+    },
+    {
+      "seed": 20038,
+      "score": 0.1,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 6,
+      "policyHp": 3
+    },
+    {
+      "seed": 20272,
+      "score": 0.1,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 53,
+      "policyHp": 5
+    },
+    {
+      "seed": 20321,
+      "score": 0.1,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 8,
+      "policyHp": 4
+    },
+    {
+      "seed": 20336,
+      "score": 0.1,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 42,
+      "policyHp": 4
+    },
+    {
+      "seed": 20386,
+      "score": 0.1009,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 261,
+      "policyHp": 3
+    },
+    {
+      "seed": 20221,
+      "score": 0.10223,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 64,
+      "policyHp": 4
+    },
+    {
+      "seed": 20084,
+      "score": 0.10333,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 14,
+      "policyHp": 1
+    },
+    {
+      "seed": 20104,
+      "score": 0.10333,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 45,
+      "policyHp": 1
+    },
+    {
+      "seed": 20464,
+      "score": 0.10333,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 8,
+      "policyHp": 1
+    },
+    {
+      "seed": 20591,
+      "score": 0.10333,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 51,
+      "policyHp": 1
+    },
+    {
+      "seed": 20208,
+      "score": 0.10383,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 284,
+      "policyHp": 5
+    },
+    {
+      "seed": 20082,
+      "score": 0.10437,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 262,
+      "policyHp": 1
+    },
+    {
+      "seed": 20042,
+      "score": 0.10474,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 135,
+      "policyHp": 2
+    },
+    {
+      "seed": 20391,
+      "score": 0.10502,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 267,
+      "policyHp": 1
+    },
+    {
+      "seed": 20182,
+      "score": 0.10769,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 147,
+      "policyHp": 2
+    },
+    {
+      "seed": 20453,
+      "score": 0.10816,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 149,
+      "policyHp": 2
+    },
+    {
+      "seed": 20508,
+      "score": 0.11059,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 74,
+      "policyHp": 1
+    },
+    {
+      "seed": 20395,
+      "score": 0.11215,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 328,
+      "policyHp": 1
+    },
+    {
+      "seed": 20213,
+      "score": 0.11308,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 371,
+      "policyHp": 4
+    },
+    {
+      "seed": 20431,
+      "score": 0.11499,
+      "policyFloors": 6,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 220,
+      "policyHp": 4
+    },
+    {
+      "seed": 20269,
+      "score": 0.11776,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 91,
+      "policyHp": 1
+    },
+    {
+      "seed": 20248,
+      "score": 0.11853,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 201,
+      "policyHp": 2
+    },
+    {
+      "seed": 20028,
+      "score": 0.11954,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 406,
+      "policyHp": 1
+    },
+    {
+      "seed": 20149,
+      "score": 0.11988,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 209,
+      "policyHp": 2
+    },
+    {
+      "seed": 20045,
+      "score": 0.12,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 2213,
+      "policyHp": 3
+    },
+    {
+      "seed": 20374,
+      "score": 0.12,
+      "policyFloors": 5,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 26,
+      "policyHp": 5
+    },
+    {
+      "seed": 20534,
+      "score": 0.1203,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 415,
+      "policyHp": 1
+    },
+    {
+      "seed": 20353,
+      "score": 0.12128,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 427,
+      "policyHp": 1
+    },
+    {
+      "seed": 20317,
+      "score": 0.12137,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 101,
+      "policyHp": 1
+    },
+    {
+      "seed": 20511,
+      "score": 0.12667,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 35,
+      "policyHp": 2
+    },
+    {
+      "seed": 20023,
+      "score": 0.12678,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 1081,
+      "policyHp": 2
+    },
+    {
+      "seed": 20083,
+      "score": 0.12847,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 124,
+      "policyHp": 1
+    },
+    {
+      "seed": 20154,
+      "score": 0.12988,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 279,
+      "policyHp": 2
+    },
+    {
+      "seed": 20414,
+      "score": 0.13,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 5,
+      "policyHp": 0
+    },
+    {
+      "seed": 20327,
+      "score": 0.13119,
+      "policyFloors": 7,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 319,
+      "policyHp": 1
+    },
+    {
+      "seed": 20530,
+      "score": 0.1334,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 45,
+      "guard1": 143,
+      "policyHp": 1
+    },
+    {
+      "seed": 20255,
+      "score": 0.13397,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 314,
+      "policyHp": 2
+    },
+    {
+      "seed": 20277,
+      "score": 0.13548,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 328,
+      "policyHp": 2
+    },
+    {
+      "seed": 20524,
+      "score": 0.14404,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 90,
+      "policyHp": 0
+    },
+    {
+      "seed": 20435,
+      "score": 0.15,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 46,
+      "policyHp": 4
+    },
+    {
+      "seed": 20495,
+      "score": 0.15,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 21,
+      "policyHp": 4
+    },
+    {
+      "seed": 20065,
+      "score": 0.15253,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 115,
+      "policyHp": 0
+    },
+    {
+      "seed": 20137,
+      "score": 0.15296,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 277,
+      "policyHp": 4
+    },
+    {
+      "seed": 20051,
+      "score": 0.15333,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 25,
+      "policyHp": 1
+    },
+    {
+      "seed": 20166,
+      "score": 0.15447,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 62,
+      "policyHp": 1
+    },
+    {
+      "seed": 20146,
+      "score": 0.15583,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 71,
+      "policyHp": 4
+    },
+    {
+      "seed": 20538,
+      "score": 0.1561,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 65,
+      "policyHp": 1
+    },
+    {
+      "seed": 20310,
+      "score": 0.15716,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 284,
+      "policyHp": 1
+    },
+    {
+      "seed": 20532,
+      "score": 0.15818,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 76,
+      "policyHp": 4
+    },
+    {
+      "seed": 20241,
+      "score": 0.16039,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 81,
+      "policyHp": 3
+    },
+    {
+      "seed": 20600,
+      "score": 0.16124,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 83,
+      "policyHp": 4
+    },
+    {
+      "seed": 20126,
+      "score": 0.16287,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 87,
+      "policyHp": 4
+    },
+    {
+      "seed": 20325,
+      "score": 0.16287,
+      "policyFloors": 6,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 87,
+      "policyHp": 0
+    },
+    {
+      "seed": 20314,
+      "score": 0.16383,
+      "policyFloors": 7,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 1459,
+      "policyHp": 1
+    },
+    {
+      "seed": 20243,
+      "score": 0.1644,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 350,
+      "policyHp": 1
+    },
+    {
+      "seed": 20416,
+      "score": 0.16518,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 358,
+      "policyHp": 1
+    },
+    {
+      "seed": 20242,
+      "score": 0.16785,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 179,
+      "policyHp": 0
+    },
+    {
+      "seed": 20518,
+      "score": 0.17,
+      "policyFloors": 4,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 20,
+      "policyHp": 4
+    },
+    {
+      "seed": 20483,
+      "score": 0.17009,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 191,
+      "policyHp": 0
+    },
+    {
+      "seed": 20164,
+      "score": 0.17022,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 456,
+      "policyHp": 3
+    },
+    {
+      "seed": 20572,
+      "score": 0.1713,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 111,
+      "policyHp": 4
+    },
+    {
+      "seed": 20177,
+      "score": 0.17429,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 121,
+      "policyHp": 3
+    },
+    {
+      "seed": 20504,
+      "score": 0.17442,
+      "policyFloors": 7,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 44,
+      "guard1": 91,
+      "policyHp": 1
+    },
+    {
+      "seed": 20024,
+      "score": 0.17453,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 469,
+      "policyHp": 1
+    },
+    {
+      "seed": 20393,
+      "score": 0.17596,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 127,
+      "policyHp": 4
+    },
+    {
+      "seed": 20460,
+      "score": 0.17616,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 116,
+      "policyHp": 1
+    },
+    {
+      "seed": 20005,
+      "score": 0.17667,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 47,
+      "guard1": 26,
+      "policyHp": 2
+    },
+    {
+      "seed": 20043,
+      "score": 0.17667,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 30,
+      "policyHp": 2
+    },
+    {
+      "seed": 20496,
+      "score": 0.17667,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 51,
+      "guard1": 39,
+      "policyHp": 2
+    },
+    {
+      "seed": 20400,
+      "score": 0.17944,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 65,
+      "policyHp": 2
+    },
+    {
+      "seed": 20265,
+      "score": 0.18,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 55,
+      "policyHp": 0
+    },
+    {
+      "seed": 20203,
+      "score": 0.18063,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 132,
+      "policyHp": 1
+    },
+    {
+      "seed": 20280,
+      "score": 0.18074,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 286,
+      "policyHp": 2
+    },
+    {
+      "seed": 20339,
+      "score": 0.181,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 68,
+      "policyHp": 2
+    },
+    {
+      "seed": 20105,
+      "score": 0.18169,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 63,
+      "policyHp": 0
+    },
+    {
+      "seed": 20312,
+      "score": 0.18173,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 150,
+      "policyHp": 4
+    },
+    {
+      "seed": 20569,
+      "score": 0.18173,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 150,
+      "policyHp": 3
+    },
+    {
+      "seed": 20512,
+      "score": 0.18228,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 299,
+      "policyHp": 2
+    },
+    {
+      "seed": 20517,
+      "score": 0.18277,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 65,
+      "policyHp": 0
+    },
+    {
+      "seed": 20301,
+      "score": 0.18285,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 304,
+      "policyHp": 2
+    },
+    {
+      "seed": 20041,
+      "score": 0.18286,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 155,
+      "policyHp": 4
+    },
+    {
+      "seed": 20555,
+      "score": 0.18346,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 73,
+      "policyHp": 2
+    },
+    {
+      "seed": 20544,
+      "score": 0.18459,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 148,
+      "policyHp": 1
+    },
+    {
+      "seed": 20184,
+      "score": 0.1846,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 163,
+      "policyHp": 4
+    },
+    {
+      "seed": 20270,
+      "score": 0.18559,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 329,
+      "policyHp": 2
+    },
+    {
+      "seed": 20157,
+      "score": 0.18642,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 156,
+      "policyHp": 1
+    },
+    {
+      "seed": 20233,
+      "score": 0.1872,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 313,
+      "policyHp": 0
+    },
+    {
+      "seed": 20139,
+      "score": 0.18898,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 168,
+      "policyHp": 1
+    },
+    {
+      "seed": 20281,
+      "score": 0.18934,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 333,
+      "policyHp": 0
+    },
+    {
+      "seed": 20472,
+      "score": 0.19401,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 99,
+      "policyHp": 2
+    },
+    {
+      "seed": 20118,
+      "score": 0.19435,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 100,
+      "policyHp": 2
+    },
+    {
+      "seed": 20235,
+      "score": 0.19475,
+      "policyFloors": 6,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 841,
+      "policyHp": 1
+    },
+    {
+      "seed": 20012,
+      "score": 0.19571,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 104,
+      "policyHp": 2
+    },
+    {
+      "seed": 20046,
+      "score": 0.19571,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 204,
+      "policyHp": 1
+    },
+    {
+      "seed": 20303,
+      "score": 0.19659,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 45,
+      "guard1": 452,
+      "policyHp": 2
+    },
+    {
+      "seed": 20222,
+      "score": 0.19702,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 108,
+      "policyHp": 2
+    },
+    {
+      "seed": 20341,
+      "score": 0.19702,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 108,
+      "policyHp": 2
+    },
+    {
+      "seed": 20484,
+      "score": 0.19733,
+      "policyFloors": 5,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 120,
+      "policyHp": 1
+    },
+    {
+      "seed": 20329,
+      "score": 0.19859,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 113,
+      "policyHp": 2
+    },
+    {
+      "seed": 20018,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 31,
+      "policyHp": 3
+    },
+    {
+      "seed": 20057,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 34,
+      "policyHp": 4
+    },
+    {
+      "seed": 20200,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 48,
+      "policyHp": 4
+    },
+    {
+      "seed": 20232,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 21,
+      "policyHp": 4
+    },
+    {
+      "seed": 20365,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 44,
+      "policyHp": 4
+    },
+    {
+      "seed": 20370,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 19,
+      "policyHp": 3
+    },
+    {
+      "seed": 20392,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 40,
+      "policyHp": 4
+    },
+    {
+      "seed": 20494,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 51,
+      "policyHp": 4
+    },
+    {
+      "seed": 20521,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 11,
+      "policyHp": 3
+    },
+    {
+      "seed": 20526,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 9,
+      "policyHp": 4
+    },
+    {
+      "seed": 20528,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 43,
+      "policyHp": 4
+    },
+    {
+      "seed": 20576,
+      "score": 0.2,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 8,
+      "policyHp": 4
+    },
+    {
+      "seed": 20009,
+      "score": 0.20333,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 14,
+      "policyHp": 1
+    },
+    {
+      "seed": 20389,
+      "score": 0.20413,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 562,
+      "policyHp": 2
+    },
+    {
+      "seed": 20047,
+      "score": 0.20549,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 298,
+      "policyHp": 4
+    },
+    {
+      "seed": 20159,
+      "score": 0.20667,
+      "policyFloors": 5,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 39,
+      "guard1": 40,
+      "policyHp": 4
+    },
+    {
+      "seed": 20103,
+      "score": 0.20883,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 298,
+      "policyHp": 1
+    },
+    {
+      "seed": 20192,
+      "score": 0.20895,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 646,
+      "policyHp": 2
+    },
+    {
+      "seed": 20571,
+      "score": 0.21241,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 153,
+      "policyHp": 0
+    },
+    {
+      "seed": 20462,
+      "score": 0.21287,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 87,
+      "policyHp": 4
+    },
+    {
+      "seed": 20229,
+      "score": 0.21627,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 96,
+      "policyHp": 4
+    },
+    {
+      "seed": 20003,
+      "score": 0.21748,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 195,
+      "policyHp": 2
+    },
+    {
+      "seed": 20007,
+      "score": 0.21783,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 197,
+      "policyHp": 2
+    },
+    {
+      "seed": 20362,
+      "score": 0.21783,
+      "policyFloors": 6,
+      "solverAttempts": 4,
+      "solverWidth": 192,
+      "solverTurns": 36,
+      "guard1": 197,
+      "policyHp": 3
+    },
+    {
+      "seed": 20531,
+      "score": 0.21837,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 102,
+      "policyHp": 3
+    },
+    {
+      "seed": 20002,
+      "score": 0.22,
+      "policyFloors": 3,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 32,
+      "policyHp": 4
+    },
+    {
+      "seed": 20324,
+      "score": 0.22271,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 105,
+      "policyHp": 1
+    },
+    {
+      "seed": 20574,
+      "score": 0.22457,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 122,
+      "policyHp": 4
+    },
+    {
+      "seed": 20114,
+      "score": 0.22485,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 123,
+      "policyHp": 4
+    },
+    {
+      "seed": 20413,
+      "score": 0.22541,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 125,
+      "policyHp": 4
+    },
+    {
+      "seed": 20076,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 59,
+      "policyHp": 2
+    },
+    {
+      "seed": 20165,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 16,
+      "policyHp": 2
+    },
+    {
+      "seed": 20191,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 20,
+      "policyHp": 2
+    },
+    {
+      "seed": 20219,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 27,
+      "policyHp": 2
+    },
+    {
+      "seed": 20223,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 10,
+      "policyHp": 2
+    },
+    {
+      "seed": 20264,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 11,
+      "policyHp": 2
+    },
+    {
+      "seed": 20297,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 5,
+      "policyHp": 2
+    },
+    {
+      "seed": 20356,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 6,
+      "policyHp": 2
+    },
+    {
+      "seed": 20447,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 51,
+      "policyHp": 2
+    },
+    {
+      "seed": 20509,
+      "score": 0.22667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 23,
+      "policyHp": 2
+    },
+    {
+      "seed": 20407,
+      "score": 0.22704,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 131,
+      "policyHp": 4
+    },
+    {
+      "seed": 20237,
+      "score": 0.22884,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 138,
+      "policyHp": 4
+    },
+    {
+      "seed": 20027,
+      "score": 0.22997,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 66,
+      "policyHp": 2
+    },
+    {
+      "seed": 20282,
+      "score": 0.23,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 49,
+      "policyHp": 0
+    },
+    {
+      "seed": 20300,
+      "score": 0.23163,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 634,
+      "policyHp": 4
+    },
+    {
+      "seed": 20152,
+      "score": 0.23271,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 594,
+      "policyHp": 1
+    },
+    {
+      "seed": 20352,
+      "score": 0.23298,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 72,
+      "policyHp": 2
+    },
+    {
+      "seed": 20086,
+      "score": 0.23339,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 667,
+      "policyHp": 3
+    },
+    {
+      "seed": 20443,
+      "score": 0.23667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 173,
+      "policyHp": 3
+    },
+    {
+      "seed": 20378,
+      "score": 0.2389,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 362,
+      "policyHp": 2
+    },
+    {
+      "seed": 20122,
+      "score": 0.23936,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 187,
+      "policyHp": 4
+    },
+    {
+      "seed": 20193,
+      "score": 0.23991,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 50,
+      "guard1": 190,
+      "policyHp": 4
+    },
+    {
+      "seed": 20063,
+      "score": 0.24039,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 81,
+      "policyHp": 0
+    },
+    {
+      "seed": 20074,
+      "score": 0.24099,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 45,
+      "guard1": 196,
+      "policyHp": 4
+    },
+    {
+      "seed": 20075,
+      "score": 0.24139,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 389,
+      "policyHp": 2
+    },
+    {
+      "seed": 20550,
+      "score": 0.24288,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 207,
+      "policyHp": 4
+    },
+    {
+      "seed": 20062,
+      "score": 0.24321,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 209,
+      "policyHp": 4
+    },
+    {
+      "seed": 20305,
+      "score": 0.24354,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 211,
+      "policyHp": 4
+    },
+    {
+      "seed": 20217,
+      "score": 0.2449,
+      "policyFloors": 5,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 391,
+      "policyHp": 0
+    },
+    {
+      "seed": 20313,
+      "score": 0.24538,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 103,
+      "policyHp": 2
+    },
+    {
+      "seed": 20194,
+      "score": 0.24546,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 223,
+      "policyHp": 4
+    },
+    {
+      "seed": 20097,
+      "score": 0.24828,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 112,
+      "policyHp": 2
+    },
+    {
+      "seed": 20029,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 17,
+      "policyHp": 3
+    },
+    {
+      "seed": 20073,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 47,
+      "guard1": 42,
+      "policyHp": 4
+    },
+    {
+      "seed": 20110,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 36,
+      "policyHp": 3
+    },
+    {
+      "seed": 20188,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 8,
+      "policyHp": 4
+    },
+    {
+      "seed": 20214,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 46,
+      "policyHp": 4
+    },
+    {
+      "seed": 20266,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 12,
+      "policyHp": 4
+    },
+    {
+      "seed": 20289,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 46,
+      "policyHp": 4
+    },
+    {
+      "seed": 20445,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 44,
+      "policyHp": 4
+    },
+    {
+      "seed": 20553,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 41,
+      "policyHp": 3
+    },
+    {
+      "seed": 20588,
+      "score": 0.25,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 37,
+      "policyHp": 4
+    },
+    {
+      "seed": 20298,
+      "score": 0.2515,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 521,
+      "policyHp": 2
+    },
+    {
+      "seed": 20176,
+      "score": 0.25333,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 27,
+      "policyHp": 1
+    },
+    {
+      "seed": 20254,
+      "score": 0.25333,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 43,
+      "policyHp": 1
+    },
+    {
+      "seed": 20332,
+      "score": 0.25333,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 7,
+      "policyHp": 1
+    },
+    {
+      "seed": 20402,
+      "score": 0.25333,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 27,
+      "policyHp": 1
+    },
+    {
+      "seed": 20535,
+      "score": 0.25333,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 23,
+      "policyHp": 1
+    },
+    {
+      "seed": 20475,
+      "score": 0.25334,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 280,
+      "policyHp": 4
+    },
+    {
+      "seed": 20347,
+      "score": 0.25433,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 68,
+      "policyHp": 3
+    },
+    {
+      "seed": 20411,
+      "score": 0.25679,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 73,
+      "policyHp": 4
+    },
+    {
+      "seed": 20106,
+      "score": 0.25773,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 75,
+      "policyHp": 4
+    },
+    {
+      "seed": 20199,
+      "score": 0.25892,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 329,
+      "policyHp": 4
+    },
+    {
+      "seed": 20547,
+      "score": 0.25908,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 78,
+      "policyHp": 4
+    },
+    {
+      "seed": 20245,
+      "score": 0.26329,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 80,
+      "policyHp": 1
+    },
+    {
+      "seed": 20331,
+      "score": 0.26418,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 383,
+      "policyHp": 4
+    },
+    {
+      "seed": 20240,
+      "score": 0.26509,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 182,
+      "policyHp": 2
+    },
+    {
+      "seed": 20537,
+      "score": 0.26554,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 94,
+      "policyHp": 4
+    },
+    {
+      "seed": 20337,
+      "score": 0.26688,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 414,
+      "policyHp": 3
+    },
+    {
+      "seed": 20490,
+      "score": 0.26851,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 434,
+      "policyHp": 4
+    },
+    {
+      "seed": 20466,
+      "score": 0.27004,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 210,
+      "policyHp": 2
+    },
+    {
+      "seed": 20456,
+      "score": 0.27035,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 108,
+      "policyHp": 4
+    },
+    {
+      "seed": 20079,
+      "score": 0.2713,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 111,
+      "policyHp": 4
+    },
+    {
+      "seed": 20124,
+      "score": 0.27151,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 27,
+      "guard1": 199,
+      "policyHp": 0
+    },
+    {
+      "seed": 20408,
+      "score": 0.27287,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 447,
+      "policyHp": 1
+    },
+    {
+      "seed": 20049,
+      "score": 0.27586,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 115,
+      "policyHp": 1
+    },
+    {
+      "seed": 20379,
+      "score": 0.27616,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 116,
+      "policyHp": 1
+    },
+    {
+      "seed": 20204,
+      "score": 0.2765,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 129,
+      "policyHp": 3
+    },
+    {
+      "seed": 20290,
+      "score": 0.27667,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 19,
+      "policyHp": 2
+    },
+    {
+      "seed": 20492,
+      "score": 0.27667,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 56,
+      "policyHp": 2
+    },
+    {
+      "seed": 20427,
+      "score": 0.27724,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 61,
+      "policyHp": 2
+    },
+    {
+      "seed": 20592,
+      "score": 0.2773,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 132,
+      "policyHp": 4
+    },
+    {
+      "seed": 20525,
+      "score": 0.27837,
+      "policyFloors": 5,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 35,
+      "guard1": 102,
+      "policyHp": 1
+    },
+    {
+      "seed": 20276,
+      "score": 0.27934,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 50,
+      "guard1": 140,
+      "policyHp": 4
+    },
+    {
+      "seed": 20425,
+      "score": 0.27983,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 142,
+      "policyHp": 4
+    },
+    {
+      "seed": 20181,
+      "score": 0.28167,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 136,
+      "policyHp": 1
+    },
+    {
+      "seed": 20095,
+      "score": 0.28169,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 635,
+      "policyHp": 4
+    },
+    {
+      "seed": 20316,
+      "score": 0.28169,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 294,
+      "policyHp": 2
+    },
+    {
+      "seed": 20424,
+      "score": 0.28317,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 602,
+      "policyHp": 1
+    },
+    {
+      "seed": 20273,
+      "score": 0.28396,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 160,
+      "policyHp": 4
+    },
+    {
+      "seed": 20596,
+      "score": 0.28544,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 167,
+      "policyHp": 4
+    },
+    {
+      "seed": 20279,
+      "score": 0.28667,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 173,
+      "policyHp": 4
+    },
+    {
+      "seed": 20179,
+      "score": 0.28765,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 49,
+      "guard1": 178,
+      "policyHp": 4
+    },
+    {
+      "seed": 20388,
+      "score": 0.28975,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 48,
+      "guard1": 371,
+      "policyHp": 2
+    },
+    {
+      "seed": 20583,
+      "score": 0.29033,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 815,
+      "policyHp": 4
+    },
+    {
+      "seed": 20150,
+      "score": 0.29042,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 817,
+      "policyHp": 4
+    },
+    {
+      "seed": 20373,
+      "score": 0.29046,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 344,
+      "policyHp": 0
+    },
+    {
+      "seed": 20285,
+      "score": 0.29147,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 92,
+      "policyHp": 2
+    },
+    {
+      "seed": 20541,
+      "score": 0.29336,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 374,
+      "policyHp": 0
+    },
+    {
+      "seed": 20169,
+      "score": 0.29401,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 46,
+      "guard1": 99,
+      "policyHp": 2
+    },
+    {
+      "seed": 20259,
+      "score": 0.29467,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 218,
+      "policyHp": 4
+    },
+    {
+      "seed": 20116,
+      "score": 0.29569,
+      "policyFloors": 2,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 126,
+      "policyHp": 4
+    },
+    {
+      "seed": 20036,
+      "score": 0.29571,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 204,
+      "policyHp": 1
+    },
+    {
+      "seed": 20449,
+      "score": 0.29604,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 206,
+      "policyHp": 1
+    },
+    {
+      "seed": 20584,
+      "score": 0.29736,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 214,
+      "policyHp": 1
+    },
+    {
+      "seed": 20128,
+      "score": 0.29742,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 236,
+      "policyHp": 4
+    },
+    {
+      "seed": 20059,
+      "score": 0.29765,
+      "policyFloors": 4,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 43,
+      "guard1": 196,
+      "policyHp": 4
+    },
+    {
+      "seed": 20564,
+      "score": 0.2977,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 424,
+      "policyHp": 0
+    },
+    {
+      "seed": 20469,
+      "score": 0.29797,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 111,
+      "policyHp": 2
+    },
+    {
+      "seed": 20151,
+      "score": 0.29859,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 50,
+      "guard1": 113,
+      "policyHp": 2
+    },
+    {
+      "seed": 20589,
+      "score": 0.29901,
+      "policyFloors": 4,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 951,
+      "policyHp": 1
+    },
+    {
+      "seed": 20006,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 16,
+      "policyHp": 3
+    },
+    {
+      "seed": 20010,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 49,
+      "policyHp": 4
+    },
+    {
+      "seed": 20019,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 14,
+      "policyHp": 3
+    },
+    {
+      "seed": 20044,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 10,
+      "policyHp": 4
+    },
+    {
+      "seed": 20070,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 27,
+      "policyHp": 4
+    },
+    {
+      "seed": 20100,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 5,
+      "policyHp": 3
+    },
+    {
+      "seed": 20108,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 23,
+      "policyHp": 4
+    },
+    {
+      "seed": 20147,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 6,
+      "policyHp": 3
+    },
+    {
+      "seed": 20220,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 44,
+      "policyHp": 3
+    },
+    {
+      "seed": 20257,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 42,
+      "policyHp": 4
+    },
+    {
+      "seed": 20286,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 44,
+      "policyHp": 4
+    },
+    {
+      "seed": 20318,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 52,
+      "policyHp": 4
+    },
+    {
+      "seed": 20345,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 39,
+      "policyHp": 4
+    },
+    {
+      "seed": 20358,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 7,
+      "policyHp": 4
+    },
+    {
+      "seed": 20383,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 12,
+      "policyHp": 3
+    },
+    {
+      "seed": 20429,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 31,
+      "policyHp": 3
+    },
+    {
+      "seed": 20493,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 44,
+      "policyHp": 4
+    },
+    {
+      "seed": 20500,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 56,
+      "policyHp": 4
+    },
+    {
+      "seed": 20502,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 55,
+      "policyHp": 4
+    },
+    {
+      "seed": 20554,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 36,
+      "policyHp": 4
+    },
+    {
+      "seed": 20580,
+      "score": 0.3,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 55,
+      "policyHp": 3
+    },
+    {
+      "seed": 20342,
+      "score": 0.30001,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 499,
+      "policyHp": 2
+    },
+    {
+      "seed": 20198,
+      "score": 0.30023,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 256,
+      "policyHp": 4
+    },
+    {
+      "seed": 20054,
+      "score": 0.30038,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 119,
+      "policyHp": 2
+    },
+    {
+      "seed": 20206,
+      "score": 0.30099,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 110,
+      "policyHp": 0
+    },
+    {
+      "seed": 20418,
+      "score": 0.3013,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 111,
+      "policyHp": 0
+    },
+    {
+      "seed": 20032,
+      "score": 0.3029,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 128,
+      "policyHp": 2
+    },
+    {
+      "seed": 20404,
+      "score": 0.3033,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 66,
+      "policyHp": 3
+    },
+    {
+      "seed": 20253,
+      "score": 0.30382,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 67,
+      "policyHp": 4
+    },
+    {
+      "seed": 20587,
+      "score": 0.30484,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 69,
+      "policyHp": 4
+    },
+    {
+      "seed": 20195,
+      "score": 0.30534,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 70,
+      "policyHp": 3
+    },
+    {
+      "seed": 20275,
+      "score": 0.30664,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 308,
+      "policyHp": 4
+    },
+    {
+      "seed": 20115,
+      "score": 0.30667,
+      "policyFloors": 3,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 43,
+      "guard1": 41,
+      "policyHp": 4
+    },
+    {
+      "seed": 20155,
+      "score": 0.30763,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 317,
+      "policyHp": 4
+    },
+    {
+      "seed": 20328,
+      "score": 0.3085,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 325,
+      "policyHp": 4
+    },
+    {
+      "seed": 20498,
+      "score": 0.30908,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 78,
+      "policyHp": 3
+    },
+    {
+      "seed": 20350,
+      "score": 0.30965,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 72,
+      "policyHp": 1
+    },
+    {
+      "seed": 20117,
+      "score": 0.31039,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 43,
+      "guard1": 81,
+      "policyHp": 4
+    },
+    {
+      "seed": 20172,
+      "score": 0.31143,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 694,
+      "policyHp": 2
+    },
+    {
+      "seed": 20068,
+      "score": 0.31148,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 164,
+      "policyHp": 2
+    },
+    {
+      "seed": 20262,
+      "score": 0.31206,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 85,
+      "policyHp": 4
+    },
+    {
+      "seed": 20428,
+      "score": 0.31286,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 79,
+      "policyHp": 1
+    },
+    {
+      "seed": 20539,
+      "score": 0.31404,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 90,
+      "policyHp": 4
+    },
+    {
+      "seed": 20246,
+      "score": 0.31658,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 190,
+      "policyHp": 2
+    },
+    {
+      "seed": 20292,
+      "score": 0.31667,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 173,
+      "policyHp": 0
+    },
+    {
+      "seed": 20479,
+      "score": 0.31746,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 48,
+      "guard1": 421,
+      "policyHp": 4
+    },
+    {
+      "seed": 20189,
+      "score": 0.31894,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 862,
+      "policyHp": 2
+    },
+    {
+      "seed": 20599,
+      "score": 0.32105,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 467,
+      "policyHp": 4
+    },
+    {
+      "seed": 20497,
+      "score": 0.32181,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 221,
+      "policyHp": 2
+    },
+    {
+      "seed": 20101,
+      "score": 0.32274,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 51,
+      "guard1": 227,
+      "policyHp": 2
+    },
+    {
+      "seed": 20293,
+      "score": 0.32274,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 28,
+      "guard1": 227,
+      "policyHp": 2
+    },
+    {
+      "seed": 20444,
+      "score": 0.32278,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 491,
+      "policyHp": 4
+    },
+    {
+      "seed": 20333,
+      "score": 0.32338,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 210,
+      "policyHp": 0
+    },
+    {
+      "seed": 20015,
+      "score": 0.32419,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 215,
+      "policyHp": 0
+    },
+    {
+      "seed": 20467,
+      "score": 0.32423,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 512,
+      "policyHp": 4
+    },
+    {
+      "seed": 20598,
+      "score": 0.32432,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 110,
+      "policyHp": 1
+    },
+    {
+      "seed": 20477,
+      "score": 0.32485,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 123,
+      "policyHp": 4
+    },
+    {
+      "seed": 20360,
+      "score": 0.32494,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 112,
+      "policyHp": 1
+    },
+    {
+      "seed": 20197,
+      "score": 0.32667,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 49,
+      "policyHp": 2
+    },
+    {
+      "seed": 20201,
+      "score": 0.32667,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 37,
+      "policyHp": 2
+    },
+    {
+      "seed": 20306,
+      "score": 0.32667,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 46,
+      "policyHp": 2
+    },
+    {
+      "seed": 20335,
+      "score": 0.32667,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 44,
+      "policyHp": 2
+    },
+    {
+      "seed": 20415,
+      "score": 0.32667,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 28,
+      "guard1": 48,
+      "policyHp": 2
+    },
+    {
+      "seed": 20559,
+      "score": 0.32667,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 45,
+      "guard1": 53,
+      "policyHp": 2
+    },
+    {
+      "seed": 20309,
+      "score": 0.32704,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 131,
+      "policyHp": 3
+    },
+    {
+      "seed": 20308,
+      "score": 0.32727,
+      "policyFloors": 3,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 235,
+      "policyHp": 0
+    },
+    {
+      "seed": 20315,
+      "score": 0.32782,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 134,
+      "policyHp": 4
+    },
+    {
+      "seed": 20482,
+      "score": 0.32833,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 136,
+      "policyHp": 3
+    },
+    {
+      "seed": 20148,
+      "score": 0.32944,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 65,
+      "policyHp": 2
+    },
+    {
+      "seed": 20099,
+      "score": 0.33,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 33,
+      "policyHp": 0
+    },
+    {
+      "seed": 20081,
+      "score": 0.33333,
+      "policyFloors": 5,
+      "solverAttempts": 6,
+      "solverWidth": 384,
+      "solverTurns": 36,
+      "guard1": 6,
+      "policyHp": 4
+    },
+    {
+      "seed": 20288,
+      "score": 0.33441,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 318,
+      "policyHp": 2
+    },
+    {
+      "seed": 20133,
+      "score": 0.33736,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 748,
+      "policyHp": 4
+    },
+    {
+      "seed": 20183,
+      "score": 0.33772,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 162,
+      "policyHp": 1
+    },
+    {
+      "seed": 20434,
+      "score": 0.34071,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 90,
+      "policyHp": 2
+    },
+    {
+      "seed": 20142,
+      "score": 0.34116,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 197,
+      "policyHp": 4
+    },
+    {
+      "seed": 20420,
+      "score": 0.34116,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 197,
+      "policyHp": 3
+    },
+    {
+      "seed": 20406,
+      "score": 0.34134,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 198,
+      "policyHp": 4
+    },
+    {
+      "seed": 20125,
+      "score": 0.34288,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 188,
+      "policyHp": 1
+    },
+    {
+      "seed": 20567,
+      "score": 0.34414,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 195,
+      "policyHp": 1
+    },
+    {
+      "seed": 20381,
+      "score": 0.3448,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 92,
+      "policyHp": 0
+    },
+    {
+      "seed": 20035,
+      "score": 0.34499,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 47,
+      "guard1": 220,
+      "policyHp": 3
+    },
+    {
+      "seed": 20437,
+      "score": 0.3453,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 222,
+      "policyHp": 4
+    },
+    {
+      "seed": 20485,
+      "score": 0.34592,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 226,
+      "policyHp": 3
+    },
+    {
+      "seed": 20170,
+      "score": 0.34607,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 46,
+      "guard1": 227,
+      "policyHp": 4
+    },
+    {
+      "seed": 20040,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 23,
+      "policyHp": 3
+    },
+    {
+      "seed": 20072,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 6,
+      "policyHp": 3
+    },
+    {
+      "seed": 20136,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 49,
+      "policyHp": 3
+    },
+    {
+      "seed": 20185,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 27,
+      "policyHp": 3
+    },
+    {
+      "seed": 20190,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 45,
+      "policyHp": 3
+    },
+    {
+      "seed": 20210,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 28,
+      "guard1": 58,
+      "policyHp": 3
+    },
+    {
+      "seed": 20343,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 12,
+      "policyHp": 3
+    },
+    {
+      "seed": 20417,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 43,
+      "policyHp": 3
+    },
+    {
+      "seed": 20442,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 28,
+      "policyHp": 3
+    },
+    {
+      "seed": 20503,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 50,
+      "policyHp": 3
+    },
+    {
+      "seed": 20552,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 40,
+      "policyHp": 3
+    },
+    {
+      "seed": 20556,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 39,
+      "policyHp": 3
+    },
+    {
+      "seed": 20558,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 34,
+      "policyHp": 3
+    },
+    {
+      "seed": 20594,
+      "score": 0.35,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 58,
+      "policyHp": 3
+    },
+    {
+      "seed": 20271,
+      "score": 0.3509,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 261,
+      "policyHp": 3
+    },
+    {
+      "seed": 20450,
+      "score": 0.3513,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 264,
+      "policyHp": 3
+    },
+    {
+      "seed": 20441,
+      "score": 0.35246,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 273,
+      "policyHp": 3
+    },
+    {
+      "seed": 20020,
+      "score": 0.35333,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 22,
+      "policyHp": 1
+    },
+    {
+      "seed": 20123,
+      "score": 0.35333,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 59,
+      "policyHp": 1
+    },
+    {
+      "seed": 20205,
+      "score": 0.35333,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 8,
+      "policyHp": 1
+    },
+    {
+      "seed": 20209,
+      "score": 0.35333,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 29,
+      "policyHp": 1
+    },
+    {
+      "seed": 20247,
+      "score": 0.35333,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 15,
+      "policyHp": 1
+    },
+    {
+      "seed": 20302,
+      "score": 0.35333,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 13,
+      "policyHp": 1
+    },
+    {
+      "seed": 20433,
+      "score": 0.35333,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 21,
+      "policyHp": 1
+    },
+    {
+      "seed": 20505,
+      "score": 0.35333,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 25,
+      "policyHp": 1
+    },
+    {
+      "seed": 20326,
+      "score": 0.35371,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 119,
+      "policyHp": 0
+    },
+    {
+      "seed": 20294,
+      "score": 0.35484,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 69,
+      "policyHp": 3
+    },
+    {
+      "seed": 20171,
+      "score": 0.35585,
+      "policyFloors": 2,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 716,
+      "policyHp": 3
+    },
+    {
+      "seed": 20021,
+      "score": 0.35679,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 73,
+      "policyHp": 3
+    },
+    {
+      "seed": 20399,
+      "score": 0.35726,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 74,
+      "policyHp": 3
+    },
+    {
+      "seed": 20549,
+      "score": 0.35773,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 75,
+      "policyHp": 3
+    },
+    {
+      "seed": 20568,
+      "score": 0.35817,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 69,
+      "policyHp": 1
+    },
+    {
+      "seed": 20143,
+      "score": 0.35867,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 70,
+      "policyHp": 1
+    },
+    {
+      "seed": 20186,
+      "score": 0.35867,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 70,
+      "policyHp": 1
+    },
+    {
+      "seed": 20322,
+      "score": 0.35894,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 299,
+      "policyHp": 1
+    },
+    {
+      "seed": 20130,
+      "score": 0.35916,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 71,
+      "policyHp": 1
+    },
+    {
+      "seed": 20107,
+      "score": 0.35934,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 333,
+      "policyHp": 4
+    },
+    {
+      "seed": 20090,
+      "score": 0.36006,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 340,
+      "policyHp": 4
+    },
+    {
+      "seed": 20088,
+      "score": 0.36059,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 74,
+      "policyHp": 1
+    },
+    {
+      "seed": 20470,
+      "score": 0.36106,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 350,
+      "policyHp": 3
+    },
+    {
+      "seed": 20004,
+      "score": 0.36242,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 78,
+      "policyHp": 1
+    },
+    {
+      "seed": 20034,
+      "score": 0.36365,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 89,
+      "policyHp": 3
+    },
+    {
+      "seed": 20161,
+      "score": 0.3637,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 343,
+      "policyHp": 1
+    },
+    {
+      "seed": 20268,
+      "score": 0.36396,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 160,
+      "policyHp": 0
+    },
+    {
+      "seed": 20299,
+      "score": 0.36454,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 387,
+      "policyHp": 4
+    },
+    {
+      "seed": 20368,
+      "score": 0.36481,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 390,
+      "policyHp": 4
+    },
+    {
+      "seed": 20011,
+      "score": 0.36627,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 96,
+      "policyHp": 3
+    },
+    {
+      "seed": 20344,
+      "score": 0.36734,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 99,
+      "policyHp": 3
+    },
+    {
+      "seed": 20401,
+      "score": 0.36734,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 99,
+      "policyHp": 3
+    },
+    {
+      "seed": 20249,
+      "score": 0.36905,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 104,
+      "policyHp": 3
+    },
+    {
+      "seed": 20234,
+      "score": 0.36938,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 30,
+      "guard1": 105,
+      "policyHp": 3
+    },
+    {
+      "seed": 20412,
+      "score": 0.37,
+      "policyFloors": 0,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 27,
+      "policyHp": 3
+    },
+    {
+      "seed": 20048,
+      "score": 0.37035,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 108,
+      "policyHp": 3
+    },
+    {
+      "seed": 20131,
+      "score": 0.37067,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 109,
+      "policyHp": 3
+    },
+    {
+      "seed": 20448,
+      "score": 0.37334,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 499,
+      "policyHp": 3
+    },
+    {
+      "seed": 20304,
+      "score": 0.37371,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 119,
+      "policyHp": 3
+    },
+    {
+      "seed": 20022,
+      "score": 0.37376,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 505,
+      "policyHp": 4
+    },
+    {
+      "seed": 20087,
+      "score": 0.374,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 120,
+      "policyHp": 3
+    },
+    {
+      "seed": 20014,
+      "score": 0.37419,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 215,
+      "policyHp": 0
+    },
+    {
+      "seed": 20501,
+      "score": 0.37514,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 124,
+      "policyHp": 3
+    },
+    {
+      "seed": 20405,
+      "score": 0.37569,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 126,
+      "policyHp": 3
+    },
+    {
+      "seed": 20039,
+      "score": 0.37675,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 118,
+      "policyHp": 1
+    },
+    {
+      "seed": 20355,
+      "score": 0.37782,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 134,
+      "policyHp": 3
+    },
+    {
+      "seed": 20085,
+      "score": 0.37808,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 135,
+      "policyHp": 3
+    },
+    {
+      "seed": 20562,
+      "score": 0.37847,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 124,
+      "policyHp": 1
+    },
+    {
+      "seed": 20001,
+      "score": 0.37884,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 138,
+      "policyHp": 3
+    },
+    {
+      "seed": 20156,
+      "score": 0.38,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 18,
+      "policyHp": 0
+    },
+    {
+      "seed": 20419,
+      "score": 0.38,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 20,
+      "policyHp": 0
+    },
+    {
+      "seed": 20430,
+      "score": 0.38,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 59,
+      "policyHp": 0
+    },
+    {
+      "seed": 20480,
+      "score": 0.38,
+      "policyFloors": 3,
+      "solverAttempts": 4,
+      "solverWidth": 192,
+      "solverTurns": 39,
+      "guard1": 38,
+      "policyHp": 1
+    },
+    {
+      "seed": 20320,
+      "score": 0.38126,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 148,
+      "policyHp": 3
+    },
+    {
+      "seed": 20543,
+      "score": 0.38126,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 148,
+      "policyHp": 3
+    },
+    {
+      "seed": 20138,
+      "score": 0.38313,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 662,
+      "policyHp": 3
+    },
+    {
+      "seed": 20175,
+      "score": 0.38353,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 158,
+      "policyHp": 3
+    },
+    {
+      "seed": 20226,
+      "score": 0.38353,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 158,
+      "policyHp": 3
+    },
+    {
+      "seed": 20359,
+      "score": 0.38418,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 161,
+      "policyHp": 3
+    },
+    {
+      "seed": 20112,
+      "score": 0.38544,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 167,
+      "policyHp": 3
+    },
+    {
+      "seed": 20071,
+      "score": 0.38675,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 309,
+      "policyHp": 0
+    },
+    {
+      "seed": 20396,
+      "score": 0.38748,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 82,
+      "policyHp": 2
+    },
+    {
+      "seed": 20158,
+      "score": 0.38908,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 78,
+      "policyHp": 0
+    },
+    {
+      "seed": 20436,
+      "score": 0.38996,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 80,
+      "policyHp": 0
+    },
+    {
+      "seed": 20168,
+      "score": 0.38997,
+      "policyFloors": 3,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 40,
+      "guard1": 66,
+      "policyHp": 0
+    },
+    {
+      "seed": 20586,
+      "score": 0.39112,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 386,
+      "policyHp": 2
+    },
+    {
+      "seed": 20432,
+      "score": 0.39134,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 198,
+      "policyHp": 3
+    },
+    {
+      "seed": 20582,
+      "score": 0.39223,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 362,
+      "policyHp": 0
+    },
+    {
+      "seed": 20056,
+      "score": 0.39246,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 86,
+      "policyHp": 0
+    },
+    {
+      "seed": 20461,
+      "score": 0.3933,
+      "policyFloors": 4,
+      "solverAttempts": 5,
+      "solverWidth": 384,
+      "solverTurns": 36,
+      "guard1": 66,
+      "policyHp": 2
+    },
+    {
+      "seed": 20384,
+      "score": 0.3953,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 222,
+      "policyHp": 3
+    },
+    {
+      "seed": 20134,
+      "score": 0.39546,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 46,
+      "guard1": 223,
+      "policyHp": 3
+    },
+    {
+      "seed": 20357,
+      "score": 0.39653,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 230,
+      "policyHp": 3
+    },
+    {
+      "seed": 20196,
+      "score": 0.39668,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 231,
+      "policyHp": 3
+    },
+    {
+      "seed": 20489,
+      "score": 0.39683,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 232,
+      "policyHp": 3
+    },
+    {
+      "seed": 20180,
+      "score": 0.39771,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 238,
+      "policyHp": 3
+    },
+    {
+      "seed": 20385,
+      "score": 0.39814,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 241,
+      "policyHp": 3
+    },
+    {
+      "seed": 20438,
+      "score": 0.39829,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 242,
+      "policyHp": 3
+    },
+    {
+      "seed": 20522,
+      "score": 0.39927,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 249,
+      "policyHp": 3
+    },
+    {
+      "seed": 20098,
+      "score": 0.39969,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 252,
+      "policyHp": 3
+    },
+    {
+      "seed": 20140,
+      "score": 0.40077,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 260,
+      "policyHp": 3
+    },
+    {
+      "seed": 20050,
+      "score": 0.40334,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 280,
+      "policyHp": 3
+    },
+    {
+      "seed": 20244,
+      "score": 0.40346,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 281,
+      "policyHp": 3
+    },
+    {
+      "seed": 20590,
+      "score": 0.40398,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 1209,
+      "policyHp": 4
+    },
+    {
+      "seed": 20102,
+      "score": 0.40423,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 133,
+      "policyHp": 2
+    },
+    {
+      "seed": 20120,
+      "score": 0.4045,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 263,
+      "policyHp": 1
+    },
+    {
+      "seed": 20030,
+      "score": 0.40479,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 292,
+      "policyHp": 3
+    },
+    {
+      "seed": 20440,
+      "score": 0.40503,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 294,
+      "policyHp": 3
+    },
+    {
+      "seed": 20519,
+      "score": 0.40534,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 1142,
+      "policyHp": 1
+    },
+    {
+      "seed": 20080,
+      "score": 0.40667,
+      "policyFloors": 1,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 34,
+      "guard1": 24,
+      "policyHp": 3
+    },
+    {
+      "seed": 20252,
+      "score": 0.40728,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 285,
+      "policyHp": 1
+    },
+    {
+      "seed": 20287,
+      "score": 0.40763,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 317,
+      "policyHp": 3
+    },
+    {
+      "seed": 20557,
+      "score": 0.40817,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 27,
+      "guard1": 69,
+      "policyHp": 1
+    },
+    {
+      "seed": 20563,
+      "score": 0.40965,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 336,
+      "policyHp": 3
+    },
+    {
+      "seed": 20261,
+      "score": 0.41116,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 29,
+      "guard1": 351,
+      "policyHp": 3
+    },
+    {
+      "seed": 20064,
+      "score": 0.41162,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 323,
+      "policyHp": 1
+    },
+    {
+      "seed": 20037,
+      "score": 0.41327,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 373,
+      "policyHp": 3
+    },
+    {
+      "seed": 20295,
+      "score": 0.41379,
+      "policyFloors": 1,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 193,
+      "policyHp": 1
+    },
+    {
+      "seed": 20251,
+      "score": 0.41469,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 353,
+      "policyHp": 1
+    },
+    {
+      "seed": 20455,
+      "score": 0.41516,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 394,
+      "policyHp": 3
+    },
+    {
+      "seed": 20283,
+      "score": 0.41543,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 397,
+      "policyHp": 3
+    },
+    {
+      "seed": 20053,
+      "score": 0.41595,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 403,
+      "policyHp": 3
+    },
+    {
+      "seed": 20439,
+      "score": 0.41603,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 404,
+      "policyHp": 3
+    },
+    {
+      "seed": 20167,
+      "score": 0.41706,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 175,
+      "policyHp": 0
+    },
+    {
+      "seed": 20278,
+      "score": 0.41946,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 446,
+      "policyHp": 3
+    },
+    {
+      "seed": 20520,
+      "score": 0.42038,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 458,
+      "policyHp": 3
+    },
+    {
+      "seed": 20523,
+      "score": 0.42083,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 36,
+      "guard1": 464,
+      "policyHp": 3
+    },
+    {
+      "seed": 20397,
+      "score": 0.42222,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 483,
+      "policyHp": 3
+    },
+    {
+      "seed": 20595,
+      "score": 0.42333,
+      "policyFloors": 2,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 2102,
+      "policyHp": 1
+    },
+    {
+      "seed": 20260,
+      "score": 0.42556,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 35,
+      "guard1": 114,
+      "policyHp": 1
+    },
+    {
+      "seed": 20486,
+      "score": 0.42873,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 583,
+      "policyHp": 3
+    },
+    {
+      "seed": 20069,
+      "score": 0.43001,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 605,
+      "policyHp": 3
+    },
+    {
+      "seed": 20162,
+      "score": 0.43169,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 63,
+      "policyHp": 0
+    },
+    {
+      "seed": 20527,
+      "score": 0.43191,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 639,
+      "policyHp": 3
+    },
+    {
+      "seed": 20033,
+      "score": 0.43506,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 700,
+      "policyHp": 3
+    },
+    {
+      "seed": 20542,
+      "score": 0.43573,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 300,
+      "policyHp": 0
+    },
+    {
+      "seed": 20066,
+      "score": 0.43676,
+      "policyFloors": 0,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 191,
+      "policyHp": 2
+    },
+    {
+      "seed": 20187,
+      "score": 0.43772,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 162,
+      "policyHp": 1
+    },
+    {
+      "seed": 20129,
+      "score": 0.43785,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 40,
+      "guard1": 319,
+      "policyHp": 0
+    },
+    {
+      "seed": 20093,
+      "score": 0.4396,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 171,
+      "policyHp": 1
+    },
+    {
+      "seed": 20144,
+      "score": 0.44667,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 2751,
+      "policyHp": 2
+    },
+    {
+      "seed": 20529,
+      "score": 0.44807,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 1019,
+      "policyHp": 3
+    },
+    {
+      "seed": 20109,
+      "score": 0.44853,
+      "policyFloors": 1,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 38,
+      "guard1": 938,
+      "policyHp": 1
+    },
+    {
+      "seed": 20409,
+      "score": 0.4491,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 33,
+      "guard1": 225,
+      "policyHp": 1
+    },
+    {
+      "seed": 20376,
+      "score": 0.4497,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 106,
+      "policyHp": 0
+    },
+    {
+      "seed": 20174,
+      "score": 0.45117,
+      "policyFloors": 1,
+      "solverAttempts": 2,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 263,
+      "policyHp": 0
+    },
+    {
+      "seed": 20546,
+      "score": 0.45191,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 244,
+      "policyHp": 1
+    },
+    {
+      "seed": 20224,
+      "score": 0.45376,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 48,
+      "guard1": 1201,
+      "policyHp": 3
+    },
+    {
+      "seed": 20488,
+      "score": 0.45596,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 42,
+      "guard1": 1280,
+      "policyHp": 3
+    },
+    {
+      "seed": 20394,
+      "score": 0.45667,
+      "policyFloors": 0,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 52,
+      "guard1": 6,
+      "policyHp": 3
+    },
+    {
+      "seed": 20426,
+      "score": 0.45667,
+      "policyFloors": 0,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 37,
+      "guard1": 41,
+      "policyHp": 3
+    },
+    {
+      "seed": 20452,
+      "score": 0.45753,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 287,
+      "policyHp": 1
+    },
+    {
+      "seed": 20163,
+      "score": 0.45872,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 37,
+      "guard1": 1386,
+      "policyHp": 3
+    },
+    {
+      "seed": 20465,
+      "score": 0.46236,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 34,
+      "guard1": 330,
+      "policyHp": 1
+    },
+    {
+      "seed": 20346,
+      "score": 0.46479,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 1652,
+      "policyHp": 3
+    },
+    {
+      "seed": 20348,
+      "score": 0.46697,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 44,
+      "guard1": 1759,
+      "policyHp": 3
+    },
+    {
+      "seed": 20121,
+      "score": 0.46825,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 32,
+      "guard1": 845,
+      "policyHp": 2
+    },
+    {
+      "seed": 20089,
+      "score": 0.47,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 39,
+      "guard1": 2144,
+      "policyHp": 3
+    },
+    {
+      "seed": 20013,
+      "score": 0.47583,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 41,
+      "guard1": 487,
+      "policyHp": 1
+    },
+    {
+      "seed": 20211,
+      "score": 0.47716,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 45,
+      "guard1": 506,
+      "policyHp": 1
+    },
+    {
+      "seed": 20468,
+      "score": 0.48067,
+      "policyFloors": 1,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 42,
+      "guard1": 109,
+      "policyHp": 1
+    },
+    {
+      "seed": 20540,
+      "score": 0.48147,
+      "policyFloors": 0,
+      "solverAttempts": 1,
+      "solverWidth": 96,
+      "solverTurns": 31,
+      "guard1": 573,
+      "policyHp": 1
+    },
+    {
+      "seed": 20364,
+      "score": 0.48263,
+      "policyFloors": 3,
+      "solverAttempts": 5,
+      "solverWidth": 384,
+      "solverTurns": 46,
+      "guard1": 444,
+      "policyHp": 4
+    },
+    {
+      "seed": 20451,
+      "score": 0.49019,
+      "policyFloors": 1,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 43,
+      "guard1": 310,
+      "policyHp": 2
+    },
+    {
+      "seed": 20515,
+      "score": 0.50286,
+      "policyFloors": 3,
+      "solverAttempts": 5,
+      "solverWidth": 384,
+      "solverTurns": 38,
+      "guard1": 79,
+      "policyHp": 0
+    },
+    {
+      "seed": 20330,
+      "score": 0.53388,
+      "policyFloors": 0,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 46,
+      "guard1": 558,
+      "policyHp": 3
+    },
+    {
+      "seed": 20570,
+      "score": 0.54,
+      "policyFloors": 1,
+      "solverAttempts": 5,
+      "solverWidth": 384,
+      "solverTurns": 47,
+      "guard1": 20,
+      "policyHp": 2
+    },
+    {
+      "seed": 20548,
+      "score": 0.5749,
+      "policyFloors": 2,
+      "solverAttempts": 9,
+      "solverWidth": 384,
+      "solverTurns": 41,
+      "guard1": 181,
+      "policyHp": 1
+    },
+    {
+      "seed": 20025,
+      "score": 0.6,
+      "policyFloors": 1,
+      "solverAttempts": 10,
+      "solverWidth": 768,
+      "solverTurns": 41,
+      "guard1": 8,
+      "policyHp": 4
+    },
+    {
+      "seed": 20061,
+      "score": 0.61148,
+      "policyFloors": 0,
+      "solverAttempts": 5,
+      "solverWidth": 384,
+      "solverTurns": 47,
+      "guard1": 241,
+      "policyHp": 3
+    },
+    {
+      "seed": 20561,
+      "score": 0.61941,
+      "policyFloors": 0,
+      "solverAttempts": 3,
+      "solverWidth": 192,
+      "solverTurns": 36,
+      "guard1": 1414,
+      "policyHp": 1
+    },
+    {
+      "seed": 20536,
+      "score": 0.65528,
+      "policyFloors": 0,
+      "solverAttempts": 5,
+      "solverWidth": 384,
+      "solverTurns": 35,
+      "guard1": 183,
+      "policyHp": 1
+    },
+    {
+      "seed": 20340,
+      "score": 0.66152,
+      "policyFloors": 1,
+      "solverAttempts": 10,
+      "solverWidth": 768,
+      "solverTurns": 56,
+      "guard1": 76,
+      "policyHp": 1
+    },
+    {
+      "seed": 20267,
+      "score": 0.70027,
+      "policyFloors": 1,
+      "solverAttempts": 6,
+      "solverWidth": 384,
+      "solverTurns": 43,
+      "guard1": 739,
+      "policyHp": 0
+    },
+    {
+      "seed": 20410,
+      "score": 0.72582,
+      "policyFloors": 0,
+      "solverAttempts": 11,
+      "solverWidth": 768,
+      "solverTurns": 37,
+      "guard1": 536,
+      "policyHp": 3
+    },
+    {
+      "seed": 20354,
+      "score": 0.7489,
+      "policyFloors": 0,
+      "solverAttempts": 13,
+      "solverWidth": 1536,
+      "solverTurns": 35,
+      "guard1": 1044,
+      "policyHp": 3
+    }
+  ],
+  "seconds": 1119.7
+}
